@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>QCM – Cours Pr. Hanine</title>
+<meta name="description" content="Supports de cours du Pr. Mounir Hanine – Errachidia, Université Moulay Ismaïl : polycopiés, TP corrigés et diaporamas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="mark">MH</span>
+      <span><strong>Pr. Mounir Hanine</strong><small>Génie électrique &amp; informatique · Errachidia</small></span>
+    </a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a>
+      <a href="index.html#modules">Modules</a>
+      <a href="qcm.html">QCM</a>
+      <a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+<div class="crumb"><a href="index.html">Accueil</a> / <a href="qcm.html">QCM</a> <span id="bc"></span></div>
+<div id="content"></div>
+</main>
+<footer>
+  <div class="wrap">
+    <span>Errachidia · Université Moulay Ismaïl</span>
+    <span class="yr" id="copyr"></span>
+  </div>
+</footer>
+<script src="data.js"></script>
+<script src="qcm-data.js"></script>
+<script src="qcm/c.js"></script>
+<script src="qcm/ii.js"></script>
+<script src="qcm/scratch.js"></script>
+<script src="qcm/langues.js"></script>
+<script src="qcm/tourisme.js"></script>
+<script src="qcm/droit.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+const param=new URLSearchParams(location.search).get('m');
+</script>
+<script>
+
+function liste(){
+  $('content').innerHTML=`<div class="eyebrow">Auto-évaluation</div><h1>QCM par module</h1>
+  <p class="lead">100 questions par module, réparties en trois niveaux : facile, moyen et difficile. Répondez puis cliquez sur « Valider » : la correction, une explication et votre note s'affichent pour chaque niveau.</p>
+  <div class="mods">${MODULES.filter(m=>QCM[m.id]).map(m=>`<a class="mod" href="qcm.html?m=${m.id}"><span>${esc(m.niveau)} · ${QCM[m.id].length} questions</span><b>${esc(m.titre)}</b><span>${esc(m.formation)}</span></a>`).join('')}</div>`;
+}
+function melange(t){t=t.slice();for(let i=t.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[t[i],t[j]]=[t[j],t[i]];}return t;}
+function quiz(m){
+  document.title='QCM '+m.titre+' – Cours Pr. Hanine';
+  $('bc').innerHTML=' / '+esc(m.titre);
+  const Q=QCM[m.id].map((x,k)=>({id:k,n:x[0],q:x[1],c:x[2],r:x[3],e:x[4],ordre:melange([0,1,2,3])}));
+  const niv=[1,2,3].filter(n=>Q.some(x=>x.n===n));
+  let num=0;
+  $('content').innerHTML=`<div class="eyebrow">QCM · ${esc(m.niveau)}</div><h1>${esc(m.titre)}</h1>
+  <p class="lead">${Q.length} questions en trois niveaux. Vous pouvez valider à tout moment : seules les questions répondues sont notées par niveau. <a href="module.html?m=${m.id}">Revoir le module</a></p>
+  <nav class="lvl">${niv.map(n=>`<a href="#niv${n}">${NIVEAUX[n]} · ${Q.filter(x=>x.n===n).length}</a>`).join('')}</nav>
+  <form id="f">${niv.map(n=>`<h2 class="lvh" id="niv${n}">${NIVEAUX[n]}<small>${Q.filter(x=>x.n===n).length} questions</small></h2><div class="lvs" id="s${n}"></div>`+
+    Q.filter(x=>x.n===n).map(x=>{num++;return `<div class="q" id="q${x.id}"><div class="num">Question ${num} / ${Q.length}</div><h3>${esc(x.q)}</h3>
+     ${x.ordre.map(j=>`<label class="opt" data-j="${j}"><input type="radio" name="q${x.id}" value="${j}"><span>${esc(x.c[j])}</span></label>`).join('')}
+     <div class="expl" hidden></div></div>`}).join('')).join('')}
+   <div class="score"><span id="sc">0 réponse sur ${Q.length}</span><span style="display:flex;gap:8px"><button class="btn" type="submit">Valider</button><button class="btn ghost" type="button" id="re">Recommencer</button></span></div>
+  </form>`;
+  const f=$('f');
+  const val=x=>{const c=f.querySelector(`input[name="q${x.id}"]:checked`);return c?c.value:'';};
+  f.addEventListener('change',()=>{const n=Q.filter(x=>val(x)!=='').length;$('sc').textContent=n+' réponse(s) sur '+Q.length;});
+  f.addEventListener('submit',e=>{e.preventDefault();let ok=0,rep=0;const parNiv={};
+    Q.forEach(x=>{const box=$('q'+x.id),v=val(x);parNiv[x.n]=parNiv[x.n]||{ok:0,rep:0,tot:0};parNiv[x.n].tot++;
+      box.querySelectorAll('.opt').forEach(o=>{const j=+o.dataset.j;o.classList.remove('ok','ko');if(j===x.r)o.classList.add('ok');else if(String(j)===v)o.classList.add('ko');});
+      if(v!==''){rep++;parNiv[x.n].rep++;}
+      if(String(x.r)===v){ok++;parNiv[x.n].ok++;}
+      const ex=box.querySelector('.expl');ex.hidden=false;ex.textContent=(String(x.r)===v?'✔ Bonne réponse. ':v===''?'Sans réponse. ':'✘ Réponse incorrecte. ')+x.e;});
+    niv.forEach(n=>{const p=parNiv[n];$('s'+n).textContent=`Score : ${p.ok} / ${p.tot}`+(p.rep<p.tot?` (${p.rep} répondues)`:'')+` – soit ${(Math.round(p.ok/p.tot*200)/10).toLocaleString('fr-FR')} / 20`;});
+    const note=Math.round(ok/Q.length*200)/10;
+    $('sc').innerHTML=`Score global : ${ok} / ${Q.length} (soit ${note.toLocaleString('fr-FR')} / 20)<span class="det">${niv.map(n=>`N${n} : ${parNiv[n].ok}/${parNiv[n].tot}`).join(' · ')}</span>`;
+  });
+  $('re').addEventListener('click',()=>{quiz(m);scrollTo(0,0);});
+}
+const mm=MODULES.find(x=>x.id===param);
+if(mm&&QCM[mm.id]) quiz(mm); else liste();
+
+</script>
+</body>
+</html>

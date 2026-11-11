@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cours Pr. Hanine</title>
+<meta name="description" content="Supports de cours du Pr. Mounir Hanine – Errachidia, Université Moulay Ismaïl : polycopiés, TP corrigés et diaporamas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="mark">MH</span>
+      <span><strong>Pr. Mounir Hanine</strong><small>Génie électrique &amp; informatique · Errachidia</small></span>
+    </a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a>
+      <a href="index.html#modules">Modules</a>
+      <a href="qcm.html">QCM</a>
+      <a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="hero wrap">
+    <div class="eyebrow" id="annee"></div>
+    <h1>Supports de cours, <em>en libre accès</em> pour mes étudiants</h1>
+    <p>Cours, diapositives, travaux pratiques corrigés et études de cas des modules que j'enseigne à Errachidia, Université Moulay Ismaïl. Les documents sont mis à jour au fil du semestre.</p>
+    <div class="signal">
+      <span><b id="nb-cours">0</b> modules</span>
+      <span><b id="nb-docs">0</b> documents</span>
+      <span><b>Mise à jour</b> <span id="maj"></span></span>
+    </div>
+  </section>
+  <div class="wrap layout">
+    <section id="cours" aria-labelledby="t-cours">
+      <h2 id="modules">Mes modules</h2>
+      <p class="sub">Chaque module a sa page : objectifs, programme, documents et QCM d'auto-évaluation.</p>
+      <div class="mods" id="mods"></div>
+      <h2 id="t-cours">Mes documents</h2>
+      <p class="sub">Choisissez une rubrique, puis cliquez sur un document pour l'ouvrir ou le télécharger.</p>
+      <div class="tabs" id="tabs" role="tablist" aria-label="Rubriques"></div>
+      <div class="tools">
+        <label class="search" for="q"><input id="q" type="search" placeholder="Rechercher un module, une formation…" aria-label="Rechercher"></label>
+        <div class="chips" id="chips" role="group" aria-label="Filtrer par niveau"></div>
+      </div>
+      <div class="courses" id="list"></div>
+      <div class="empty" id="empty" hidden>Aucun document ne correspond à votre recherche.</div>
+    </section>
+    <aside>
+      <section class="panel" id="annonces">
+        <h2>Annonces</h2>
+        <ul class="news" id="news"></ul>
+      </section>
+      <section class="panel contact" id="contact">
+        <h2>Contact</h2>
+        <p id="contact-lieu"></p>
+        <p id="contact-perm"></p>
+        <div class="mail"><code id="mail"></code><button class="copy" id="copy" type="button">Copier</button></div>
+      </section>
+    </aside>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <span>Errachidia · Université Moulay Ismaïl</span>
+    <span class="yr" id="copyr"></span>
+  </div>
+</footer>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<!-- Contenu du site (modules, annonces, contact) : modifiez seulement data.js -->
+<script src="data.js"></script>
+<script src="qcm-data.js"></script>
+<script src="qcm/c.js"></script>
+<script src="qcm/ii.js"></script>
+<script src="qcm/scratch.js"></script>
+<script src="qcm/langues.js"></script>
+<script src="qcm/tourisme.js"></script>
+<script src="qcm/droit.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let filtre='Tous';
+$('annee').textContent=SITE.annee; $('maj').textContent=SITE.maj;
+$('mail').textContent=SITE.email; $('contact-lieu').textContent=SITE.lieu; $('contact-perm').textContent=SITE.permanence;
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+$('nb-cours').textContent=MODULES.length;
+$('mods').innerHTML=MODULES.map(m=>`<a class="mod" href="module.html?m=${m.id}"><span>${esc(m.niveau)} · ${DOCUMENTS.filter(d=>d.mid===m.id).length} documents${QCM[m.id]?' · QCM':''}</span><b>${esc(m.titre)}</b><span>${esc(m.formation)}</span></a>`).join('');
+$('nb-docs').textContent=DOCUMENTS.length;
+$('news').innerHTML=ANNONCES.map(a=>`<li><div class="date"><b>${esc(a.jour)}</b>${esc(a.mois)}</div><p><strong>${esc(a.titre)}</strong>${esc(a.texte)}</p></li>`).join('');
+let onglet=(location.hash.startsWith('#r-')&&RUBRIQUES[+location.hash.slice(3)])?RUBRIQUES[+location.hash.slice(3)]:'Tout';
+const rubs=['Tout',...RUBRIQUES.filter(r=>DOCUMENTS.some(d=>d.rubrique===r))];
+function drawTabs(){$('tabs').innerHTML=rubs.map(r=>`<button class="tab" role="tab" type="button" data-r="${esc(r)}" aria-selected="${r===onglet}">${esc(r)}<span class="n">${r==='Tout'?DOCUMENTS.length:DOCUMENTS.filter(d=>d.rubrique===r).length}</span></button>`).join('');}
+drawTabs();
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;onglet=b.dataset.r;drawTabs();render();});
+const niveaux=['Tous',...new Set(DOCUMENTS.map(d=>d.niveau))];
+$('chips').innerHTML=niveaux.map(n=>`<button class="chip" type="button" data-f="${esc(n)}" aria-pressed="${n===filtre}">${esc(n)}</button>`).join('');
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filtre=b.dataset.f;
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
+const card=d=>`
+    <article class="course">
+      <div class="course-head"><div><div class="code">${esc(d.module)}</div><h3>${esc(d.titre)}</h3></div><span class="level">${esc(d.niveau)}</span></div>
+      <p>${esc(d.desc||'')}</p>
+      <div class="meta"><span>${esc(d.formation)}</span>${d.pages?`<span>${d.pages} pages</span>`:''}</div>
+      <div class="res"><a href="${esc(d.fichier)}" target="_blank" rel="noopener"><span class="fmt">PDF</span>Ouvrir le document</a><a href="module.html?m=${d.mid}">Page du module</a></div>
+    </article>`;
+function render(){
+  const t=$('q').value.trim().toLowerCase();
+  const items=DOCUMENTS.filter(d=>(onglet==='Tout'||d.rubrique===onglet)&&(filtre==='Tous'||d.niveau===filtre)&&(!t||[d.module,d.titre,d.formation,d.desc||''].join(' ').toLowerCase().includes(t)));
+  const groupes=onglet==='Tout'?RUBRIQUES:[onglet];
+  $('list').className='';
+  $('list').innerHTML=groupes.map(r=>{const g=items.filter(d=>d.rubrique===r);if(!g.length)return'';
+    return `<div class="group">${onglet==='Tout'?`<h3 class="gt">${esc(r)}</h3>`:''}<div class="courses">${g.map(card).join('')}</div></div>`}).join('');
+  $('empty').hidden=items.length>0;
+}
+$('q').addEventListener('input',render);
+const toast=$('toast');let tt;
+function show(msg){toast.textContent=msg;toast.hidden=false;clearTimeout(tt);tt=setTimeout(()=>toast.hidden=true,2800)}
+$('copy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(SITE.email);show('Adresse copiée.')}
+  catch(_){const r=document.createRange();r.selectNodeContents($('mail'));const s=getSelection();s.removeAllRanges();s.addRange(r);show('Adresse sélectionnée : copiez-la avec Ctrl+C.')}
+});
+render();
+</script>
+</body>
+</html>

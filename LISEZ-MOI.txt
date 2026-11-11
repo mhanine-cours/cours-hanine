@@ -1,0 +1,37 @@
+SITE DE COURS – Pr. Mounir HANINE
+=================================
+
+Contenu du dossier
+- index.html, module.html, qcm.html, apropos.html, style.css : les pages (ne pas modifier,
+  sauf apropos.html pour mettre à jour votre présentation et vos publications)
+- data.js     : documents, modules (objectifs, programme), annonces, contact
+- qcm-data.js : les questions des QCM (10 par module)
+- documents/ : les polycopiés, TP et diaporamas en PDF
+
+Ajouter un document
+1. Copier le fichier PDF dans le dossier documents/ (nom sans espace ni accent,
+   par exemple : linux-polycopie.pdf).
+2. Dans data.js, ajouter dans la liste DOCUMENTS un bloc du type :
+   { rubrique:"Cours", niveau:"Licence", module:"Système d'exploitation 1",
+     formation:"Licence Informatique appliquée", titre:"Polycopié de cours",
+     pages:90, fichier:"documents/linux-polycopie.pdf", desc:"Courte description." },
+   Rubriques possibles : Cours, Diapositives, Travaux pratiques corrigés,
+   Études de cas, Examens corrigés.
+3. Remettre le dossier en ligne (voir ci-dessous).
+
+Mise en ligne gratuite avec GitHub Pages (adresse permanente)
+1. Créer un compte gratuit sur https://github.com
+2. Créer un dépôt public nommé, par exemple : cours-hanine
+3. Dans le dépôt : « Add file » > « Upload files », glisser TOUT le contenu
+   de ce dossier (index.html, data.js et le dossier documents), puis « Commit changes ».
+4. « Settings » > « Pages » > Source : « Deploy from a branch », branche « main », dossier « / (root) » > « Save ».
+5. Après une à deux minutes, le site est en ligne à l'adresse :
+   https://VOTRE-NOM-UTILISATEUR.github.io/cours-hanine/
+
+Modifier ou ajouter une question de QCM
+Les questions sont dans le dossier qcm/ (un fichier par module : c.js, ii.js,
+scratch.js, langues.js, tourisme.js, droit.js). Une question = une ligne :
+  [2,"Énoncé ?",["choix 1","choix 2","choix 3","choix 4"],1,"Explication."],
+- le 1er nombre est le niveau : 1 facile, 2 moyen, 3 difficile ;
+- l'avant-dernier nombre est la bonne réponse, en partant de 0
+  (0 = choix 1, 1 = choix 2…). L'ordre des choix est mélangé à l'affichage.

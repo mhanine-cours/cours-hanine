@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Module – Cours Pr. Hanine</title>
+<meta name="description" content="Supports de cours du Pr. Mounir Hanine – Errachidia, Université Moulay Ismaïl : polycopiés, TP corrigés et diaporamas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <span class="mark">MH</span>
+      <span><strong>Pr. Mounir Hanine</strong><small>Génie électrique &amp; informatique · Errachidia</small></span>
+    </a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a>
+      <a href="index.html#modules">Modules</a>
+      <a href="qcm.html">QCM</a>
+      <a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+<div class="crumb"><a href="index.html">Accueil</a> / <a href="index.html#modules">Modules</a> / <span id="bc"></span></div>
+<div id="content"></div>
+</main>
+<footer>
+  <div class="wrap">
+    <span>Errachidia · Université Moulay Ismaïl</span>
+    <span class="yr" id="copyr"></span>
+  </div>
+</footer>
+<script src="data.js"></script>
+<script src="qcm-data.js"></script>
+<script src="qcm/c.js"></script>
+<script src="qcm/ii.js"></script>
+<script src="qcm/scratch.js"></script>
+<script src="qcm/langues.js"></script>
+<script src="qcm/tourisme.js"></script>
+<script src="qcm/droit.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+const param=new URLSearchParams(location.search).get('m');
+</script>
+<script>
+
+const m=MODULES.find(x=>x.id===param)||MODULES[0];
+document.title=m.titre+' – Cours Pr. Hanine';
+$('bc').textContent=m.titre;
+const docs=DOCUMENTS.filter(d=>d.mid===m.id);
+const byRub=RUBRIQUES.map(r=>[r,docs.filter(d=>d.rubrique===r)]).filter(x=>x[1].length);
+$('content').innerHTML=`
+ <div class="eyebrow">${esc(m.niveau)} · ${esc(m.formation)}</div>
+ <h1>${esc(m.titre)}</h1>
+ <p class="lead">${esc(m.intro)}</p>
+ <div class="grid2">
+  <div class="stack">
+   <section class="panel"><h2>Objectifs</h2><ul>${m.objectifs.map(o=>`<li>${esc(o)}</li>`).join('')}</ul></section>
+   <section class="panel"><h2>Programme</h2><ol>${m.programme.map(o=>`<li>${esc(o)}</li>`).join('')}</ol></section>
+   <section><h2>Documents du module</h2><p class="sub">${docs.length} document(s), classés par rubrique.</p>
+    ${byRub.map(([r,l])=>`<div class="group"><h3 class="gt">${esc(r)}</h3><div class="courses">${l.map(d=>`
+     <article class="course"><div class="course-head"><div><h3>${esc(d.titre)}</h3></div><span class="level">${d.pages?d.pages+' p.':'PDF'}</span></div>
+     <p>${esc(d.desc||'')}</p><div class="meta"><span>${esc(d.formation)}</span></div>
+     <div class="res"><a href="${esc(d.fichier)}" target="_blank" rel="noopener"><span class="fmt">PDF</span>Ouvrir le document</a></div></article>`).join('')}</div></div>`).join('')}
+   </section>
+  </div>
+  <aside class="stack">
+   <section class="panel"><h2>Prérequis</h2><p class="sub" style="margin:0">${esc(m.prerequis)}</p></section>
+   ${QCM[m.id]?`<section class="panel"><h2>Auto-évaluation</h2><p class="sub">${QCM[m.id].length} questions en trois niveaux (facile, moyen, difficile), avec correction immédiate.</p><a class="btn" href="qcm.html?m=${m.id}">Faire le QCM</a></section>`:''}
+   <section class="panel"><h2>Autres modules</h2><ul>${MODULES.filter(x=>x.id!==m.id).map(x=>`<li><a href="module.html?m=${x.id}">${esc(x.titre)}</a></li>`).join('')}</ul></section>
+  </aside>
+ </div>`;
+
+</script>
+</body>
+</html>
