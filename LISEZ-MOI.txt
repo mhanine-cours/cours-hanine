@@ -38,5 +38,5 @@ scratch.js, langues.js, tourisme.js, droit.js). Une question = une ligne :
 
 - numerix.html : logiciel didactique NumériLab (numération, complément à 2, IEEE 754, ASCII, exercices corrigés). Lien dans le menu de toutes les pages.
 
-- logiciels.html : page des logiciels didactiques (NumériLab, GénéLab, application de pilotage à venir).
-- generateur.html : GénéLab, simulateur SCPI du banc SEFRAM 4463 / 5062DC.
+- logiciels.html : page des logiciels didactiques (NumériLab, Banc virtuel FSE, application de pilotage à venir).
+- generateur.html : Banc virtuel FSE, simulateur de contrôle d’instruments (SEFRAM 4463 / 5062DC).
