@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Banc virtuel FSE – Contrôle d’instruments (SCPI) – Cours Pr. Hanine</title>
+<title>Banc virtuel de contrôle d’instruments – FS Errachidia – UMI</title>
 <meta name="description" content="Banc virtuel FSE : simulateur du générateur SEFRAM 4463 et de l'oscilloscope SEFRAM 5062DC, pilotés avec les commandes SCPI réelles des appareils.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 <style>
 /* ===== NumériLab – design ===== */
@@ -93,6 +93,8 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 @media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.picker button:last-child{grid-column:span 2}.split{grid-template-columns:1fr}.tool{padding:18px}}
 @media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
 
+.page h1.bv-title{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-weight:600;font-size:clamp(24px,2.6vw,32px);line-height:1.15;letter-spacing:-.01em;margin:6px 0 14px;font-variation-settings:"opsz" 72}
+.page h1.bv-title span{display:block;margin-top:8px;font:500 clamp(13px,1.3vw,15px)/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--sand)}
 .bench{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
 .inst{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
 .inst-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
@@ -135,7 +137,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <section class="nx-hero">
     <div>
       <div class="eyebrow">Logiciel didactique · Informatique industrielle</div>
-      <h1>Banc virtuel de contrôle d’instruments – Faculté des Sciences d’Errachidia</h1>
+      <h1 class="bv-title">Banc virtuel de contrôle d’instruments<span>Faculté des Sciences d’Errachidia · Université Moulay Ismaïl</span></h1>
       <p class="lead">Pilotez un générateur SEFRAM 4463 et un oscilloscope SEFRAM 5062DC simulés, avec les <b>vraies commandes SCPI</b> des appareils du banc de TP, disponibles en <b>salle B2 de la Faculté des Sciences d’Errachidia</b>. Chaque réglage fait à la souris affiche la commande exacte à envoyer par VISA depuis LabVIEW.</p>
       <div class="chips"><span><b>2</b> instruments sur bus GPIB</span><span><b>syntaxe SCPI</b> des appareils</span><span><b>6</b> défis corrigés</span><span>sans matériel</span></div>
     </div>
