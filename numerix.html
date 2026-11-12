@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>NumériLab – Logiciel didactique de numération – Cours Pr. Hanine</title>
+<meta name="description" content="NumériLab : logiciel didactique interactif pour apprendre la numération, le complément à 2, la norme IEEE 754 et le code ASCII, avec exercices corrigés.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== NumériLab – design ===== */
+.nx-hero{display:grid;grid-template-columns:1.25fr .9fr;gap:36px;align-items:center;margin:4px 0 34px}
+.nx-hero .lead{margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font:500 13px var(--mono);padding:6px 11px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+.chips b{color:var(--accent);font-weight:600}
+.screen{background:#0d1d22;color:#d7f2ee;border-radius:16px;padding:22px 24px;font-family:var(--mono);box-shadow:0 18px 40px -18px rgba(8,40,45,.55);position:relative;overflow:hidden}
+.screen:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px);pointer-events:none}
+.screen .dots{display:flex;gap:6px;margin-bottom:16px}.screen .dots i{width:10px;height:10px;border-radius:50%;background:#2f4a50}.screen .dots i:first-child{background:#e36f5c}.screen .dots i:nth-child(2){background:#e0a64a}.screen .dots i:nth-child(3){background:#3fb6ad}
+.screen .ln{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed #23393f;font-size:15px}
+.screen .ln:last-child{border:0}.screen .ln small{color:#7fa5a2}.screen .ln b{color:#7ee0d6;font-weight:500;letter-spacing:.04em}
+.screen .big{font:600 34px var(--mono);color:#fff;margin:2px 0 10px;letter-spacing:.02em}
+.screen .cur{display:inline-block;width:10px;height:1.1em;background:#3fb6ad;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px}
+.picker button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px 14px 13px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s}
+.picker button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.picker .ic{font:600 14px var(--mono);width:44px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--sand-soft);color:var(--sand)}
+.picker .tt{font:600 15px var(--body)}.picker .dd{font-size:12.5px;color:var(--muted);line-height:1.35}
+.picker button[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),0 10px 24px -16px var(--accent)}
+.picker button[aria-selected="true"] .ic{background:var(--accent);color:var(--accent-ink)}
+.tool{display:none;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 26px;animation:fade .25s ease}
+.tool.on{display:block}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.tool h2{font:700 20px var(--display);margin:0 0 4px}.tool .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.console{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px 6px;margin-bottom:18px}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-bottom:12px}
+.row label{display:flex;flex-direction:column;gap:6px;font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.row input,.row select{font:500 18px var(--mono);padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-width:170px;transition:border-color .15s,box-shadow .15s}
+.row input:focus,.row select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.row input.wide{min-width:260px}
+.ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px;font:12px var(--mono);color:var(--muted)}
+.ex button{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px dashed var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.ex button:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.res4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:0 0 18px}
+.res4 div{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px 13px;border-top:4px solid var(--accent);cursor:copy;transition:background .15s}
+.res4 div:nth-child(2){border-top-color:var(--sand)}.res4 div:nth-child(3){border-top-color:#5a7bb5}.res4 div:nth-child(4){border-top-color:#b5655a}
+.res4 div:hover{background:var(--bg)}
+.res4 small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.res4 b{font:600 20px var(--mono);word-break:break-all}
+.res4 div.copied:after{content:"copié ✓";position:absolute;top:10px;right:12px;font:500 11px var(--mono);color:var(--accent)}
+.steps{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:15.5px;line-height:1.6}
+.steps h3{display:flex;align-items:center;gap:10px;margin:18px 0 10px;font:600 16px var(--body)}
+.steps h3:first-child{margin-top:0}
+.steps h3:before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+.steps ol{margin:0;padding:0;list-style:none;counter-reset:st}
+.steps ol li{position:relative;padding:2px 0 10px 40px;counter-increment:st}
+.steps ol li:before{content:counter(st);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--sand-soft);color:var(--sand);font:600 13px var(--mono);display:grid;place-items:center}
+.steps ol li:not(:last-child):after{content:"";position:absolute;left:12.5px;top:30px;bottom:0;width:1px;background:var(--line)}
+.steps ul{margin:0;padding-left:20px}
+.mono{font-family:var(--mono)}
+table.t{border-collapse:separate;border-spacing:0;font:14px var(--mono);margin:10px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.t td,table.t th{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:6px 14px;text-align:center}
+table.t tr:last-child td{border-bottom:0}table.t td:last-child,table.t th:last-child{border-right:0}
+table.t th{background:var(--bg);font-weight:500;color:var(--muted);font-size:12.5px}
+table.t tr td:last-child{font-weight:600;color:var(--accent)}
+.bitwrap{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 16px;overflow-x:auto}
+.bits{display:flex;gap:3px;font:600 15px var(--mono);min-width:max-content}
+.bits span{width:24px;height:32px;display:grid;place-items:center;border-radius:5px}
+.bits span:nth-child(1),.bits span:nth-child(9){margin-right:6px}
+.b-s{background:#f6d6d6;color:#7a1f1f}.b-e{background:#d7ecd9;color:#1d5a27}.b-m{background:#dbe7f6;color:#1f3d6b}
+@media (prefers-color-scheme:dark){.b-s{background:#4a2222;color:#f4c7c7}.b-e{background:#1f3d26;color:#c7ecd0}.b-m{background:#1e2f48;color:#cfe0f6}}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);flex-wrap:wrap;margin-top:10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.err{color:#c0392b;font-weight:500;background:color-mix(in srgb,#c0392b 8%,transparent);border-left:3px solid #c0392b;padding:10px 14px;border-radius:6px}
+.ok{color:#23794a;font-weight:600}
+.callout{background:color-mix(in srgb,#23794a 9%,transparent);border-left:3px solid #23794a;padding:10px 14px;border-radius:6px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.split>div>h3{font:600 15px var(--body);margin:0 0 10px}
+.exo{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.exo .q{font:600 24px var(--body);margin:2px 0 16px}
+.exo .q sub{font-size:14px}
+.qtag{display:inline-block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--sand);background:var(--sand-soft);padding:4px 9px;border-radius:6px}
+.scorebar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.scorebar>div{flex:1;min-width:120px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.scorebar small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.scorebar b{font:700 24px var(--display)}
+.scorebar .nxm{flex:none;min-width:0;padding:0;border:0;height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.nxm i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.fb-ok{animation:pop .35s}@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:none}}
+.foot-note{margin:26px 0 0;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.foot-note b{color:var(--ink)}
+@media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.picker button:last-child{grid-column:span 2}.split{grid-template-columns:1fr}.tool{padding:18px}}
+@media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">MH</span><span><strong>Pr. Mounir Hanine</strong><small>Génie électrique &amp; informatique · Errachidia</small></span></a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="numerix.html">NumériLab</a><a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+  <div class="crumb"><a href="index.html">Accueil</a> / NumériLab</div>
+  <section class="nx-hero">
+    <div>
+      <div class="eyebrow">Logiciel didactique · Programmation C 1</div>
+      <h1>NumériLab : le laboratoire de la numération</h1>
+      <p class="lead">Convertissez, observez chaque étape du calcul, puis entraînez-vous avec des exercices générés automatiquement et corrigés. NumériLab accompagne le chapitre 0 du cours (architecture et numération) et le TP 1.</p>
+      <div class="chips"><span><b>5</b> outils interactifs</span><span><b>pas à pas</b> détaillé</span><span><b>∞</b> exercices corrigés</span><span>gratuit · sans inscription</span></div>
+    </div>
+    <div class="screen" aria-hidden="true">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <small style="color:#7fa5a2">décimal</small>
+      <div class="big" id="scr-n">45<span class="cur"></span></div>
+      <div class="ln"><small>binaire</small><b id="scr-b">0010 1101</b></div>
+      <div class="ln"><small>hexadécimal</small><b id="scr-h">0x2D</b></div>
+      <div class="ln"><small>octal</small><b id="scr-o">055</b></div>
+      <div class="ln"><small>ASCII</small><b id="scr-a">'-'</b></div>
+    </div>
+  </section>
+
+  <div class="picker" role="tablist" aria-label="Outils">
+    <button role="tab" data-t="conv" aria-selected="true"><span class="ic">2⇄16</span><span class="tt">Changement de base</span><span class="dd">Divisions successives, puissances, groupes de bits</span></button>
+    <button role="tab" data-t="c2" aria-selected="false"><span class="ic">−x</span><span class="tt">Complément à 2</span><span class="dd">Entiers signés sur 8 ou 16 bits</span></button>
+    <button role="tab" data-t="ieee" aria-selected="false"><span class="ic">1.f</span><span class="tt">Réels IEEE 754</span><span class="dd">Signe, exposant, mantisse d'un float</span></button>
+    <button role="tab" data-t="ascii" aria-selected="false"><span class="ic">A=65</span><span class="tt">Caractères ASCII</span><span class="dd">Codes des caractères d'un texte</span></button>
+    <button role="tab" data-t="exo" aria-selected="false"><span class="ic">✓</span><span class="tt">Exercices corrigés</span><span class="dd">Entraînement avec score et correction</span></button>
+  </div>
+
+  <!-- 1. Changement de base -->
+  <section class="tool on" id="conv">
+    <h2>Changement de base</h2><p class="sub">Saisissez un nombre dans la base de votre choix : les quatre écritures s'affichent, avec la méthode détaillée.</p>
+    <div class="console">
+      <div class="row">
+        <label>Nombre<input id="cv-val" value="45" autocomplete="off"></label>
+        <label>Écrit en base<select id="cv-base"><option value="10">10 (décimal)</option><option value="2">2 (binaire)</option><option value="8">8 (octal)</option><option value="16">16 (hexadécimal)</option></select></label>
+        <label>Méthode vers<select id="cv-to"><option value="2">base 2</option><option value="8">base 8</option><option value="16">base 16</option></select></label>
+      </div>
+      <div class="ex">Exemples : <button data-v="255" data-b="10">255</button><button data-v="1024" data-b="10">1024</button><button data-v="101101" data-b="2">101101₂</button><button data-v="FF" data-b="16">FF₁₆</button><button data-v="777" data-b="8">777₈</button></div>
+    </div>
+    <div id="cv-out"></div>
+  </section>
+
+  <!-- 2. Complément à 2 -->
+  <section class="tool" id="c2">
+    <h2>Complément à 2</h2><p class="sub">C'est ainsi que le type <span class="mono">char</span> (8 bits) ou <span class="mono">short</span> (16 bits) stocke un entier négatif.</p>
+    <div class="split">
+      <div><h3>Encoder un entier signé</h3>
+        <div class="console"><div class="row">
+          <label>Entier signé<input id="c2-val" value="-20" autocomplete="off"></label>
+          <label>Bits<select id="c2-n"><option>8</option><option>16</option></select></label></div>
+          <div class="ex">Exemples : <button data-c2="-1">−1</button><button data-c2="-128">−128</button><button data-c2="127">127</button><button data-c2="-75">−75</button></div></div>
+        <div id="c2-out"></div></div>
+      <div><h3>Décoder un mot binaire</h3>
+        <div class="console"><div class="row"><label>Mot de 8 ou 16 bits<input id="c2-bin" class="wide" value="11110110" autocomplete="off"></label></div>
+          <div class="ex">Exemples : <button data-bin="10000000">10000000</button><button data-bin="01111111">01111111</button><button data-bin="11111111">11111111</button></div></div>
+        <div id="c2-dec"></div></div>
+    </div>
+  </section>
+
+  <!-- 3. IEEE 754 -->
+  <section class="tool" id="ieee">
+    <h2>Réels en virgule flottante (IEEE 754)</h2><p class="sub">Comment un <span class="mono">float</span> du langage C est rangé dans 32 bits.</p>
+    <div class="console"><div class="row"><label>Nombre réel<input id="ie-val" value="12.625" autocomplete="off"></label></div>
+      <div class="ex">Exemples : <button data-f="0.1">0.1</button><button data-f="-0.75">−0.75</button><button data-f="1">1</button><button data-f="3.14159">3.14159</button><button data-f="1e-40">1e-40</button></div></div>
+    <div id="ie-out"></div>
+  </section>
+
+  <!-- 4. ASCII -->
+  <section class="tool" id="ascii">
+    <h2>Caractères ASCII</h2><p class="sub">En C, un caractère est un petit entier : <span class="mono">'A' == 65</span>.</p>
+    <div class="console"><div class="row"><label>Texte<input id="as-val" class="wide" value="Hanine C1" autocomplete="off"></label></div></div>
+    <div id="as-out"></div>
+  </section>
+
+  <!-- 5. Exercices -->
+  <section class="tool" id="exo">
+    <h2>Exercices corrigés</h2><p class="sub">Un nouvel énoncé à chaque clic ; la correction reprend la méthode du cours.</p>
+    <div class="scorebar">
+      <div><small>Réussis</small><b id="sc-ok">0</b></div>
+      <div><small>Tentés</small><b id="sc-tot">0</b></div>
+      <div><small>Série en cours</small><b id="sc-st">0</b></div>
+      <div><small>Taux de réussite</small><b id="sc-pc">–</b><div class="nxm"><i id="sc-bar"></i></div></div>
+    </div>
+    <div class="exo">
+      <div class="row" style="justify-content:space-between">
+        <label>Type d'exercice<select id="ex-type">
+          <option value="d2b">Décimal → binaire</option><option value="b2d">Binaire → décimal</option>
+          <option value="d2h">Décimal → hexadécimal</option><option value="h2d">Hexadécimal → décimal</option>
+          <option value="b2h">Binaire → hexadécimal</option><option value="c2">Complément à 2 sur 8 bits</option>
+          <option value="mix">Au hasard</option></select></label>
+        <button class="btn ghost" id="ex-new" type="button">↻ Nouvel exercice</button>
+      </div>
+      <span class="qtag" id="ex-tag"></span>
+      <div class="q" id="ex-q"></div>
+      <div class="row"><label>Votre réponse<input id="ex-ans" class="wide" autocomplete="off" placeholder="tapez puis Entrée"></label><button class="btn" id="ex-check" type="button">Vérifier</button><button class="btn ghost" id="ex-sol" type="button">Voir la correction</button></div>
+      <div id="ex-fb"></div>
+    </div>
+    <span class="score2" id="ex-score" hidden></span>
+  </section>
+  <p class="foot-note"><span>💡</span><span><b>Astuce :</b> cliquez sur une carte de résultat pour copier sa valeur. NumériLab fonctionne aussi sur téléphone.</span></p>
+</main>
+<footer><div class="wrap"><span>NumériLab – logiciel didactique · Pr. Mounir Hanine · Université Moulay Ismaïl</span><span class="yr" id="copyr"></span></div></footer>
+<script>
+const $=id=>document.getElementById(id);
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+document.querySelectorAll('.picker button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.picker button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('.tool').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));});
+const DIG='0123456789ABCDEF';
+const sub=(s,b)=>`${s}<sub>${b}</sub>`;
+const grp=(s,k=4)=>s.replace(/\B(?=(\d{4})+(?!\d))/g,' ');
+
+/* ---------- 1. Changement de base ---------- */
+function parseBase(str,b){str=str.trim().toUpperCase().replace(/\s/g,'');if(!str)return null;
+  const ok=new RegExp('^['+DIG.slice(0,b)+']+$');if(!ok.test(str))return NaN;return parseInt(str,b);}
+function stepsFromDec(n,b){
+  if(n===0)return `<p>0 s'écrit 0 dans toutes les bases.</p>`;
+  let rows='',q=n,res='';
+  while(q>0){const r=q%b;rows+=`<tr><td>${q}</td><td>÷ ${b}</td><td>${Math.floor(q/b)}</td><td>${DIG[r]}${b===16&&r>9?' ('+r+')':''}</td></tr>`;res=DIG[r]+res;q=Math.floor(q/b);}
+  return `<h3>Du décimal vers la base ${b} : divisions successives</h3>
+  <table class="t"><tr><th>Dividende</th><th>Diviseur</th><th>Quotient</th><th>Reste</th></tr>${rows}</table>
+  <p>On s'arrête quand le quotient vaut 0, puis on lit les restes <b>de bas en haut</b> : ${sub(n,10)} = <b class="mono">${sub(res,b)}</b>.</p>`;}
+function stepsToDec(str,b){
+  str=str.toUpperCase();const L=str.length;let terms=[],vals=[];
+  for(let i=0;i<L;i++){const d=parseInt(str[i],16),p=L-1-i;terms.push(`${DIG[d]}×${b}<sup>${p}</sup>`);vals.push(d*b**p);}
+  return `<h3>De la base ${b} vers le décimal : développement en puissances de ${b}</h3>
+  <p class="mono">${sub(str,b)} = ${terms.join(' + ')}<br>= ${vals.join(' + ')}<br>= <b>${vals.reduce((a,c)=>a+c,0)}</b></p>`;}
+function stepsBinGroups(n,b){
+  const k=b===16?4:3;let bin=n.toString(2);while(bin.length%k)bin='0'+bin;
+  const g=bin.match(new RegExp('.{'+k+'}','g'));
+  return `<h3>Méthode rapide binaire ↔ base ${b} : groupes de ${k} bits</h3>
+  <table class="t"><tr>${g.map(x=>`<td>${x}</td>`).join('')}</tr><tr>${g.map(x=>`<th>${DIG[parseInt(x,2)]}</th>`).join('')}</tr></table>
+  <p>On découpe le binaire en groupes de ${k} bits à partir de la droite, puis on remplace chaque groupe par son chiffre en base ${b}.</p>`;}
+function conv(){
+  const b=+$('cv-base').value,to=+$('cv-to').value,s=$('cv-val').value;const n=parseBase(s,b);
+  if(n===null){$('cv-out').innerHTML='';return;}
+  if(isNaN(n)){$('cv-out').innerHTML=`<p class="err">« ${s} » n'est pas un nombre valide en base ${b}. Chiffres autorisés : ${DIG.slice(0,b).split('').join(', ')}.</p>`;return;}
+  if(n>4294967295){$('cv-out').innerHTML='<p class="err">Nombre trop grand pour cet outil (maximum 2³² − 1).</p>';return;}
+  let html=`<div class="res4"><div><small>Décimal (base 10)</small><b>${n}</b></div><div><small>Binaire (base 2)</small><b>${grp(n.toString(2))}</b></div><div><small>Octal (base 8)</small><b>${n.toString(8)}</b></div><div><small>Hexadécimal (base 16)</small><b>${n.toString(16).toUpperCase()}</b></div></div><div class="steps">`;
+  if(b!==10)html+=stepsToDec(s.trim().replace(/\s/g,''),b);
+  html+=stepsFromDec(n,to===b&&b!==10?2:to);
+  if(to!==2)html+=stepsBinGroups(n,to);
+  html+=`<p>Nombre de bits nécessaires : <b>${n?n.toString(2).length:1}</b>.</p></div>`;
+  $('cv-out').innerHTML=html;}
+['cv-val','cv-base','cv-to'].forEach(i=>$(i).addEventListener('input',conv));conv();
+
+/* ---------- 2. Complément à 2 ---------- */
+const pad=(s,n)=>s.padStart(n,'0');
+function c2(){
+  const n=+$('c2-n').value,v=parseInt($('c2-val').value,10),min=-(2**(n-1)),max=2**(n-1)-1;
+  if(isNaN(v)){$('c2-out').innerHTML='';return;}
+  if(v<min||v>max){$('c2-out').innerHTML=`<p class="err">Sur ${n} bits, on ne représente que les entiers de ${min} à ${max}.</p>`;return;}
+  const code=((v%2**n)+2**n)%2**n,bin=pad(code.toString(2),n);
+  let h=`<div class="res4"><div><small>Représentation sur ${n} bits</small><b>${bin}</b></div><div><small>Hexadécimal</small><b>${code.toString(16).toUpperCase().padStart(n/4,'0')}</b></div><div><small>Intervalle sur ${n} bits</small><b>${min} à ${max}</b></div></div><div class="steps">`;
+  if(v>=0)h+=`<h3>Entier positif</h3><p>Un entier positif s'écrit directement en binaire sur ${n} bits : ${v} = <b class="mono">${bin}</b>. Le bit de poids fort vaut 0 : le nombre est positif.</p>`;
+  else{const a=pad((-v).toString(2),n),inv=a.split('').map(x=>x==='0'?'1':'0').join('');
+    h+=`<h3>Entier négatif : méthode en trois étapes</h3><ol>
+    <li>On écrit la valeur absolue ${-v} sur ${n} bits : <span class="mono">${a}</span></li>
+    <li>On inverse tous les bits (complément à 1) : <span class="mono">${inv}</span></li>
+    <li>On ajoute 1 : <span class="mono">${inv} + 1 = <b>${bin}</b></span></li></ol>
+    <p>Vérification : ${2**n} − ${-v} = ${code}, et ${code} s'écrit bien <span class="mono">${bin}</span>. Le bit de poids fort vaut 1 : le nombre est négatif.</p>`;}
+  $('c2-out').innerHTML=h+'</div>';}
+function c2dec(){
+  const s=$('c2-bin').value.replace(/\s/g,'');
+  if(!/^[01]+$/.test(s)||(s.length!==8&&s.length!==16)){$('c2-dec').innerHTML='<p class="err">Saisissez exactement 8 ou 16 bits (0 et 1).</p>';return;}
+  const n=s.length,u=parseInt(s,2),v=s[0]==='1'?u-2**n:u;
+  let h=`<div class="steps"><h3>Décodage</h3>`;
+  if(s[0]==='0')h+=`<p>Le bit de poids fort vaut 0 : le nombre est positif et vaut directement <b>${v}</b>.</p>`;
+  else{const inv=s.split('').map(x=>x==='0'?'1':'0').join(''),a=parseInt(inv,2)+1;
+    h+=`<p>Le bit de poids fort vaut 1 : le nombre est négatif. On inverse les bits (<span class="mono">${inv}</span>), on ajoute 1 (<span class="mono">${pad(a.toString(2),n)}</span> = ${a}) : le nombre vaut <b>−${a}</b>.</p>`;}
+  $('c2-dec').innerHTML=h+'</div>';}
+['c2-val','c2-n'].forEach(i=>$(i).addEventListener('input',c2));$('c2-bin').addEventListener('input',c2dec);c2();c2dec();
+
+/* ---------- 3. IEEE 754 ---------- */
+function ieee(){
+  const raw=$('ie-val').value.trim().replace(',','.');const x=Number(raw);
+  if(raw===''||isNaN(x)){$('ie-out').innerHTML=raw?'<p class="err">Saisissez un nombre réel, par exemple 12.625 ou -0.75.</p>':'';return;}
+  const dv=new DataView(new ArrayBuffer(4));dv.setFloat32(0,x);const u=dv.getUint32(0),bits=pad(u.toString(2),32);
+  const sgn=bits[0],exp=bits.slice(1,9),man=bits.slice(9),E=parseInt(exp,2),stored=dv.getFloat32(0);
+  let h=`<div class="bitwrap"><div class="bits">${bits.split('').map((b,i)=>`<span class="${i===0?'b-s':i<9?'b-e':'b-m'}">${b}</span>`).join('')}</div><div class="legend"><span><i class="b-s"></i>signe · 1 bit</span><span><i class="b-e"></i>exposant · 8 bits</span><span><i class="b-m"></i>mantisse · 23 bits</span></div></div>
+  <div class="res4"><div><small>Hexadécimal</small><b>${pad(u.toString(16).toUpperCase(),8)}</b></div><div><small>Signe</small><b>${sgn} (${sgn==='0'?'positif':'négatif'})</b></div><div><small>Exposant stocké</small><b>${exp} = ${E}</b></div><div><small>Valeur réellement stockée</small><b>${stored}</b></div></div><div class="steps">`;
+  if(x===0)h+='<p>Zéro est un cas particulier : exposant et mantisse sont nuls.</p>';
+  else if(E===255)h+='<p>Exposant rempli de 1 : la valeur est l\'infini ou NaN (not a number).</p>';
+  else if(E===0)h+='<p>Exposant nul : nombre dénormalisé (très proche de zéro).</p>';
+  else{const a=Math.abs(x),ip=Math.floor(a);let fp=a-ip,fb='',rows='';
+    for(let i=0;i<12&&fp>0;i++){const y=fp*2,bit=y>=1?1:0;rows+=`<tr><td>${+fp.toFixed(6)} × 2</td><td>${+y.toFixed(6)}</td><td>${bit}</td></tr>`;fb+=bit;fp=y-bit;}
+    const e=E-127;
+    h+=`<h3>Étapes de l'encodage</h3><ol>
+    <li><b>Signe</b> : ${x<0?'x est négatif, bit de signe = 1':'x est positif, bit de signe = 0'}.</li>
+    <li><b>Partie entière</b> ${ip} en binaire : <span class="mono">${ip.toString(2)}</span>.</li>
+    <li><b>Partie décimale</b> par multiplications successives par 2 (on garde la partie entière de chaque produit) :
+    ${rows?`<table class="t"><tr><th>Calcul</th><th>Résultat</th><th>Bit</th></tr>${rows}</table>`:' aucune.'}
+    ${fp>0?'<span class="mono">La suite ne s\'arrête pas : le nombre n\'est pas représentable exactement, il sera arrondi.</span>':''}</li>
+    <li><b>Écriture binaire</b> : <span class="mono">${ip.toString(2)}${fb?','+fb:''}</span>.</li>
+    <li><b>Normalisation</b> sous la forme 1,… × 2<sup>e</sup> : e = ${e}.</li>
+    <li><b>Exposant stocké</b> = e + 127 (biais) = ${e} + 127 = ${E} = <span class="mono">${exp}</span>.</li>
+    <li><b>Mantisse</b> : les 23 bits après la virgule (le 1 avant la virgule n'est pas stocké) : <span class="mono">${man}</span>.</li></ol>
+    ${stored!==x?`<p class="err">⚠ Attention : ${x} n'est pas représentable exactement en simple précision ; la valeur stockée est ${stored}. C'est pourquoi on ne compare jamais deux float avec == en C.</p>`:'<p class="ok callout">Ce nombre est représenté exactement en simple précision.</p>'}`;}
+  $('ie-out').innerHTML=h+'</div>';}
+$('ie-val').addEventListener('input',ieee);ieee();
+
+/* ---------- 4. ASCII ---------- */
+function ascii(){
+  const s=$('as-val').value;if(!s){$('as-out').innerHTML='';return;}
+  const rows=[...s].slice(0,40).map(ch=>{const c=ch.charCodeAt(0);const bad=c>127;
+    return `<tr><td>${ch===' '?'(espace)':ch.replace(/[<>&]/g,'')}</td><td>${c}</td><td>${c.toString(16).toUpperCase()}</td><td>${bad?'—':pad(c.toString(2),8)}</td><td>${bad?'hors ASCII':''}</td></tr>`}).join('');
+  $('as-out').innerHTML=`<table class="t"><tr><th>Caractère</th><th>Décimal</th><th>Hexa</th><th>Binaire (8 bits)</th><th></th></tr>${rows}</table>
+  <div class="steps"><h3>À retenir</h3><ul><li>'A' = 65, 'a' = 97 : l'écart entre majuscule et minuscule est de 32.</li><li>'0' = 48 : pour obtenir la valeur d'un chiffre en C, on écrit <span class="mono">c - '0'</span>.</li><li>Les caractères accentués (é, à…) ne font pas partie de l'ASCII de base (0 à 127).</li></ul></div>`;}
+$('as-val').addEventListener('input',ascii);ascii();
+
+/* ---------- 5. Exercices ---------- */
+let cur=null,ok=0,tot=0,answered=false;const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function nouvel(){
+  let t=$('ex-type').value;if(t==='mix')t=['d2b','b2d','d2h','h2d','b2h','c2'][R(0,5)];
+  let n,q,a,sol;
+  if(t==='d2b'){n=R(5,255);q=`Convertir ${sub(n,10)} en binaire.`;a=n.toString(2);sol=stepsFromDec(n,2);}
+  if(t==='b2d'){n=R(5,255);const s=n.toString(2);q=`Convertir ${sub(s,2)} en décimal.`;a=String(n);sol=stepsToDec(s,2);}
+  if(t==='d2h'){n=R(20,1000);q=`Convertir ${sub(n,10)} en hexadécimal.`;a=n.toString(16).toUpperCase();sol=stepsFromDec(n,16);}
+  if(t==='h2d'){n=R(20,1000);const s=n.toString(16).toUpperCase();q=`Convertir ${sub(s,16)} en décimal.`;a=String(n);sol=stepsToDec(s,16);}
+  if(t==='b2h'){n=R(20,255);const s=n.toString(2);q=`Convertir ${sub(s,2)} en hexadécimal.`;a=n.toString(16).toUpperCase();sol=stepsBinGroups(n,16);}
+  if(t==='c2'){n=-R(1,128);const code=n+256;q=`Donner la représentation de ${n} en complément à 2 sur 8 bits.`;a=pad(code.toString(2),8);
+    const ab=pad((-n).toString(2),8),inv=ab.split('').map(x=>x==='0'?'1':'0').join('');sol=`<h3>Correction</h3><ol><li>|${n}| = ${-n} = <span class="mono">${ab}</span></li><li>Inversion : <span class="mono">${inv}</span></li><li>+1 : <b class="mono">${a}</b></li></ol>`;}
+  cur={a,sol,t};answered=false;$('ex-q').innerHTML=q;$('ex-ans').value='';$('ex-fb').innerHTML='';$('ex-ans').focus();}
+function norm(s,t){s=s.trim().toUpperCase().replace(/\s/g,'').replace(/^0X/,'');if(['d2b','b2h','d2h'].includes(t)&&t!=='c2')s=s.replace(/^0+(?=.)/,'');return s;}
+$('ex-check').onclick=()=>{if(!cur)return;const v=norm($('ex-ans').value,cur.t);if(!v)return;
+  if(!answered){tot++;if(v===cur.a)ok++;answered=true;}
+  $('ex-score').textContent=`Score : ${ok} / ${tot}`;
+  $('ex-fb').innerHTML=v===cur.a?`<p class="ok">✔ Bonne réponse : ${cur.a}</p>`:`<p class="err">✘ Réponse incorrecte. La bonne réponse est ${cur.a}.</p><div class="steps">${cur.sol}</div>`;};
+$('ex-sol').onclick=()=>{if(!cur)return;if(!answered){tot++;answered=true;$('ex-score').textContent=`Score : ${ok} / ${tot}`;}$('ex-fb').innerHTML=`<p>Réponse : <b class="mono">${cur.a}</b></p><div class="steps">${cur.sol}</div>`;};
+$('ex-ans').addEventListener('keydown',e=>{if(e.key==='Enter')$('ex-check').click();});
+$('ex-new').onclick=nouvel;nouvel();
+
+/* ---------- habillage ---------- */
+const TAG={d2b:'Décimal → binaire',b2d:'Binaire → décimal',d2h:'Décimal → hexa',h2d:'Hexa → décimal',b2h:'Binaire → hexa',c2:'Complément à 2'};
+let streak=0;
+function upd(){$('sc-ok').textContent=ok;$('sc-tot').textContent=tot;$('sc-st').textContent=streak;
+  const p=tot?Math.round(100*ok/tot):0;$('sc-pc').textContent=tot?p+' %':'–';$('sc-bar').style.width=p+'%';}
+const _chk=$('ex-check').onclick;$('ex-check').onclick=()=>{const was=answered;_chk();if(!cur)return;
+  const v=norm($('ex-ans').value,cur.t);if(!v)return;if(!was){streak=v===cur.a?streak+1:0;}
+  if(v===cur.a)$('ex-fb').firstElementChild.classList.add('fb-ok','callout');upd();};
+const _sol=$('ex-sol').onclick;$('ex-sol').onclick=()=>{const was=answered;_sol();if(!was)streak=0;upd();};
+const _nv=nouvel;$('ex-new').onclick=()=>{_nv();$('ex-tag').textContent=TAG[cur.t];};$('ex-tag').textContent=TAG[cur.t];
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{$('cv-base').value=b.dataset.b;$('cv-val').value=b.dataset.v;conv();});
+document.querySelectorAll('[data-c2]').forEach(b=>b.onclick=()=>{const v=+b.dataset.c2;if(v<-128||v>127)$('c2-n').value=16;$('c2-val').value=v;c2();});
+document.querySelectorAll('[data-bin]').forEach(b=>b.onclick=()=>{$('c2-bin').value=b.dataset.bin;c2dec();});
+document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{$('ie-val').value=b.dataset.f;ieee();});
+document.addEventListener('click',e=>{const d=e.target.closest('.res4 div');if(!d)return;const t=d.querySelector('b').textContent;
+  navigator.clipboard&&navigator.clipboard.writeText(t).catch(()=>{});d.classList.add('copied');setTimeout(()=>d.classList.remove('copied'),1200);});
+const demo=[45,65,127,200,255,72,13,99];let di=0;
+function screen(){const n=demo[di++%demo.length];$('scr-n').innerHTML=n+'<span class="cur"></span>';
+  $('scr-b').textContent=pad(n.toString(2),8).replace(/(\d{4})(\d{4})/,'$1 $2');$('scr-h').textContent='0x'+n.toString(16).toUpperCase();
+  $('scr-o').textContent='0'+n.toString(8);$('scr-a').textContent=n>=33&&n<127?"'"+String.fromCharCode(n)+"'":'—';}
+screen();setInterval(screen,2600);
+
+</script>
+</body>
+</html>
