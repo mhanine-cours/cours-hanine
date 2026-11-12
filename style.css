@@ -129,3 +129,6 @@ footer .yr{font:500 14px var(--mono);color:var(--ink)}
 .score .det{font:12px var(--mono);opacity:.85;display:block}
 .brand .logo{height:72px;width:auto;border-radius:6px;background:#fff;padding:2px 4px;flex:none}
 @media (max-width:600px){.brand .logo{height:54px}}
+.news-link{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start;text-decoration:none;color:inherit;border-radius:10px;padding:6px;margin:-6px;transition:background .15s}
+.news-link:hover{background:var(--bg)}.news-link:hover strong{color:var(--accent)}.news .go{color:var(--accent);font-weight:600}
+.news li:has(.news-link){display:block}

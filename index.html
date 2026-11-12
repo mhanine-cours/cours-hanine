@@ -92,7 +92,7 @@ $('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
 $('nb-cours').textContent=MODULES.length;
 $('mods').innerHTML=MODULES.map(m=>`<a class="mod" href="module.html?m=${m.id}"><span>${esc(m.niveau)} · ${DOCUMENTS.filter(d=>d.mid===m.id).length} documents${QCM[m.id]?' · QCM':''}</span><b>${esc(m.titre)}</b><span>${esc(m.formation)}</span></a>`).join('');
 $('nb-docs').textContent=DOCUMENTS.length;
-$('news').innerHTML=ANNONCES.map(a=>`<li><div class="date"><b>${esc(a.jour)}</b>${esc(a.mois)}</div><p><strong>${esc(a.titre)}</strong>${esc(a.texte)}</p></li>`).join('');
+$('news').innerHTML=ANNONCES.map(a=>{const c=`<div class="date"><b>${esc(a.jour)}</b>${esc(a.mois)}</div><p><strong>${esc(a.titre)}${a.lien?' <span class="go">→</span>':''}</strong>${esc(a.texte)}</p>`;return `<li>${a.lien?`<a class="news-link" href="${esc(a.lien)}">${c}</a>`:c}</li>`;}).join('');
 let onglet=(location.hash.startsWith('#r-')&&RUBRIQUES[+location.hash.slice(3)])?RUBRIQUES[+location.hash.slice(3)]:'Tout';
 const rubs=['Tout',...RUBRIQUES.filter(r=>DOCUMENTS.some(d=>d.rubrique===r))];
 function drawTabs(){$('tabs').innerHTML=rubs.map(r=>`<button class="tab" role="tab" type="button" data-r="${esc(r)}" aria-selected="${r===onglet}">${esc(r)}<span class="n">${r==='Tout'?DOCUMENTS.length:DOCUMENTS.filter(d=>d.rubrique===r).length}</span></button>`).join('');}
