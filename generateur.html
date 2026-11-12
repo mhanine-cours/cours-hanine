@@ -96,7 +96,8 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 .bench{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
 .inst{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
 .inst-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}.inst-h small.salle{display:block;margin-top:4px;font:500 13px var(--body);color:var(--sand)}
+.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}.manuals{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;font-size:13.5px;color:var(--muted)}.manuals a{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none}.manuals a:hover{border-color:var(--accent);color:var(--accent)}
+.inst-h small.salle{display:block;margin-top:4px;font:500 13px var(--body);color:var(--sand)}
 .led{font:600 12px var(--mono);padding:4px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
 .led.on{background:#1f7a52;color:#fff;border-color:#1f7a52}
 .lcd{background:#14261a;color:#b9f5c6;border-radius:10px;padding:14px 16px;font-family:var(--mono);box-shadow:inset 0 0 0 2px #0d1a11,inset 0 0 18px rgba(0,0,0,.5);margin-bottom:14px}
@@ -151,7 +152,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <div class="bench">
     <!-- ===== Générateur ===== -->
     <section class="inst">
-      <div class="inst-h"><div><h2>Générateur SEFRAM 4463</h2><small class="mono">GPIB0::9::INSTR · adresse 9</small><small class="salle">📍 Disponible en salle B2 – Faculté des Sciences d’Errachidia</small></div><span class="led" id="g-led">OFF</span></div>
+      <div class="inst-h"><div><h2>Générateur SEFRAM 4463</h2><small class="mono">GPIB0::9::INSTR · adresse 9</small><small class="salle">📍 Disponible en salle B2 – Faculté des Sciences d’Errachidia</small></div><span class="led" id="g-led">OFF</span></div><div class="manuals"><span>📘 Manuels :</span><a href="documents/manuel-sefram-4463-fr.pdf" target="_blank" rel="noopener">utilisation (FR)</a><a href="documents/manuel-sefram-4463-programmation-en.pdf" target="_blank" rel="noopener">programmation SCPI (EN)</a></div>
       <div class="lcd" id="g-lcd"></div>
       <div class="ctrl">
         <div class="seg" id="g-func"><button data-f="SIN">∿ SIN</button><button data-f="SQU">⊓ SQU</button><button data-f="TRI">⋀ TRI</button></div>
@@ -174,7 +175,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 
     <!-- ===== Oscilloscope ===== -->
     <section class="inst">
-      <div class="inst-h"><div><h2>Oscilloscope SEFRAM 5062DC</h2><small class="mono">GPIB0::7::INSTR · syntaxe GDS-2000</small><small class="salle">📍 Disponible en salle B2 – Faculté des Sciences d’Errachidia</small></div><span class="led on" id="s-led">RUN</span></div>
+      <div class="inst-h"><div><h2>Oscilloscope SEFRAM 5062DC</h2><small class="mono">GPIB0::7::INSTR · syntaxe GDS-2000</small><small class="salle">📍 Disponible en salle B2 – Faculté des Sciences d’Errachidia</small></div><span class="led on" id="s-led">RUN</span></div><div class="manuals"><span>📘 Manuel :</span><a href="documents/manuel-sefram-5062dc-5064dc-en.pdf" target="_blank" rel="noopener">utilisation série 5X6X (EN)</a></div>
       <canvas id="scope" width="640" height="512"></canvas>
       <div class="meas" id="s-meas"></div>
       <div class="ctrl">
@@ -227,8 +228,8 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
     <div class="split">
       <div><h3>Générateur SEFRAM 4463</h3>
         <table class="t"><tr><th>Commande</th><th>Effet</th></tr>
-        <tr><td>*IDN? · *RST · *CLS · *TST?</td><td>identité · réglages usine (sortie OFF) · effacer · autotest</td></tr>
-        <tr><td>:FUNC SIN | SQU | TRI</td><td>forme ; :FUNC? pour relire</td></tr>
+        <tr><td>*IDN? → SEFRAM, SEFRAM 4463,0,V1.1 · *RST · *CLS · *TST?</td><td>identité · réglages usine (sortie OFF) · effacer · autotest</td></tr>
+        <tr><td>[:SOURce]:FUNCtion[:SHAPe] SIN | SQU | TRI</td><td>forme ; :FUNC? pour relire</td></tr>
         <tr><td>:FREQ 1KHZ · :FREQ 2500</td><td>fréquence (HZ, KHZ, MHZ ou MIN, MAX) ; :FREQ? [MIN|MAX]</td></tr>
         <tr><td>:VOLT:AMPL 2</td><td>amplitude crête à crête sur 50 Ω ; :VOLT:AMPL?</td></tr>
         <tr><td>:VOLT:OFFS 0.5</td><td>offset ; :VOLT:OFFS? [MAX]</td></tr>
@@ -244,7 +245,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
         <tr><td>:MEASure:SOURce 1;:MEASure:VPP?</td><td>tension crête à crête (aussi VMAX?, VMIN?, VRMS?)</td></tr>
         <tr><td>:MEASure:FREQuency? · :MEASure:PERiod?</td><td>fréquence, période</td></tr></table></div>
     </div>
-    <p class="foot-note"><span>ℹ️</span><span>Les commandes et limites suivent les manuels utilisés en TP (SEFRAM 4463, section 4 ; programmation GDS-2000 pour le 5062DC). Les réponses de *IDN? et les libellés d'erreur sont simulés : relevez les valeurs exactes sur les vrais appareils.</span></p>
+    <p class="foot-note"><span>ℹ️</span><span> Syntaxe, réponses (*IDN?, NR2/NR3) et codes d'erreur du générateur conformes au manuel SEFRAM 4463 (section 4). Pour l'oscilloscope, la réponse de *IDN? est simulée.</span></p>
   </section>
 </main>
 <footer><div class="wrap"><span>GénéLab – logiciel didactique · Pr. Mounir Hanine · Université Moulay Ismaïl</span><span class="yr" id="copyr"></span></div></footer>
@@ -269,14 +270,16 @@ const kw=(tok,spec)=>{const t=tok.toUpperCase(),L=spec.toUpperCase(),Sh=spec.rep
 function num(arg,unitMap){if(arg==null)return NaN;let a=arg.trim().toUpperCase();
   const m=a.match(/^([+-]?(\d+\.?\d*|\.\d+)(E[+-]?\d+)?)\s*([A-Z]*)$/);if(!m)return NaN;let v=parseFloat(m[1]);const u=m[4];
   if(u){if(!(u in unitMap))return NaN;v*=unitMap[u];}return v;}
-const FU={HZ:1,KHZ:1e3,MHZ:1e6,MAHZ:1e6},VU={V:1,MV:1e-3,VPP:1};
+const FU={HZ:1,KHZ:1e3,MHZ:1e6,MAHZ:1e6},VU={V:1,MV:1e-3,VPP:1,MVPP:1e-3};
 function splitMsg(msg){return msg.split(';').map(s=>s.trim()).filter(Boolean);}
 function parseCmd(c,prev){ // retourne {path:[...],q:bool,arg}
   let common=c.startsWith('*');let m=c.match(/^(\S+)\s*(.*)$/);let head=m[1],arg=m[2]||'';
   let q=head.endsWith('?');if(q)head=head.slice(0,-1);
   if(common)return{common:head.toUpperCase(),q,arg};
   let abs=head.startsWith(':');head=head.replace(/^:/,'');
-  return{path:head.split(':'),q,arg,abs};
+  let path=head.split(':');if(path.length>1&&kw(path[0],'SOURce'))path=path.slice(1);
+  const last=path[path.length-1];if(path.length===2&&(kw(last,'CW')&&kw(path[0],'FREQuency')||kw(last,'SHAPe')&&kw(path[0],'FUNCtion')||kw(last,'STATe')&&kw(path[0],'OUTPut')))path=[path[0]];
+  return{path,q,arg,abs};
 }
 function genErr(code,txt){G.err.push(code+',"'+txt+'"');}
 function gExec(msg){
@@ -284,7 +287,7 @@ function gExec(msg){
   for(const c of splitMsg(msg)){
     const p=parseCmd(c);
     if(p.common){const k=p.common;
-      if(k==='*IDN'&&p.q)out.push('SEFRAM,4463,SIM00009,V1.00 (simulé)');
+      if(k==='*IDN'&&p.q)out.push('SEFRAM, SEFRAM 4463,0,V1.1');
       else if(k==='*RST'&&!p.q){gReset();pend={ampl:G.ampl,offs:G.offs,touched:false,out:null};}
       else if(k==='*CLS'&&!p.q)G.err=[];
       else if(k==='*TST'&&p.q)out.push('0');
@@ -306,10 +309,10 @@ function gExec(msg){
       G.freq=v;continue;}
     if(kw(P[0],'VOLTage')){
       const sub=P[1]||'AMPL';
-      if(kw(sub,'AMPLitude')){if(p.q){out.push(sci(G.ampl,4));continue;}
+      if(kw(sub,'AMPLitude')){if(p.q){out.push((+G.ampl).toFixed(3));continue;}
         let v=kw(A,'MAXimum')?10:kw(A,'MINimum')?0.01:num(a,VU);if(isNaN(v)){genErr(-224,'Illegal parameter value');continue;}
         pend.ampl=v;pend.touched=true;continue;}
-      if(kw(sub,'OFFSet')){if(p.q){if(kw(A,'MAXimum')){const lim=G.ampl>=1?5:G.ampl>=0.1?0.5:0.05;out.push(sci(Math.min(4.5,lim-G.ampl/2),4));}else out.push(sci(G.offs,4));continue;}
+      if(kw(sub,'OFFSet')){if(p.q){if(kw(A,'MAXimum')){const lim=G.ampl>=1?5:G.ampl>=0.1?0.5:0.05;out.push(Math.min(4.5,lim-G.ampl/2).toFixed(3));}else out.push((+G.offs).toFixed(3));continue;}
         let v=num(a,VU);if(isNaN(v)){genErr(-224,'Illegal parameter value');continue;}
         pend.offs=v;pend.touched=true;continue;}
       genErr(-113,'Undefined header');continue;}
@@ -330,11 +333,11 @@ function gExec(msg){
 function sMeasure(){const d=dispSignal();return d;}
 function sExec(msg){const out=[];
   for(const c of splitMsg(msg)){const p=parseCmd(c);
-    if(p.common){if(p.common==='*IDN'&&p.q)out.push('SEFRAM,5062DC,SIM00007,V1.00 (simulé)');else if(p.common==='*RST'&&!p.q){Object.assign(S,{vdiv:1,tdiv:1e-3,offs:0,coup:1,run:true});}else if(p.common==='*CLS')S.err=[];else S.err.push('-113,"Undefined header"');continue;}
+    if(p.common){if(p.common==='*IDN'&&p.q)out.push('SEFRAM,5062DC,SIM00007,V1.00 (réponse simulée)');else if(p.common==='*RST'&&!p.q){Object.assign(S,{vdiv:1,tdiv:1e-3,offs:0,coup:1,run:true});}else if(p.common==='*CLS')S.err=[];else S.err.push('-113,"Undefined header"');continue;}
     const P=p.path,a=p.arg.trim(),A=a.toUpperCase(),n=parseFloat(a);
     const ch=P[0].match(/^(CHANnel|CHAN)(\d)$/i);
     if(ch||/^CHAN(nel)?1$/i.test(P[0])){const s=P[1]||'';
-      if(kw(s,'SCALe')){if(p.q)out.push(sci(S.vdiv,3));else if(n>=0.002&&n<=10)S.vdiv=n;else S.err.push('-222,"Data out of range"');continue;}
+      if(kw(s,'SCALe')){if(p.q)out.push(sci(S.vdiv,3));else if(n>=0.002&&n<=5)S.vdiv=n;else S.err.push('-222,"Data out of range"');continue;}
       if(kw(s,'OFFSet')||kw(s,'POSition')){if(p.q)out.push(sci(S.offs,3));else if(!isNaN(n))S.offs=n;continue;}
       if(kw(s,'COUPling')){const m={'0':0,'1':1,'2':2,AC:0,DC:1,GND:2}[A];if(p.q)out.push(String(S.coup));else if(m!=null)S.coup=m;else S.err.push('-224,"Illegal parameter value"');continue;}
       S.err.push('-113,"Undefined header"');continue;}
@@ -401,7 +404,7 @@ $('g-out').onclick=()=>send('gen',':OUTP '+(G.out?'OFF':'ON'));
 $('g-rst').onclick=()=>send('gen','*RST');
 document.querySelectorAll('input[name=load]').forEach(r=>r.onchange=()=>{load=r.value;lcd();});
 // Oscilloscope
-seq125(0.002,10).forEach(v=>$('s-vdiv').insertAdjacentHTML('beforeend',`<option value="${v}">${eng(v,'V',3)}</option>`));
+seq125(0.002,5).forEach(v=>$('s-vdiv').insertAdjacentHTML('beforeend',`<option value="${v}">${eng(v,'V',3)}</option>`));
 seq125(1e-9,10).forEach(v=>$('s-tdiv').insertAdjacentHTML('beforeend',`<option value="${v}">${eng(v,'s',3)}</option>`));
 $('s-vdiv').onchange=e=>send('scope',':CHANnel1:SCALe '+e.target.value);
 $('s-tdiv').onchange=e=>send('scope',':TIMebase:SCALe '+(+e.target.value).toExponential().replace('e','E'));
@@ -410,7 +413,7 @@ $('s-run').onclick=()=>send('scope',S.run?':STOP':':RUN');
 $('s-auto').onclick=()=>send('scope',':AUTOSet');
 $('s-meas-b').onclick=()=>send('scope',':MEASure:SOURce 1;:MEASure:VPP?;:MEASure:FREQuency?');
 function autoset(){const d=dispSignal();const up=(x,L)=>L.find(v=>v>=x)||L[L.length-1];
-  if(d.f)S.tdiv=up(2.5/d.f/10,seq125(1e-9,10));const span=Math.max(Math.abs(d.vmax),Math.abs(d.vmin));S.vdiv=up(Math.max(span/3.5,0.002),seq125(0.002,10));S.offs=0;S.coup=1;S.run=true;S.frozen=null;}
+  if(d.f)S.tdiv=up(2.5/d.f/10,seq125(1e-9,10));const span=Math.max(Math.abs(d.vmax),Math.abs(d.vmin));S.vdiv=up(Math.max(span/3.5,0.002),seq125(0.002,5));S.offs=0;S.coup=1;S.run=true;S.frozen=null;}
 // Console
 const EX={gen:['*IDN?',':FUNC SIN;:FREQ 1KHZ;:VOLT:AMPL 2;:VOLT:OFFS 0;:OUTP ON',':FREQ?',':FREQ? MAX',':VOLT:AMPL 8;:VOLT:OFFS 1.5',':SYST:ERR?',':VOLT:OFFS? MAX','*RST'],
   scope:['*IDN?',':CHANnel1:SCALe 0.5;:TIMebase:SCALe 2e-4',':MEASure:SOURce 1;:MEASure:VPP?',':MEASure:FREQuency?',':STOP',':RUN',':ACQuire1:MEMory?']};

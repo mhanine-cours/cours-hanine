@@ -12,10 +12,11 @@ const SITE = {
 };
 
 /* Les rubriques, dans l'ordre des onglets. */
-const RUBRIQUES = ["Cours", "Diapositives", "Travaux pratiques corrigés", "Études de cas", "Examens corrigés"];
+const RUBRIQUES = ["Cours", "Diapositives", "Travaux pratiques corrigés", "Études de cas", "Examens corrigés", "Manuels des appareils"];
 
 /* Les annonces : la plus récente en premier. */
 const ANNONCES = [
+  { jour:"12", mois:"nov", titre:"Manuels des appareils", texte:"Les manuels du générateur SEFRAM 4463 et de l'oscilloscope SEFRAM 5062DC (salle B2) sont en ligne." },
   { jour:"12", mois:"nov", titre:"Nouveau : GénéLab", texte:"Simulateur du banc SEFRAM (générateur 4463 et oscilloscope 5062DC) piloté en SCPI. Rubrique Logiciels." },
   { jour:"11", mois:"nov", titre:"Site réorganisé", texte:"Les documents sont classés par rubrique : cours, diapositives, travaux pratiques corrigés et études de cas." },
   { jour:"11", mois:"nov", titre:"Nouvelle étude de cas", texte:"Excel appliqué au droit public des administrations territoriales." }
@@ -26,6 +27,16 @@ const ANNONCES = [
    - niveau   : "Licence" ou "Master" (sert au filtre)
    - fichier  : déposez le PDF portant exactement ce nom dans le dossier documents/ */
 const DOCUMENTS = [
+ // ---------- Manuels des appareils (banc SEFRAM, salle B2, FS Errachidia) ----------
+ { rubrique:"Manuels des appareils", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
+   titre:"Générateur SEFRAM 4463 – Manuel d'utilisation (FR)", pages:32, fichier:"documents/manuel-sefram-4463-fr.pdf",
+   desc:"Générateur DDS 31 MHz / arbitraire 50 MHz : installation, spécifications, utilisation de la face avant." },
+ { rubrique:"Manuels des appareils", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
+   titre:"Générateur SEFRAM 4463 – Operating manual et programmation SCPI (EN)", pages:91, fichier:"documents/manuel-sefram-4463-programmation-en.pdf",
+   desc:"Manuel complet en anglais : commandes à distance GPIB/RS-232, syntaxe SCPI, codes d'erreur et arbre des commandes." },
+ { rubrique:"Manuels des appareils", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
+   titre:"Oscilloscope SEFRAM 5062DC / 5064DC – User manual (EN)", pages:110, fichier:"documents/manuel-sefram-5062dc-5064dc-en.pdf",
+   desc:"Manuel d'utilisation de la série SEFRAM 5X6X : face avant, mesures automatiques, déclenchement, acquisition, interfaces." },
  // ---------- Cours ----------
  { rubrique:"Cours", niveau:"Licence", mid:"c", module:"Programmation en langage C", formation:"Licence Digitalisation – tronc commun Informatique appliquée",
    titre:"Support de cours avec exemples corrigés", pages:58, fichier:"documents/langage-c-digitalisation-polycopie.pdf",
