@@ -100,6 +100,8 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 .app h2{font:700 20px var(--display);margin:0 0 4px}.app .appmod{font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
 .app p{margin:0 0 12px;font-size:15px;line-height:1.55}.app ul{margin:0 0 16px;padding-left:18px;font-size:14.5px}.app .btn{align-self:flex-start;margin-top:auto}
 .app.soon{border-style:dashed}.badge{display:inline-block;font:500 11px var(--mono);padding:3px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--muted);margin-left:6px;vertical-align:2px}
+.byline{font-size:15px;color:var(--muted);margin:-6px 0 18px}.byline b{color:var(--ink)}
+.app .by{display:block;font:500 12.5px var(--mono);color:var(--sand);margin:0 0 12px}
 </style>
 </head>
 <body>
@@ -116,35 +118,41 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <div class="eyebrow">Logiciels didactiques</div>
   <h1>Apprendre en manipulant</h1>
   <p class="lead">Des logiciels gratuits, utilisables dans le navigateur sur ordinateur ou téléphone, pour s'entraîner avant et après les séances de cours et de TP.</p>
+  <p class="byline">Logiciels conçus et développés par <b>Pr Mounir HANINE</b> · Faculté des Sciences Errachidia · Université Moulay Ismail</p>
   <div class="apps">
     <article class="app">
       <span class="ic">2⇄16</span><h2>NumériLab</h2><div class="appmod">Programmation en langage C · Licence</div>
       <p>Le laboratoire de la numération : chaque calcul est détaillé étape par étape.</p>
       <ul><li>changement de base (2, 8, 10, 16)</li><li>complément à 2 sur 8 et 16 bits</li><li>réels IEEE 754 et code ASCII</li><li>exercices générés et corrigés</li></ul>
+      <span class="by">par M. HANINE</span>
       <a class="btn" href="numerix.html">Ouvrir NumériLab</a>
     </article>
     <article class="app">
       <span class="ic">SCPI</span><h2>Banc virtuel FSE</h2><div class="appmod">Master ESE · Licence Digitalisation</div>
       <p>Banc virtuel de contrôle d’instruments de la Faculté des Sciences d’Errachidia : un générateur SEFRAM 4463 et un oscilloscope SEFRAM 5062DC simulés, pilotés avec leurs vraies commandes SCPI. Les vrais appareils sont disponibles en salle B2 de la Faculté des Sciences d’Errachidia.</p>
       <ul><li>face avant et écran d'oscilloscope</li><li>console SCPI avec file d'erreurs</li><li>chaîne LabVIEW « Formater en chaîne »</li><li>6 défis corrigés</li><li>manuels des appareils à télécharger</li></ul>
+      <span class="by">par M. HANINE</span>
       <a class="btn" href="generateur.html">Ouvrir le banc virtuel</a>
     </article>
     <article class="app">
       <span class="ic">TO %</span><h2>Riad digital</h2><div class="appmod">Culture digitale et tourisme · Master (S7)</div>
       <p>Simulateur de gestion d'un hébergement touristique à Merzouga : prix, stratégie digitale, avis en ligne et plateformes de réservation.</p>
       <ul><li>tableau de bord : TO, ADR, RevPAR, résultat</li><li>feuille « Mensuel » avec les formules Excel du TP 5</li><li>export vers Excel (.csv)</li><li>objectifs de gestion et exercices de calcul</li></ul>
+      <span class="by">par M. HANINE</span>
       <a class="btn" href="tourisme.html">Ouvrir Riad digital</a>
     </article>
     <article class="app">
       <span class="ic">AUDIT</span><h2>Audit SI Lab</h2><div class="appmod">Audit des systèmes d'information avec Excel</div>
       <p>Mission d'audit simulée du SI d'une entreprise fictive d'Errachidia : comptes, journal des connexions, sauvegardes et factures.</p>
       <ul><li>10 contrôles d'audit avec leur formule Excel</li><li>anomalies surlignées dans les feuilles</li><li>niveau de risque et recommandations</li><li>rapport d'audit imprimable, export .csv</li></ul>
+      <span class="by">par M. HANINE</span>
       <a class="btn" href="audit.html">Ouvrir Audit SI Lab</a>
     </article>
     <article class="app soon">
       <span class="ic">VISA</span><h2>Application de pilotage du banc <span class="badge">bientôt</span></h2><div class="appmod">Master ESE · Licence Digitalisation</div>
       <p>L'application qui pilote le vrai générateur SEFRAM 4463 et récupère le signal de l'oscilloscope sur le PC du banc, par GPIB.</p>
       <ul><li>installée sur le PC du banc, salle B2 de la Faculté des Sciences d’Errachidia</li><li>nécessite NI-VISA (et LabVIEW ou son moteur d'exécution)</li><li>s'entraîner d'abord avec le banc virtuel FSE</li></ul>
+      <span class="by">par M. HANINE</span>
       <span class="btn ghost" aria-disabled="true">Téléchargement prochainement</span>
     </article>
   </div>
