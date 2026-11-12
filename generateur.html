@@ -96,7 +96,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 .bench{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
 .inst{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
 .inst-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}
+.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}.inst-h small.salle{display:block;margin-top:4px;font:500 13px var(--body);color:var(--sand)}
 .led{font:600 12px var(--mono);padding:4px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
 .led.on{background:#1f7a52;color:#fff;border-color:#1f7a52}
 .lcd{background:#14261a;color:#b9f5c6;border-radius:10px;padding:14px 16px;font-family:var(--mono);box-shadow:inset 0 0 0 2px #0d1a11,inset 0 0 18px rgba(0,0,0,.5);margin-bottom:14px}
@@ -135,7 +135,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
     <div>
       <div class="eyebrow">Logiciel didactique · Informatique industrielle</div>
       <h1>GénéLab : le banc SEFRAM virtuel</h1>
-      <p class="lead">Pilotez un générateur SEFRAM 4463 et un oscilloscope SEFRAM 5062DC simulés, avec les <b>vraies commandes SCPI</b> des appareils du banc de TP. Chaque réglage fait à la souris affiche la commande exacte à envoyer par VISA depuis LabVIEW.</p>
+      <p class="lead">Pilotez un générateur SEFRAM 4463 et un oscilloscope SEFRAM 5062DC simulés, avec les <b>vraies commandes SCPI</b> des appareils du banc de TP, disponibles en <b>salle B2 de la Faculté des Sciences d’Errachidia</b>. Chaque réglage fait à la souris affiche la commande exacte à envoyer par VISA depuis LabVIEW.</p>
       <div class="chips"><span><b>2</b> instruments sur bus GPIB</span><span><b>syntaxe SCPI</b> des appareils</span><span><b>6</b> défis corrigés</span><span>sans matériel</span></div>
     </div>
     <div class="screen" aria-hidden="true">
@@ -151,7 +151,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <div class="bench">
     <!-- ===== Générateur ===== -->
     <section class="inst">
-      <div class="inst-h"><div><h2>Générateur SEFRAM 4463</h2><small class="mono">GPIB0::9::INSTR · adresse 9</small></div><span class="led" id="g-led">OFF</span></div>
+      <div class="inst-h"><div><h2>Générateur SEFRAM 4463</h2><small class="mono">GPIB0::9::INSTR · adresse 9</small><small class="salle">📍 Disponible en salle B2 – Faculté des Sciences d’Errachidia</small></div><span class="led" id="g-led">OFF</span></div>
       <div class="lcd" id="g-lcd"></div>
       <div class="ctrl">
         <div class="seg" id="g-func"><button data-f="SIN">∿ SIN</button><button data-f="SQU">⊓ SQU</button><button data-f="TRI">⋀ TRI</button></div>
@@ -174,7 +174,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 
     <!-- ===== Oscilloscope ===== -->
     <section class="inst">
-      <div class="inst-h"><div><h2>Oscilloscope SEFRAM 5062DC</h2><small class="mono">GPIB0::7::INSTR · syntaxe GDS-2000</small></div><span class="led on" id="s-led">RUN</span></div>
+      <div class="inst-h"><div><h2>Oscilloscope SEFRAM 5062DC</h2><small class="mono">GPIB0::7::INSTR · syntaxe GDS-2000</small><small class="salle">📍 Disponible en salle B2 – Faculté des Sciences d’Errachidia</small></div><span class="led on" id="s-led">RUN</span></div>
       <canvas id="scope" width="640" height="512"></canvas>
       <div class="meas" id="s-meas"></div>
       <div class="ctrl">
