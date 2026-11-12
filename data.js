@@ -17,7 +17,7 @@ const RUBRIQUES = ["Cours", "Diapositives", "Travaux pratiques corrigés", "Étu
 /* Les annonces : la plus récente en premier.
    lien (facultatif) : page ouverte quand on clique sur l'annonce. */
 const ANNONCES = [
-  { jour:"12", mois:"nov", lien:"audit.html", titre:"Nouveau : Audit SI Lab", texte:"Mission d'audit des systèmes d'information simulée, avec contrôles par formules Excel (rubrique Logiciels)." },
+  { jour:"12", mois:"nov", lien:"audit.html", titre:"Nouveau : Audit SI Lab", texte:"Mission d'audit des systèmes d'information simulée, avec contrôles par formules Excel, pour le Master ACBI (S9)." },
   { jour:"12", mois:"nov", lien:"tourisme.html", titre:"Nouveau : Riad digital", texte:"Simulateur de gestion touristique pour le module Culture digitale et tourisme (rubrique Logiciels)." },
   { jour:"12", mois:"nov", lien:"module.html?m=ii", titre:"Manuels des appareils", texte:"Les manuels du générateur SEFRAM 4463 et de l'oscilloscope SEFRAM 5062DC (salle B2) sont en ligne." },
   { jour:"12", mois:"nov", lien:"generateur.html", titre:"Nouveau : Banc virtuel FSE", texte:"Simulateur de contrôle d'instruments (générateur 4463 et oscilloscope 5062DC) piloté en SCPI. Rubrique Logiciels." },
