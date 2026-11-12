@@ -89,7 +89,7 @@ const MODULES = [
    prerequis:"Aucun, en dehors de l'usage courant d'un ordinateur.",
    programme:["Architecture de l'ordinateur et systèmes de numération","Représentation des nombres et des caractères","Introduction au langage C et étapes de la compilation","Variables, types et constantes","Opérateurs et expressions","Entrées-sorties","Conversions de type","Structures conditionnelles et boucles"] },
  { id:"ii", titre:"Informatique industrielle", niveau:"Master", formation:"Master ST Électronique et systèmes embarqués (S9) · Cycle d'ingénieur SEIT (S1)",
-   intro:"Ce module forme à la programmation graphique sous LabVIEW et au pilotage d'instruments de mesure depuis un ordinateur.",
+   intro:"Ce module forme à la programmation graphique sous l'environnement LabVIEW et au pilotage d'instruments de mesure depuis un ordinateur.",
    objectifs:["Comprendre la chaîne d'acquisition et de commande et la notion d'instrument virtuel","Programmer des applications LabVIEW structurées (sous-VI, boucles, tableaux, graphes, fichiers)","Communiquer avec un instrument par bus GPIB et commandes SCPI","Piloter un générateur et rapatrier une mesure d'oscilloscope sur le PC"],
    prerequis:"Bases de programmation et d'électronique (signaux, mesure).",
    programme:["Informatique industrielle et chaîne d'acquisition","Environnement LabVIEW, face-avant et diagramme","Débogage et sous-VI","Boucles, temporisation et registres à décalage","Tableaux, clusters et graphes","Structures Condition, chaînes de caractères et fichiers","Bus GPIB et commandes SCPI","Pilotage du générateur SEFRAM 4463 et de l'oscilloscope SEFRAM 5062DC"] },
