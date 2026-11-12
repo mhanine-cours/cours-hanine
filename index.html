@@ -98,7 +98,7 @@ const rubs=['Tout',...RUBRIQUES.filter(r=>DOCUMENTS.some(d=>d.rubrique===r))];
 function drawTabs(){$('tabs').innerHTML=rubs.map(r=>`<button class="tab" role="tab" type="button" data-r="${esc(r)}" aria-selected="${r===onglet}">${esc(r)}<span class="n">${r==='Tout'?DOCUMENTS.length:DOCUMENTS.filter(d=>d.rubrique===r).length}</span></button>`).join('');}
 drawTabs();
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;onglet=b.dataset.r;drawTabs();render();});
-const niveaux=['Tous',...new Set(DOCUMENTS.map(d=>d.niveau))];
+const niveaux=['Tous',...new Set(DOCUMENTS.flatMap(d=>d.niveau.split(' · ')))];
 $('chips').innerHTML=niveaux.map(n=>`<button class="chip" type="button" data-f="${esc(n)}" aria-pressed="${n===filtre}">${esc(n)}</button>`).join('');
 $('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filtre=b.dataset.f;
   document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
@@ -111,7 +111,7 @@ const card=d=>`
     </article>`;
 function render(){
   const t=$('q').value.trim().toLowerCase();
-  const items=DOCUMENTS.filter(d=>(onglet==='Tout'||d.rubrique===onglet)&&(filtre==='Tous'||d.niveau===filtre)&&(!t||[d.module,d.titre,d.formation,d.desc||''].join(' ').toLowerCase().includes(t)));
+  const items=DOCUMENTS.filter(d=>(onglet==='Tout'||d.rubrique===onglet)&&(filtre==='Tous'||d.niveau.split(' · ').includes(filtre))&&(!t||[d.module,d.titre,d.formation,d.desc||''].join(' ').toLowerCase().includes(t)));
   const groupes=onglet==='Tout'?RUBRIQUES:[onglet];
   $('list').className='';
   $('list').innerHTML=groupes.map(r=>{const g=items.filter(d=>d.rubrique===r);if(!g.length)return'';

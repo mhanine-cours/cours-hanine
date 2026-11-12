@@ -28,13 +28,13 @@ const ANNONCES = [
    - fichier  : déposez le PDF portant exactement ce nom dans le dossier documents/ */
 const DOCUMENTS = [
  // ---------- Manuels des appareils (banc SEFRAM, salle B2, FS Errachidia) ----------
- { rubrique:"Manuels des appareils", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
+ { rubrique:"Manuels des appareils", niveau:"Master · Licence", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
    titre:"Générateur SEFRAM 4463 – Manuel d'utilisation (FR)", pages:32, fichier:"documents/manuel-sefram-4463-fr.pdf",
    desc:"Générateur DDS 31 MHz / arbitraire 50 MHz : installation, spécifications, utilisation de la face avant." },
- { rubrique:"Manuels des appareils", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
+ { rubrique:"Manuels des appareils", niveau:"Master · Licence", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
    titre:"Générateur SEFRAM 4463 – Operating manual et programmation SCPI (EN)", pages:91, fichier:"documents/manuel-sefram-4463-programmation-en.pdf",
    desc:"Manuel complet en anglais : commandes à distance GPIB/RS-232, syntaxe SCPI, codes d'erreur et arbre des commandes." },
- { rubrique:"Manuels des appareils", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
+ { rubrique:"Manuels des appareils", niveau:"Master · Licence", mid:"ii", module:"Informatique industrielle", formation:"Banc de TP – salle B2, Faculté des Sciences d'Errachidia",
    titre:"Oscilloscope SEFRAM 5062DC / 5064DC – User manual (EN)", pages:110, fichier:"documents/manuel-sefram-5062dc-5064dc-en.pdf",
    desc:"Manuel d'utilisation de la série SEFRAM 5X6X : face avant, mesures automatiques, déclenchement, acquisition, interfaces." },
  // ---------- Cours ----------
@@ -44,7 +44,7 @@ const DOCUMENTS = [
  { rubrique:"Cours", niveau:"Master", mid:"tourisme", module:"Culture digitale et tourisme", formation:"Master Communication touristique et valorisation du patrimoine (S7)",
    titre:"Polycopié de cours avec exercices corrigés", pages:44, fichier:"documents/culture-digitale-tourisme.pdf",
    desc:"La culture digitale dans le tourisme et Excel appliqué aux données touristiques, jusqu'au tableau de bord." },
- { rubrique:"Diapositives", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Master ST ESE · Cycle d'ingénieur SEIT",
+ { rubrique:"Diapositives", niveau:"Master · Licence", mid:"ii", module:"Informatique industrielle", formation:"Master ST ESE · Cycle d'ingénieur SEIT · Licence Digitalisation (S5)",
    titre:"Cours d'informatique industrielle – diaporama", pages:112, fichier:"documents/info-industrielle-cours.pdf",
    desc:"Chaîne d'acquisition, instrument virtuel, programmation LabVIEW et contrôle d'instruments." },
  { rubrique:"Diapositives", niveau:"Licence", mid:"scratch", module:"TIC dans l'enseignement 2 – Scratch", formation:"Licence en Éducation – Enseignement primaire (S2)",
@@ -61,7 +61,7 @@ const DOCUMENTS = [
  { rubrique:"Travaux pratiques corrigés", niveau:"Licence", mid:"c", module:"Programmation C1", formation:"Licence Digitalisation – tronc commun Informatique appliquée",
    titre:"Travaux pratiques avec correction", pages:39, fichier:"documents/langage-c-tp-corriges.pdf",
    desc:"Numération, premiers programmes, opérateurs, conversions de type et structures de contrôle, avec corrigés." },
- { rubrique:"Travaux pratiques corrigés", niveau:"Master", mid:"ii", module:"Informatique industrielle", formation:"Master ST ESE · Cycle d'ingénieur SEIT",
+ { rubrique:"Travaux pratiques corrigés", niveau:"Master · Licence", mid:"ii", module:"Informatique industrielle", formation:"Master ST ESE · Cycle d'ingénieur SEIT · Licence Digitalisation (S5)",
    titre:"11 TP corrigés : LabVIEW et contrôle d'instruments", pages:35, fichier:"documents/info-industrielle-tp-corriges.pdf",
    desc:"TP 1 à 8 : programmation LabVIEW. TP 9 à 11 : pilotage GPIB du générateur SEFRAM 4463 et de l'oscilloscope SEFRAM 5062DC." },
  { rubrique:"Travaux pratiques corrigés", niveau:"Licence", mid:"scratch", module:"TIC dans l'enseignement 2 – Scratch", formation:"Licence en Éducation – Enseignement primaire (S2)",
@@ -88,7 +88,7 @@ const MODULES = [
    objectifs:["Comprendre l'architecture d'un ordinateur et la représentation des données (binaire, hexadécimal, IEEE 754, ASCII)","Écrire, compiler et exécuter un programme C","Utiliser variables, types, opérateurs et conversions","Lire et afficher des données avec scanf et printf","Construire des programmes avec les structures de contrôle"],
    prerequis:"Aucun, en dehors de l'usage courant d'un ordinateur.",
    programme:["Architecture de l'ordinateur et systèmes de numération","Représentation des nombres et des caractères","Introduction au langage C et étapes de la compilation","Variables, types et constantes","Opérateurs et expressions","Entrées-sorties","Conversions de type","Structures conditionnelles et boucles"] },
- { id:"ii", titre:"Informatique industrielle", niveau:"Master", formation:"Master ST Électronique et systèmes embarqués (S9) · Cycle d'ingénieur SEIT (S1)",
+ { id:"ii", titre:"Informatique industrielle", niveau:"Master · Licence", formation:"Master ST Électronique et systèmes embarqués (S9) · Cycle d'ingénieur SEIT (S1) · Licence Digitalisation (S5)",
    intro:"Ce module forme à la programmation graphique sous l'environnement LabVIEW et au pilotage d'instruments de mesure depuis un ordinateur.",
    objectifs:["Comprendre la chaîne d'acquisition et de commande et la notion d'instrument virtuel","Programmer des applications LabVIEW structurées (sous-VI, boucles, tableaux, graphes, fichiers)","Communiquer avec un instrument par bus GPIB et commandes SCPI","Piloter un générateur et rapatrier une mesure d'oscilloscope sur le PC"],
    prerequis:"Bases de programmation et d'électronique (signaux, mesure).",
