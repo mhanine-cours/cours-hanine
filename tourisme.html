@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Riad digital – Simulateur de gestion touristique – FS Errachidia – UMI</title>
+<meta name="description" content="Riad digital : simulateur de gestion d'un hébergement touristique à Merzouga (prix, stratégie digitale, TO, ADR, RevPAR, formules Excel).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== NumériLab – design ===== */
+.nx-hero{display:grid;grid-template-columns:1.25fr .9fr;gap:36px;align-items:center;margin:4px 0 34px}
+.nx-hero .lead{margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font:500 13px var(--mono);padding:6px 11px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+.chips b{color:var(--accent);font-weight:600}
+.screen{background:#0d1d22;color:#d7f2ee;border-radius:16px;padding:22px 24px;font-family:var(--mono);box-shadow:0 18px 40px -18px rgba(8,40,45,.55);position:relative;overflow:hidden}
+.screen:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px);pointer-events:none}
+.screen .dots{display:flex;gap:6px;margin-bottom:16px}.screen .dots i{width:10px;height:10px;border-radius:50%;background:#2f4a50}.screen .dots i:first-child{background:#e36f5c}.screen .dots i:nth-child(2){background:#e0a64a}.screen .dots i:nth-child(3){background:#3fb6ad}
+.screen .ln{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed #23393f;font-size:15px}
+.screen .ln:last-child{border:0}.screen .ln small{color:#7fa5a2}.screen .ln b{color:#7ee0d6;font-weight:500;letter-spacing:.04em}
+.screen .big{font:600 34px var(--mono);color:#fff;margin:2px 0 10px;letter-spacing:.02em}
+.screen .cur{display:inline-block;width:10px;height:1.1em;background:#3fb6ad;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px}
+.picker button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px 14px 13px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s}
+.picker button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.picker .ic{font:600 14px var(--mono);width:44px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--sand-soft);color:var(--sand)}
+.picker .tt{font:600 15px var(--body)}.picker .dd{font-size:12.5px;color:var(--muted);line-height:1.35}
+.picker button[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),0 10px 24px -16px var(--accent)}
+.picker button[aria-selected="true"] .ic{background:var(--accent);color:var(--accent-ink)}
+.tool{display:none;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 26px;animation:fade .25s ease}
+.tool.on{display:block}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.tool h2{font:700 20px var(--display);margin:0 0 4px}.tool .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.console{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px 6px;margin-bottom:18px}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-bottom:12px}
+.row label{display:flex;flex-direction:column;gap:6px;font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.row input,.row select{font:500 18px var(--mono);padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-width:170px;transition:border-color .15s,box-shadow .15s}
+.row input:focus,.row select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.row input.wide{min-width:260px}
+.ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px;font:12px var(--mono);color:var(--muted)}
+.ex button{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px dashed var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.ex button:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.res4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:0 0 18px}
+.res4 div{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px 13px;border-top:4px solid var(--accent);cursor:copy;transition:background .15s}
+.res4 div:nth-child(2){border-top-color:var(--sand)}.res4 div:nth-child(3){border-top-color:#5a7bb5}.res4 div:nth-child(4){border-top-color:#b5655a}
+.res4 div:hover{background:var(--bg)}
+.res4 small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.res4 b{font:600 20px var(--mono);word-break:break-all}
+.res4 div.copied:after{content:"copié ✓";position:absolute;top:10px;right:12px;font:500 11px var(--mono);color:var(--accent)}
+.steps{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:15.5px;line-height:1.6}
+.steps h3{display:flex;align-items:center;gap:10px;margin:18px 0 10px;font:600 16px var(--body)}
+.steps h3:first-child{margin-top:0}
+.steps h3:before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+.steps ol{margin:0;padding:0;list-style:none;counter-reset:st}
+.steps ol li{position:relative;padding:2px 0 10px 40px;counter-increment:st}
+.steps ol li:before{content:counter(st);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--sand-soft);color:var(--sand);font:600 13px var(--mono);display:grid;place-items:center}
+.steps ol li:not(:last-child):after{content:"";position:absolute;left:12.5px;top:30px;bottom:0;width:1px;background:var(--line)}
+.steps ul{margin:0;padding-left:20px}
+.mono{font-family:var(--mono)}
+table.t{border-collapse:separate;border-spacing:0;font:14px var(--mono);margin:10px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.t td,table.t th{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:6px 14px;text-align:center}
+table.t tr:last-child td{border-bottom:0}table.t td:last-child,table.t th:last-child{border-right:0}
+table.t th{background:var(--bg);font-weight:500;color:var(--muted);font-size:12.5px}
+table.t tr td:last-child{font-weight:600;color:var(--accent)}
+.bitwrap{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 16px;overflow-x:auto}
+.bits{display:flex;gap:3px;font:600 15px var(--mono);min-width:max-content}
+.bits span{width:24px;height:32px;display:grid;place-items:center;border-radius:5px}
+.bits span:nth-child(1),.bits span:nth-child(9){margin-right:6px}
+.b-s{background:#f6d6d6;color:#7a1f1f}.b-e{background:#d7ecd9;color:#1d5a27}.b-m{background:#dbe7f6;color:#1f3d6b}
+@media (prefers-color-scheme:dark){.b-s{background:#4a2222;color:#f4c7c7}.b-e{background:#1f3d26;color:#c7ecd0}.b-m{background:#1e2f48;color:#cfe0f6}}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);flex-wrap:wrap;margin-top:10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.err{color:#c0392b;font-weight:500;background:color-mix(in srgb,#c0392b 8%,transparent);border-left:3px solid #c0392b;padding:10px 14px;border-radius:6px}
+.ok{color:#23794a;font-weight:600}
+.callout{background:color-mix(in srgb,#23794a 9%,transparent);border-left:3px solid #23794a;padding:10px 14px;border-radius:6px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.split>div>h3{font:600 15px var(--body);margin:0 0 10px}
+.exo{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.exo .q{font:600 24px var(--body);margin:2px 0 16px}
+.exo .q sub{font-size:14px}
+.qtag{display:inline-block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--sand);background:var(--sand-soft);padding:4px 9px;border-radius:6px}
+.scorebar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.scorebar>div{flex:1;min-width:120px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.scorebar small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.scorebar b{font:700 24px var(--display)}
+.scorebar .nxm{flex:none;min-width:0;padding:0;border:0;height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.nxm i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.fb-ok{animation:pop .35s}@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:none}}
+.foot-note{margin:26px 0 0;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.foot-note b{color:var(--ink)}
+@media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.picker button:last-child{grid-column:span 2}.split{grid-template-columns:1fr}.tool{padding:18px}}
+@media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
+
+.page h1.bv-title{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-weight:600;font-size:clamp(24px,2.6vw,32px);line-height:1.15;letter-spacing:-.01em;margin:6px 0 14px;font-variation-settings:"opsz" 72}
+.page h1.bv-title span{display:block;margin-top:8px;font:500 clamp(13px,1.3vw,15px)/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--sand)}
+.bench{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
+.inst{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.inst-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}.manuals{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;font-size:13.5px;color:var(--muted)}.manuals a{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none}.manuals a:hover{border-color:var(--accent);color:var(--accent)}
+.inst-h small.salle{display:block;margin-top:4px;font:500 13px var(--body);color:var(--sand)}
+.led{font:600 12px var(--mono);padding:4px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.led.on{background:#1f7a52;color:#fff;border-color:#1f7a52}
+.lcd{background:#14261a;color:#b9f5c6;border-radius:10px;padding:14px 16px;font-family:var(--mono);box-shadow:inset 0 0 0 2px #0d1a11,inset 0 0 18px rgba(0,0,0,.5);margin-bottom:14px}
+.lcd div{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;padding:3px 0}
+.lcd span{font-size:12px;color:#7fbf8c;letter-spacing:.06em}.lcd b{font-size:20px;font-weight:500}
+.lcd div:first-child b{font-size:28px}.lcd b.on{color:#fff;background:#2b7a3e;padding:0 8px;border-radius:4px;font-size:15px}
+.seg{display:flex;gap:6px;margin-bottom:12px}.seg button{flex:1;font:600 14px var(--mono);padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);cursor:pointer}
+.seg button.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.io{display:flex;gap:4px}.io input{min-width:0;width:110px}.io select{min-width:0;width:92px}
+.inst .row input{min-width:0;width:120px}.inst .row select{min-width:0}
+.btns{gap:8px}.load{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-top:4px}.load label{display:flex;gap:6px;align-items:center;color:var(--ink)}
+#scope{width:100%;height:auto;border-radius:10px;display:block;background:#0b1a1d}
+.meas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 12px}
+.meas div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}.meas small{display:block;font:500 10.5px var(--mono);color:var(--muted);text-transform:uppercase}.meas b{font:600 14px var(--mono)}
+.log{background:#0d1d22;color:#d7f2ee;border-radius:12px;padding:12px 14px;font:13.5px var(--mono);height:230px;overflow:auto}
+.log .l{display:flex;gap:10px;padding:2px 0}.log .t{width:34px;flex:none;font-size:11px;padding-top:2px;color:#7fa5a2}.log .t.gen{color:#e0a64a}.log .t.scope{color:#7ee0d6}.log .r{color:#9fd8a8}
+.lvfmt{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;word-break:break-all}
+.defi{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+.defi.done{border-color:#23794a;box-shadow:inset 4px 0 0 #23794a}.defi .dq{font-size:16px;margin-bottom:8px}.defi .row{margin:0}
+.scorebar>div{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+@media (max-width:980px){.bench{grid-template-columns:1fr}.meas{grid-template-columns:repeat(3,1fr)}}
+
+.tool.on{animation:none}
+.sim{display:grid;grid-template-columns:.95fr 1.25fr;gap:18px;align-items:start}
+.grp{font:600 15px var(--body);margin:14px 0 8px}
+.sl{display:grid;grid-template-columns:1fr 120px;gap:2px 12px;align-items:center;margin-bottom:10px}
+.sl label{grid-column:1/3;font-size:14px;color:var(--muted)}.sl input{width:100%;accent-color:var(--accent)}.sl output{font:600 14px var(--mono);text-align:right}
+.tg{display:flex;flex-direction:column;gap:8px;margin-top:10px;font-size:14.5px}.tg label{display:flex;gap:8px;align-items:center}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpis div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.kpis small{display:block;font:500 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.kpis b{display:block;font:600 17px var(--mono);margin:2px 0}.kpis em{font:11px var(--mono);color:var(--muted);font-style:normal;word-break:break-all}
+.kpis .pos b{color:#23794a}.kpis .neg b{color:#c0392b}
+#chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);margin:6px 0 10px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.advice{background:color-mix(in srgb,var(--sand) 10%,transparent);border-left:3px solid var(--sand);padding:10px 14px;border-radius:6px;font-size:14.5px}
+.xl-bar{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px 8px 0 0;background:var(--bg);padding:6px 10px;font:13.5px var(--mono);flex-wrap:wrap}
+.xl-bar .nm{min-width:44px;font-weight:600}.xl-bar .fx{font-style:italic;color:var(--muted)}.xl-bar .fm{font-weight:600;color:#1d6f42}.xl-bar .ex{color:var(--muted);font-family:var(--body);font-size:13px}
+.xl-wrap{overflow-x:auto;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px}
+table.xl{border-collapse:collapse;font:13px var(--mono);width:100%;min-width:900px;background:var(--paper)}
+table.xl th{background:var(--bg);color:var(--muted);font-weight:500;padding:4px 6px;border:1px solid var(--line);min-width:28px}
+table.xl td{border:1px solid var(--line);padding:4px 8px;text-align:right;white-space:nowrap}
+table.xl td.hd{font-weight:600;text-align:center;background:color-mix(in srgb,#1d6f42 10%,transparent)}
+table.xl td.calc{cursor:pointer;color:#1d6f42}table.xl td.calc:hover{background:var(--bg)}table.xl td.sel{outline:2px solid #1d6f42;outline-offset:-2px}
+table.xl tr.tot td{font-weight:600;background:var(--bg)}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px}
+.goal{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);font-size:14.5px}
+.goal span{font-weight:700;width:18px;color:var(--muted)}.goal.done{border-color:#23794a}.goal.done span{color:#23794a}.goal.ok{box-shadow:inset 4px 0 0 #23794a}
+@media (max-width:980px){.sim{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662"><span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span></a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+  <div class="crumb"><a href="index.html">Accueil</a> / <a href="logiciels.html">Logiciels</a> / Riad digital</div>
+  <section class="nx-hero">
+    <div>
+      <div class="eyebrow">Logiciel didactique · Culture digitale et tourisme · Master (S7)</div>
+      <h1 class="bv-title">Riad digital : piloter un hébergement touristique<span>Simulateur de gestion et de stratégie digitale · Merzouga</span></h1>
+      <p class="lead">Vous dirigez le <b>Riad des Dunes</b>, à Merzouga. Fixez vos prix, votre stratégie digitale (réseaux sociaux, site web, avis en ligne, plateformes de réservation) et votre qualité de service, puis lisez les résultats de l'année dans un tableau de bord construit avec <b>les formules Excel du cours</b>.</p>
+      <div class="chips"><span><b>12</b> mois simulés</span><span><b>TO · ADR · RevPAR</b></span><span>formules Excel</span><span>export vers Excel</span></div>
+    </div>
+    <div class="screen" aria-hidden="true">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="ln"><small>A1</small><b>Mois</b></div>
+      <div class="ln"><small>F2</small><b>=B2*C2</b></div>
+      <div class="ln"><small>G2</small><b>=D2/F2</b></div>
+      <div class="ln"><small>H2</small><b>=E2/D2</b></div>
+      <div class="ln"><small>I2</small><b>=E2/F2<span class="cur"></span></b></div>
+    </div>
+  </section>
+
+  <div class="sim">
+    <!-- Décisions -->
+    <section class="inst">
+      <div class="inst-h"><div><h2>Vos décisions</h2><small>Les résultats se mettent à jour immédiatement</small></div><button class="btn ghost" id="reset" type="button">Réglages de départ</button></div>
+      <h3 class="grp">🏨 Établissement et prix</h3>
+      <div class="sl"><label for="rooms">Nombre de chambres</label><input type="range" id="rooms" min="6" max="40" step="1"><output id="o-rooms"></output></div>
+      <div class="sl"><label for="ph">Prix haute saison (oct.–avr.)</label><input type="range" id="ph" min="300" max="2500" step="50"><output id="o-ph"></output></div>
+      <div class="sl"><label for="pb">Prix basse saison (mai–sept.)</label><input type="range" id="pb" min="200" max="2000" step="50"><output id="o-pb"></output></div>
+      <div class="sl"><label for="serv">Qualité de service (formation, accueil)</label><input type="range" id="serv" min="1" max="5" step="1"><output id="o-serv"></output></div>
+      <h3 class="grp">📱 Stratégie digitale (budget par mois)</h3>
+      <div class="sl"><label for="soc">Réseaux sociaux (Instagram, TikTok…)</label><input type="range" id="soc" min="0" max="10000" step="250"><output id="o-soc"></output></div>
+      <div class="sl"><label for="seo">Site web, réservation directe et référencement</label><input type="range" id="seo" min="0" max="10000" step="250"><output id="o-seo"></output></div>
+      <div class="sl"><label for="com">Commission des plateformes (Booking, Airbnb…)</label><input type="range" id="com" min="10" max="25" step="1"><output id="o-com"></output></div>
+      <div class="tg">
+        <label><input type="checkbox" id="rep"> Répondre à tous les avis en ligne</label>
+        <label><input type="checkbox" id="pho"> Photos et vidéos professionnelles</label>
+        <label><input type="checkbox" id="lang"> Site en 3 langues (FR, EN, ES)</label>
+      </div>
+    </section>
+
+    <!-- Tableau de bord -->
+    <section class="inst">
+      <div class="inst-h"><div><h2>Tableau de bord annuel</h2><small>Riad des Dunes · année simulée</small></div><span class="led on" id="stars"></span></div>
+      <div class="kpis" id="kpis"></div>
+      <canvas id="chart" width="720" height="300" aria-label="Chambres vendues et taux d'occupation par mois"></canvas>
+      <div class="legend"><span><i style="background:#2f8f87"></i>chambres vendues</span><span><i style="background:#d08a2e"></i>taux d'occupation</span></div>
+      <div class="advice" id="advice"></div>
+    </section>
+  </div>
+
+  <!-- Tableau Excel -->
+  <section class="tool on" style="margin-top:22px">
+    <h2>La feuille de calcul « Mensuel »</h2>
+    <p class="sub">Les mêmes colonnes et les mêmes formules que dans le TP 5 « Piloter un hôtel ». Cliquez sur une cellule calculée pour voir sa formule.</p>
+    <div class="xl-bar"><span class="nm" id="xl-ref">G2</span><span class="fx">fx</span><span class="fm" id="xl-fm">=D2/F2</span><span class="ex" id="xl-ex">Taux d'occupation = chambres vendues / chambres disponibles</span></div>
+    <div class="xl-wrap"><table class="xl" id="xl"></table></div>
+    <div class="row btns" style="margin-top:12px"><button class="btn" id="csv" type="button">Exporter vers Excel (.csv)</button><span style="font-size:14px;color:var(--muted)">Ouvrez le fichier dans Excel, puis construisez vous-même le tableau croisé dynamique et les graphiques.</span></div>
+  </section>
+
+  <!-- Objectifs -->
+  <section class="tool on" style="margin-top:22px">
+    <h2>Objectifs de gestion</h2>
+    <p class="sub">Trouvez des réglages qui atteignent chaque objectif. Ils sont vérifiés en direct.</p>
+    <div class="scorebar"><div><small>Objectifs atteints</small><b id="g-score">0 / 6</b><div class="nxm"><i id="g-bar"></i></div></div><div><small>Meilleur résultat net de la session</small><b id="best">—</b></div></div>
+    <div class="goals" id="goals"></div>
+  </section>
+
+  <!-- Exercices -->
+  <section class="tool on" style="margin-top:22px">
+    <h2>Exercices de calcul</h2>
+    <p class="sub">Calculez l'indicateur demandé à partir de la feuille ci-dessus, comme dans Excel. Arrondissez à l'unité (ou à 0,1 % près pour un taux).</p>
+    <div class="exo"><span class="qtag" id="q-tag"></span><div class="q" id="q-txt"></div>
+      <div class="row"><label>Votre réponse<input id="q-ans" class="wide" autocomplete="off" placeholder="ex. 62,5 % ou 845"></label><button class="btn" id="q-chk" type="button">Vérifier</button><button class="btn ghost" id="q-new" type="button">↻ Autre exercice</button></div>
+      <div id="q-fb"></div></div>
+  </section>
+  <p class="foot-note"><span>ℹ️</span><span>Modèle pédagogique simplifié : la demande dépend de la saison, du prix, de la visibilité digitale et de la note en ligne. Les chiffres sont fictifs et servent à comprendre les mécanismes, pas à prévoir l'activité réelle d'un établissement.</span></p>
+</main>
+<footer><div class="wrap"><span>Riad digital – logiciel didactique · Pr Mounir HANINE · Faculté des Sciences Errachidia · UMI</span><span class="yr" id="copyr"></span></div></footer>
+<script>
+const $=id=>document.getElementById(id);
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+const MOIS=['Janv.','Févr.','Mars','Avr.','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'];
+const JOURS=[31,28,31,30,31,30,31,31,30,31,30,31];
+const SAISON=[0.92,1.0,1.0,0.95,0.68,0.45,0.32,0.38,0.6,0.92,0.88,1.0]; // Merzouga : forte saison d'octobre à avril
+const HAUTE=[1,1,1,1,0,0,0,0,0,1,1,1];
+const DEF={rooms:16,ph:900,pb:600,serv:3,soc:1500,seo:1000,com:18,rep:false,pho:false,lang:false};
+const fr=(v,d=0)=>Number(v).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const mad=v=>fr(v)+' MAD',pc=v=>fr(100*v,1)+' %';
+function get(){const g=id=>+$(id).value;return{rooms:g('rooms'),ph:g('ph'),pb:g('pb'),serv:g('serv'),soc:g('soc'),seo:g('seo'),com:g('com'),rep:$('rep').checked,pho:$('pho').checked,lang:$('lang').checked};}
+function set(s){for(const k of['rooms','ph','pb','serv','soc','seo','com'])$(k).value=s[k];for(const k of['rep','pho','lang'])$(k).checked=s[k];}
+/* ---------- Modèle ---------- */
+function simulate(s){
+  const vis=1+0.45*(1-Math.exp(-s.soc/3000))+0.35*(1-Math.exp(-s.seo/3000))+(s.pho?0.12:0)+(s.lang?0.1:0);
+  const pm=(s.ph*7+s.pb*5)/12;
+  let note=2.9+0.28*s.serv+(s.rep?0.35:0)+(s.pho?0.1:0)-Math.max(0,(pm-1100)/1400)*0.6;
+  note=Math.max(1,Math.min(5,note));
+  const direct=Math.min(0.75,0.12+0.45*(1-Math.exp(-s.seo/3500))+(s.lang?0.06:0));
+  const rows=[];
+  for(let m=0;m<12;m++){
+    const P=HAUTE[m]?s.ph:s.pb;
+    const demande=JOURS[m]*10*SAISON[m]*vis*Math.pow(note/4,2.2)*Math.pow(700/P,HAUTE[m]?1.1:1.8);
+    const dispo=s.rooms*JOURS[m];
+    const vend=Math.round(Math.min(dispo*0.97,demande));
+    const ca=vend*P;
+    const comm=ca*(1-direct)*s.com/100;
+    const charges=12000+s.rooms*1800+vend*180+s.soc+s.seo+s.serv*1400;
+    rows.push({mois:MOIS[m],ch:s.rooms,j:JOURS[m],vend,ca,dispo,to:vend/dispo,adr:vend?ca/vend:0,revpar:ca/dispo,comm,res:ca-comm-charges});
+  }
+  const T=rows.reduce((a,r)=>({vend:a.vend+r.vend,ca:a.ca+r.ca,dispo:a.dispo+r.dispo,comm:a.comm+r.comm,res:a.res+r.res}),{vend:0,ca:0,dispo:0,comm:0,res:0});
+  T.to=T.vend/T.dispo;T.adr=T.vend?T.ca/T.vend:0;T.revpar=T.ca/T.dispo;
+  return{rows,T,note,direct,vis};
+}
+/* ---------- Affichage ---------- */
+let R=null,best=-Infinity,sel={r:1,c:6};
+function out(){const s=get();
+  $('o-rooms').textContent=s.rooms;$('o-ph').textContent=mad(s.ph);$('o-pb').textContent=mad(s.pb);$('o-serv').textContent='★'.repeat(s.serv)+'☆'.repeat(5-s.serv);
+  $('o-soc').textContent=mad(s.soc);$('o-seo').textContent=mad(s.seo);$('o-com').textContent=s.com+' %';
+  R=simulate(s);const T=R.T;
+  $('stars').textContent='Note en ligne '+fr(R.note,1)+' / 5';
+  $('kpis').innerHTML=[['Taux d\'occupation',pc(T.to),'=SOMME(D2:D13)/SOMME(F2:F13)'],['ADR (prix moyen)',mad(T.adr),'=SOMME(E2:E13)/SOMME(D2:D13)'],['RevPAR',mad(T.revpar),'=SOMME(E2:E13)/SOMME(F2:F13)'],
+    ['Chiffre d\'affaires',mad(T.ca),'=SOMME(E2:E13)'],['Commissions plateformes',mad(T.comm),'=SOMME(J2:J13)'],['Résultat net',mad(T.res),'=SOMME(K2:K13)'],
+    ['Réservations directes',pc(R.direct),'site web, téléphone, réseaux sociaux'],['Chambres vendues',fr(T.vend),'=SOMME(D2:D13)']]
+    .map(([a,b,c],i)=>`<div class="${i===5?(T.res>=0?'pos':'neg'):''}"><small>${a}</small><b>${b}</b><em>${c}</em></div>`).join('');
+  drawChart();table();advice();goals();
+  if(T.res>best){best=T.res;}$('best').textContent=mad(best);
+}
+function drawChart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.height,pad={l:44,r:44,t:16,b:30};
+  const css=getComputedStyle(document.body),ink=css.getPropertyValue('--muted')||'#666',line=css.getPropertyValue('--line')||'#ddd';
+  c.clearRect(0,0,W,H);const rows=R.rows,maxV=Math.max(...rows.map(r=>r.dispo));const cw=(W-pad.l-pad.r)/12;
+  c.strokeStyle=line;c.lineWidth=1;c.font='12px IBM Plex Mono, monospace';c.fillStyle=ink;
+  for(let i=0;i<=4;i++){const y=pad.t+(H-pad.t-pad.b)*i/4;c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();c.fillText(fr(maxV*(1-i/4)),2,y+4);c.fillText(fr(100*(1-i/4))+'%',W-pad.r+6,y+4);}
+  rows.forEach((r,i)=>{const x=pad.l+i*cw,h=(H-pad.t-pad.b)*r.vend/maxV;c.fillStyle='#2f8f87';c.fillRect(x+cw*0.18,H-pad.b-h,cw*0.64,h);c.fillStyle=ink;c.fillText(r.mois.slice(0,4),x+cw*0.12,H-10);});
+  c.strokeStyle='#d08a2e';c.lineWidth=2.5;c.beginPath();rows.forEach((r,i)=>{const x=pad.l+i*cw+cw/2,y=pad.t+(H-pad.t-pad.b)*(1-r.to);i?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();
+  c.fillStyle='#d08a2e';rows.forEach((r,i)=>{const x=pad.l+i*cw+cw/2,y=pad.t+(H-pad.t-pad.b)*(1-r.to);c.beginPath();c.arc(x,y,3.5,0,7);c.fill();});}
+const COLS=[['A','Mois',r=>r.mois,null],['B','Chambres',r=>r.ch,null],['C','Jours',r=>r.j,null],['D','Vendues',r=>fr(r.vend),null],['E','CA (MAD)',r=>fr(r.ca),null],
+  ['F','Disponibles',r=>fr(r.dispo),n=>`=B${n}*C${n}`],['G','Occupation',r=>pc(r.to),n=>`=D${n}/F${n}`],['H','ADR',r=>fr(r.adr),n=>`=E${n}/D${n}`],['I','RevPAR',r=>fr(r.revpar),n=>`=E${n}/F${n}`],
+  ['J','Commission',r=>fr(r.comm),n=>`=E${n}*(1-$direct)*$taux`],['K','Résultat',r=>fr(r.res),n=>`=E${n}-J${n}-charges`]];
+const EXPL={F:'Chambres disponibles = chambres × jours',G:'Taux d\'occupation = chambres vendues / chambres disponibles (format %)',H:'ADR = chiffre d\'affaires / chambres vendues',I:'RevPAR = chiffre d\'affaires / chambres disponibles',J:'Commission = CA réservé via les plateformes × taux de commission',K:'Résultat = CA − commissions − charges (fixes, par nuitée, marketing, service)'};
+function table(){const rows=R.rows;let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+'</tr><tr><th>1</th>'+COLS.map(c=>`<td class="hd">${c[1]}</td>`).join('')+'</tr>';
+  rows.forEach((r,i)=>{const n=i+2;h+=`<tr><th>${n}</th>`+COLS.map((c,j)=>`<td class="${c[3]?'calc':''}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}">${c[2](r)}</td>`).join('')+'</tr>';});
+  const T=R.T;h+=`<tr class="tot"><th>14</th><td>Total</td><td></td><td></td><td>${fr(T.vend)}</td><td>${fr(T.ca)}</td><td>${fr(T.dispo)}</td><td>${pc(T.to)}</td><td>${fr(T.adr)}</td><td>${fr(T.revpar)}</td><td>${fr(T.comm)}</td><td>${fr(T.res)}</td></tr>`;
+  $('xl').innerHTML=h;
+  $('xl').querySelectorAll('td.calc').forEach(td=>td.onclick=()=>{sel={r:+td.dataset.r,c:+td.dataset.c};const col=COLS[sel.c],n=sel.r+1;$('xl-ref').textContent=col[0]+n;$('xl-fm').textContent=col[3](n);$('xl-ex').textContent=EXPL[col[0]];table();});}
+function advice(){const s=get(),T=R.T,a=[];
+  if(R.note<3.8)a.push('Votre note en ligne pénalise la demande : améliorez le service et répondez aux avis.');
+  if(T.to>0.9)a.push('Vous êtes presque complet : vous pouvez sans doute augmenter vos prix (yield management).');
+  if(T.to<0.4)a.push('Taux d\'occupation faible : prix trop élevés ou visibilité digitale insuffisante.');
+  if(R.direct<0.3)a.push('Moins de 30 % de réservations directes : les commissions des plateformes pèsent lourd. Investissez dans le site web.');
+  if(s.pb>=s.ph)a.push('Votre prix de basse saison est au moins égal à celui de haute saison : la demande d\'été à Merzouga est faible.');
+  if(!a.length)a.push('Équilibre correct. Comparez l\'effet d\'une hausse de prix sur l\'ADR et sur le RevPAR.');
+  $('advice').innerHTML='<b>Analyse :</b> '+a.join(' ');}
+/* ---------- Objectifs ---------- */
+const GOALS=[
+ ['Taux d\'occupation annuel d\'au moins 60 %',()=>R.T.to>=0.6],
+ ['RevPAR annuel d\'au moins 450 MAD',()=>R.T.revpar>=450],
+ ['Note en ligne d\'au moins 4,5 / 5',()=>R.note>=4.5],
+ ['Au moins 50 % de réservations directes',()=>R.direct>=0.5],
+ ['Taux d\'occupation d\'au moins 40 % en juillet (basse saison)',()=>R.rows[6].to>=0.4],
+ ['Résultat net annuel d\'au moins 1 500 000 MAD',()=>R.T.res>=1500000]];
+const done=new Set();
+function goals(){GOALS.forEach((g,i)=>{if(g[1]())done.add(i);});
+  $('goals').innerHTML=GOALS.map((g,i)=>`<div class="goal ${g[1]()?'ok':''} ${done.has(i)?'done':''}"><span>${g[1]()?'✔':done.has(i)?'✓':'○'}</span>${g[0]}</div>`).join('');
+  $('g-score').textContent=done.size+' / '+GOALS.length;$('g-bar').style.width=(100*done.size/GOALS.length)+'%';}
+/* ---------- Exercices ---------- */
+let Q=null;const R2=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function newQ(){const m=R2(0,11),r=R.rows[m],n=m+2,k=R2(0,3);
+  const types=[['Taux d\'occupation',`Quel est le taux d'occupation de ${r.mois.toLowerCase()} ?`,r.to,true,`=D${n}/F${n}`],['ADR',`Quel est l'ADR (prix moyen par chambre vendue) de ${r.mois.toLowerCase()} ?`,r.adr,false,`=E${n}/D${n}`],
+    ['RevPAR',`Quel est le RevPAR de ${r.mois.toLowerCase()} ?`,r.revpar,false,`=E${n}/F${n}`],['Chambres disponibles',`Combien de chambres sont disponibles en ${r.mois.toLowerCase()} ?`,r.dispo,false,`=B${n}*C${n}`]];
+  Q=types[k];Q.push(m);$('q-tag').textContent=Q[0];$('q-txt').textContent=Q[1]+' (ligne '+n+' de la feuille)';$('q-ans').value='';$('q-fb').innerHTML='';}
+$('q-new').onclick=newQ;
+$('q-chk').onclick=()=>{if(!Q)return;let v=$('q-ans').value.replace(/\s/g,'').replace(',','.').replace('%','');if(v==='')return;v=parseFloat(v);
+  const exp=Q[3]?Q[2]*100:Q[2];const ok=Q[3]?Math.abs(v-exp)<=0.15:Math.abs(v-exp)<=Math.max(1,exp*0.005);
+  $('q-fb').innerHTML=ok?`<p class="ok callout">✔ Exact : ${Q[3]?pc(Q[2]):fr(Q[2],Q[0]==='Chambres disponibles'?0:2)}. Formule Excel : <span class="mono">${Q[4]}</span></p>`:`<p class="err">✘ Pas tout à fait. Formule à utiliser : <span class="mono">${Q[4]}</span>. Résultat attendu : ${Q[3]?pc(Q[2]):fr(Q[2],2)}.</p>`;};
+$('q-ans').addEventListener('keydown',e=>{if(e.key==='Enter')$('q-chk').click();});
+/* ---------- Export CSV pour Excel (format français) ---------- */
+$('csv').onclick=()=>{const head=['Mois','Chambres','Jours','Vendues','CA','Disponibles','Occupation','ADR','RevPAR','Commission','Résultat'];
+  const num=v=>String(Math.round(v*100)/100).replace('.',',');
+  const lines=[head.join(';'),...R.rows.map((r,i)=>{const n=i+2;return[r.mois,r.ch,r.j,r.vend,num(r.ca),`=B${n}*C${n}`,`=D${n}/F${n}`,`=E${n}/D${n}`,`=E${n}/F${n}`,num(r.comm),num(r.res)].join(';');})];
+  const blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='riad-des-dunes-mensuel.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+/* ---------- Démarrage ---------- */
+$('reset').onclick=()=>{set(DEF);out();};
+document.querySelectorAll('.sim input').forEach(i=>i.addEventListener('input',out));
+set(DEF);out();newQ();
+</script>
+
+</body>
+</html>

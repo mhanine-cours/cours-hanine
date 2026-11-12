@@ -40,3 +40,4 @@ scratch.js, langues.js, tourisme.js, droit.js). Une question = une ligne :
 
 - logiciels.html : page des logiciels didactiques (NumériLab, Banc virtuel FSE, application de pilotage à venir).
 - generateur.html : Banc virtuel FSE, simulateur de contrôle d’instruments (SEFRAM 4463 / 5062DC).
+- tourisme.html : Riad digital, simulateur de gestion touristique (module Culture digitale et tourisme).
