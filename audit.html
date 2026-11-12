@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Audit SI Lab – Mission d’audit simulée – FS Errachidia – UMI</title>
+<meta name="description" content="Audit SI Lab : mission d'audit des systèmes d'information simulée, contrôles par formules Excel, rapport d'audit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== NumériLab – design ===== */
+.nx-hero{display:grid;grid-template-columns:1.25fr .9fr;gap:36px;align-items:center;margin:4px 0 34px}
+.nx-hero .lead{margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font:500 13px var(--mono);padding:6px 11px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+.chips b{color:var(--accent);font-weight:600}
+.screen{background:#0d1d22;color:#d7f2ee;border-radius:16px;padding:22px 24px;font-family:var(--mono);box-shadow:0 18px 40px -18px rgba(8,40,45,.55);position:relative;overflow:hidden}
+.screen:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px);pointer-events:none}
+.screen .dots{display:flex;gap:6px;margin-bottom:16px}.screen .dots i{width:10px;height:10px;border-radius:50%;background:#2f4a50}.screen .dots i:first-child{background:#e36f5c}.screen .dots i:nth-child(2){background:#e0a64a}.screen .dots i:nth-child(3){background:#3fb6ad}
+.screen .ln{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed #23393f;font-size:15px}
+.screen .ln:last-child{border:0}.screen .ln small{color:#7fa5a2}.screen .ln b{color:#7ee0d6;font-weight:500;letter-spacing:.04em}
+.screen .big{font:600 34px var(--mono);color:#fff;margin:2px 0 10px;letter-spacing:.02em}
+.screen .cur{display:inline-block;width:10px;height:1.1em;background:#3fb6ad;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px}
+.picker button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px 14px 13px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s}
+.picker button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.picker .ic{font:600 14px var(--mono);width:44px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--sand-soft);color:var(--sand)}
+.picker .tt{font:600 15px var(--body)}.picker .dd{font-size:12.5px;color:var(--muted);line-height:1.35}
+.picker button[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),0 10px 24px -16px var(--accent)}
+.picker button[aria-selected="true"] .ic{background:var(--accent);color:var(--accent-ink)}
+.tool{display:none;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 26px;animation:fade .25s ease}
+.tool.on{display:block}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.tool h2{font:700 20px var(--display);margin:0 0 4px}.tool .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.console{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px 6px;margin-bottom:18px}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-bottom:12px}
+.row label{display:flex;flex-direction:column;gap:6px;font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.row input,.row select{font:500 18px var(--mono);padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-width:170px;transition:border-color .15s,box-shadow .15s}
+.row input:focus,.row select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.row input.wide{min-width:260px}
+.ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px;font:12px var(--mono);color:var(--muted)}
+.ex button{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px dashed var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.ex button:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.res4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:0 0 18px}
+.res4 div{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px 13px;border-top:4px solid var(--accent);cursor:copy;transition:background .15s}
+.res4 div:nth-child(2){border-top-color:var(--sand)}.res4 div:nth-child(3){border-top-color:#5a7bb5}.res4 div:nth-child(4){border-top-color:#b5655a}
+.res4 div:hover{background:var(--bg)}
+.res4 small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.res4 b{font:600 20px var(--mono);word-break:break-all}
+.res4 div.copied:after{content:"copié ✓";position:absolute;top:10px;right:12px;font:500 11px var(--mono);color:var(--accent)}
+.steps{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:15.5px;line-height:1.6}
+.steps h3{display:flex;align-items:center;gap:10px;margin:18px 0 10px;font:600 16px var(--body)}
+.steps h3:first-child{margin-top:0}
+.steps h3:before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+.steps ol{margin:0;padding:0;list-style:none;counter-reset:st}
+.steps ol li{position:relative;padding:2px 0 10px 40px;counter-increment:st}
+.steps ol li:before{content:counter(st);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--sand-soft);color:var(--sand);font:600 13px var(--mono);display:grid;place-items:center}
+.steps ol li:not(:last-child):after{content:"";position:absolute;left:12.5px;top:30px;bottom:0;width:1px;background:var(--line)}
+.steps ul{margin:0;padding-left:20px}
+.mono{font-family:var(--mono)}
+table.t{border-collapse:separate;border-spacing:0;font:14px var(--mono);margin:10px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.t td,table.t th{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:6px 14px;text-align:center}
+table.t tr:last-child td{border-bottom:0}table.t td:last-child,table.t th:last-child{border-right:0}
+table.t th{background:var(--bg);font-weight:500;color:var(--muted);font-size:12.5px}
+table.t tr td:last-child{font-weight:600;color:var(--accent)}
+.bitwrap{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 16px;overflow-x:auto}
+.bits{display:flex;gap:3px;font:600 15px var(--mono);min-width:max-content}
+.bits span{width:24px;height:32px;display:grid;place-items:center;border-radius:5px}
+.bits span:nth-child(1),.bits span:nth-child(9){margin-right:6px}
+.b-s{background:#f6d6d6;color:#7a1f1f}.b-e{background:#d7ecd9;color:#1d5a27}.b-m{background:#dbe7f6;color:#1f3d6b}
+@media (prefers-color-scheme:dark){.b-s{background:#4a2222;color:#f4c7c7}.b-e{background:#1f3d26;color:#c7ecd0}.b-m{background:#1e2f48;color:#cfe0f6}}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);flex-wrap:wrap;margin-top:10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.err{color:#c0392b;font-weight:500;background:color-mix(in srgb,#c0392b 8%,transparent);border-left:3px solid #c0392b;padding:10px 14px;border-radius:6px}
+.ok{color:#23794a;font-weight:600}
+.callout{background:color-mix(in srgb,#23794a 9%,transparent);border-left:3px solid #23794a;padding:10px 14px;border-radius:6px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.split>div>h3{font:600 15px var(--body);margin:0 0 10px}
+.exo{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.exo .q{font:600 24px var(--body);margin:2px 0 16px}
+.exo .q sub{font-size:14px}
+.qtag{display:inline-block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--sand);background:var(--sand-soft);padding:4px 9px;border-radius:6px}
+.scorebar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.scorebar>div{flex:1;min-width:120px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.scorebar small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.scorebar b{font:700 24px var(--display)}
+.scorebar .nxm{flex:none;min-width:0;padding:0;border:0;height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.nxm i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.fb-ok{animation:pop .35s}@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:none}}
+.foot-note{margin:26px 0 0;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.foot-note b{color:var(--ink)}
+@media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.picker button:last-child{grid-column:span 2}.split{grid-template-columns:1fr}.tool{padding:18px}}
+@media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
+
+.page h1.bv-title{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-weight:600;font-size:clamp(24px,2.6vw,32px);line-height:1.15;letter-spacing:-.01em;margin:6px 0 14px;font-variation-settings:"opsz" 72}
+.page h1.bv-title span{display:block;margin-top:8px;font:500 clamp(13px,1.3vw,15px)/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--sand)}
+.bench{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
+.inst{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.inst-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}.manuals{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;font-size:13.5px;color:var(--muted)}.manuals a{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none}.manuals a:hover{border-color:var(--accent);color:var(--accent)}
+.inst-h small.salle{display:block;margin-top:4px;font:500 13px var(--body);color:var(--sand)}
+.led{font:600 12px var(--mono);padding:4px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.led.on{background:#1f7a52;color:#fff;border-color:#1f7a52}
+.lcd{background:#14261a;color:#b9f5c6;border-radius:10px;padding:14px 16px;font-family:var(--mono);box-shadow:inset 0 0 0 2px #0d1a11,inset 0 0 18px rgba(0,0,0,.5);margin-bottom:14px}
+.lcd div{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;padding:3px 0}
+.lcd span{font-size:12px;color:#7fbf8c;letter-spacing:.06em}.lcd b{font-size:20px;font-weight:500}
+.lcd div:first-child b{font-size:28px}.lcd b.on{color:#fff;background:#2b7a3e;padding:0 8px;border-radius:4px;font-size:15px}
+.seg{display:flex;gap:6px;margin-bottom:12px}.seg button{flex:1;font:600 14px var(--mono);padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);cursor:pointer}
+.seg button.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.io{display:flex;gap:4px}.io input{min-width:0;width:110px}.io select{min-width:0;width:92px}
+.inst .row input{min-width:0;width:120px}.inst .row select{min-width:0}
+.btns{gap:8px}.load{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-top:4px}.load label{display:flex;gap:6px;align-items:center;color:var(--ink)}
+#scope{width:100%;height:auto;border-radius:10px;display:block;background:#0b1a1d}
+.meas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 12px}
+.meas div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}.meas small{display:block;font:500 10.5px var(--mono);color:var(--muted);text-transform:uppercase}.meas b{font:600 14px var(--mono)}
+.log{background:#0d1d22;color:#d7f2ee;border-radius:12px;padding:12px 14px;font:13.5px var(--mono);height:230px;overflow:auto}
+.log .l{display:flex;gap:10px;padding:2px 0}.log .t{width:34px;flex:none;font-size:11px;padding-top:2px;color:#7fa5a2}.log .t.gen{color:#e0a64a}.log .t.scope{color:#7ee0d6}.log .r{color:#9fd8a8}
+.lvfmt{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;word-break:break-all}
+.defi{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+.defi.done{border-color:#23794a;box-shadow:inset 4px 0 0 #23794a}.defi .dq{font-size:16px;margin-bottom:8px}.defi .row{margin:0}
+.scorebar>div{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+@media (max-width:980px){.bench{grid-template-columns:1fr}.meas{grid-template-columns:repeat(3,1fr)}}
+
+.tool.on{animation:none}
+.sim{display:grid;grid-template-columns:.95fr 1.25fr;gap:18px;align-items:start}
+.grp{font:600 15px var(--body);margin:14px 0 8px}
+.sl{display:grid;grid-template-columns:1fr 120px;gap:2px 12px;align-items:center;margin-bottom:10px}
+.sl label{grid-column:1/3;font-size:14px;color:var(--muted)}.sl input{width:100%;accent-color:var(--accent)}.sl output{font:600 14px var(--mono);text-align:right}
+.tg{display:flex;flex-direction:column;gap:8px;margin-top:10px;font-size:14.5px}.tg label{display:flex;gap:8px;align-items:center}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpis div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.kpis small{display:block;font:500 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.kpis b{display:block;font:600 17px var(--mono);margin:2px 0}.kpis em{font:11px var(--mono);color:var(--muted);font-style:normal;word-break:break-all}
+.kpis .pos b{color:#23794a}.kpis .neg b{color:#c0392b}
+#chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);margin:6px 0 10px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.advice{background:color-mix(in srgb,var(--sand) 10%,transparent);border-left:3px solid var(--sand);padding:10px 14px;border-radius:6px;font-size:14.5px}
+.xl-bar{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px 8px 0 0;background:var(--bg);padding:6px 10px;font:13.5px var(--mono);flex-wrap:wrap}
+.xl-bar .nm{min-width:44px;font-weight:600}.xl-bar .fx{font-style:italic;color:var(--muted)}.xl-bar .fm{font-weight:600;color:#1d6f42}.xl-bar .ex{color:var(--muted);font-family:var(--body);font-size:13px}
+.xl-wrap{overflow-x:auto;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px}
+table.xl{border-collapse:collapse;font:13px var(--mono);width:100%;min-width:900px;background:var(--paper)}
+table.xl th{background:var(--bg);color:var(--muted);font-weight:500;padding:4px 6px;border:1px solid var(--line);min-width:28px}
+table.xl td{border:1px solid var(--line);padding:4px 8px;text-align:right;white-space:nowrap}
+table.xl td.hd{font-weight:600;text-align:center;background:color-mix(in srgb,#1d6f42 10%,transparent)}
+table.xl td.calc{cursor:pointer;color:#1d6f42}table.xl td.calc:hover{background:var(--bg)}table.xl td.sel{outline:2px solid #1d6f42;outline-offset:-2px}
+table.xl tr.tot td{font-weight:600;background:var(--bg)}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px}
+.goal{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);font-size:14.5px}
+.goal span{font-weight:700;width:18px;color:var(--muted)}.goal.done{border-color:#23794a}.goal.done span{color:#23794a}.goal.ok{box-shadow:inset 4px 0 0 #23794a}
+@media (max-width:980px){.sim{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+
+.mission-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:15px}
+.sheets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sheets button{font:600 14px var(--body);padding:8px 14px;border:1px solid var(--line);border-radius:8px 8px 0 0;background:var(--bg);color:var(--ink);cursor:pointer}
+.sheets button small{font:500 11px var(--mono);color:var(--muted);margin-left:4px}
+.sheets button.sel{background:#1d6f42;color:#fff;border-color:#1d6f42}.sheets button.sel small{color:#d7f0e0}
+.xl-wrap.tall{max-height:420px;overflow:auto}
+table.xl td{text-align:left}table.xl tr.bad td{background:color-mix(in srgb,#c0392b 12%,transparent);color:#9b2c1f}
+table.xl td.ctl,table.xl th.ctl{background:color-mix(in srgb,#d08a2e 12%,transparent);font-weight:600}
+.audit{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}
+.tests{display:flex;flex-direction:column;gap:6px}
+.tests button{display:grid;grid-template-columns:20px 1fr;gap:0 8px;text-align:left;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit}
+.tests button span{grid-row:1/3;font-weight:700;color:var(--muted)}.tests button b{font-size:14px;font-weight:600}.tests button small{font:11.5px var(--mono);color:var(--muted)}
+.tests button.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.tests button.done span{color:#23794a}
+.work{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.work h3{font:700 19px var(--display);margin:8px 0 10px}.work p{font-size:15px;line-height:1.55}
+.work .fm{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:#1d6f42;font-weight:600;word-break:break-all}
+.stepn{font:600 15px var(--body);margin:16px 0 8px}
+.recos{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.recos label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:14.5px;cursor:pointer}
+.recos label.good{border-color:#23794a;background:color-mix(in srgb,#23794a 9%,transparent)}.recos label.wrong{border-color:#c0392b;background:color-mix(in srgb,#c0392b 8%,transparent)}
+.seg button:disabled{cursor:default}
+.crit{font:600 12px var(--mono);padding:2px 8px;border-radius:6px}.c-Eleve{background:#f6d6d6;color:#7a1f1f}.c-Moyen{background:#fbe7c6;color:#7a4b00}.c-Faible{background:#d7ecd9;color:#1d5a27}
+table.rep{min-width:760px}table.rep td{white-space:normal}
+@media (max-width:900px){.audit{grid-template-columns:1fr}}
+@media print{header.top,footer,.nx-hero,.mission-bar,.tool:not(#rapport),.foot-note,#print{display:none!important}.tool{border:0}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662"><span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span></a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+  <div class="crumb"><a href="index.html">Accueil</a> / <a href="logiciels.html">Logiciels</a> / Audit SI Lab</div>
+  <section class="nx-hero">
+    <div>
+      <div class="eyebrow">Logiciel didactique · Audit des systèmes d'information avec Excel</div>
+      <h1 class="bv-title">Audit SI Lab : mission d'audit simulée<span>Contrôles d'audit par les formules Excel · Société Oasis Distribution, Errachidia</span></h1>
+      <p class="lead">Vous êtes auditeur. La société <b>Oasis Distribution</b> vous confie l'audit de son système d'information au <b>31/12/2025</b>. Examinez les quatre feuilles de données, réalisez les dix contrôles avec les formules Excel, comptez les anomalies, évaluez les risques et proposez vos recommandations. Le rapport d'audit se construit au fur et à mesure.</p>
+      <div class="chips"><span><b>4</b> feuilles de données</span><span><b>10</b> contrôles d'audit</span><span>formules Excel</span><span>rapport d'audit</span></div>
+    </div>
+    <div class="screen" aria-hidden="true">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="ln"><small>Comptes</small><b>=SI(ET(D2="Parti";E2="Actif");"Anomalie";"")</b></div>
+      <div class="ln"><small>Journal</small><b>=NB.SI.ENS(A:A;A2;D:D;"Échec")</b></div>
+      <div class="ln"><small>Factures</small><b>=SI(E2=F2;"Anomalie";"")</b></div>
+      <div class="ln"><small>Score</small><b id="hero-score">0 / 10<span class="cur"></span></b></div>
+    </div>
+  </section>
+
+  <div class="mission-bar">
+    <div><b>Mission n° <span id="m-id"></span></b> · date d'audit : 31/12/2025 · <span id="m-prog">0 contrôle réalisé sur 10</span></div>
+    <div class="row btns" style="margin:0"><button class="btn ghost" id="new-m" type="button">↻ Nouvelle mission (autres données)</button><button class="btn ghost" id="csv-all" type="button">Exporter les 4 feuilles (.csv)</button></div>
+  </div>
+
+  <!-- Données -->
+  <section class="tool on">
+    <h2>Les données de l'entreprise</h2>
+    <p class="sub">Les lignes en anomalie s'affichent en rouge une fois le contrôle exécuté. Vous pouvez aussi exporter les feuilles pour travailler directement dans Excel.</p>
+    <div class="sheets" id="sheets"></div>
+    <div class="xl-bar"><span class="nm" id="sh-name"></span><span class="ex" id="sh-desc"></span></div>
+    <div class="xl-wrap tall"><table class="xl" id="sheet"></table></div>
+  </section>
+
+  <!-- Contrôles -->
+  <section class="tool on" style="margin-top:22px">
+    <h2>Les contrôles d'audit</h2>
+    <div class="audit">
+      <div class="tests" id="tests"></div>
+      <div class="work" id="work"></div>
+    </div>
+  </section>
+
+  <!-- Rapport -->
+  <section class="tool on" style="margin-top:22px" id="rapport">
+    <h2>Rapport d'audit</h2>
+    <p class="sub">Synthèse des constats de la mission. Elle se remplit à mesure que vous réalisez les contrôles.</p>
+    <div class="scorebar"><div><small>Score de l'auditeur</small><b id="score">0 / 30</b><div class="nxm"><i id="score-bar"></i></div></div><div><small>Constats à risque élevé</small><b id="nb-high">0</b></div><div><small>Niveau de maîtrise du SI</small><b id="maturity">—</b></div></div>
+    <div class="xl-wrap"><table class="xl rep" id="report"></table></div>
+    <div class="row btns" style="margin-top:12px"><button class="btn" id="print" type="button">Imprimer le rapport</button></div>
+  </section>
+  <p class="foot-note"><span>ℹ️</span><span>Données entièrement fictives, générées pour l'exercice. Barème : 1 point pour le bon nombre d'anomalies, 1 point pour le bon niveau de risque, 1 point pour la bonne recommandation, par contrôle.</span></p>
+</main>
+<footer><div class="wrap"><span>Audit SI Lab – logiciel didactique · Pr Mounir HANINE · Faculté des Sciences Errachidia · UMI</span><span class="yr" id="copyr"></span></div></footer>
+<script>
+const $=id=>document.getElementById(id);
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ---------- Générateur pseudo-aléatoire reproductible ---------- */
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+let rnd,ri=(a,b)=>a+Math.floor(rnd()*(b-a+1)),pick=a=>a[Math.floor(rnd()*a.length)];
+const AUDIT=new Date(2025,11,31);const DAY=864e5;
+const d2s=d=>String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+const dt2s=d=>d2s(d)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+const PRE=['Yassine','Fatima','Omar','Salma','Hamza','Khadija','Youssef','Imane','Mehdi','Hajar','Anas','Sara','Ayoub','Meryem','Rachid','Nadia','Karim','Zineb','Hicham','Asmae','Bilal','Loubna','Amine','Siham','Tarik','Houda','Said','Ikram','Nabil','Laila'];
+const NOM=['Alaoui','Bennani','El Idrissi','Ouali','Amrani','Tazi','Bouzid','Chraibi','Haddou','Lahlou','Ait Taleb','Zahraoui','Ennaji','Mansouri','Belkadi','Ouchen','Rami','Sabri','Hilali','Kettani'];
+const SERV=['Comptabilité','Ventes','Logistique','Ressources humaines','Direction','Informatique'];
+const FOUR=['Atlas Fournitures','Sud Emballages','Ziz Transport','Tafilalet Négoce','Oasis Bureautique','Dunes Services','Errachidia Matériaux'];
+let D,REP={},sheet='comptes',cur=0,seed;
+function gen(s){seed=s;rnd=rng(s);const users=[];const used=new Set();
+  for(let i=0;i<42;i++){let n;do n=pick(PRE)+' '+pick(NOM);while(used.has(n));used.add(n);
+    const serv=i<4?'Informatique':pick(SERV.slice(0,5));const login='u'+String(101+i);
+    users.push({mat:'M'+String(2001+i),nom:n,login,serv,rh:'Présent',cpt:'Actif',last:new Date(AUDIT-ri(0,40)*DAY),prof:serv==='Informatique'?'Admin':'Standard',pwd:new Date(AUDIT-ri(5,170)*DAY)});}
+  const idx=()=>ri(4,users.length-1);
+  // anomalies
+  const nOrph=ri(3,5);for(let k=0;k<nOrph;){const u=users[idx()];if(u.rh==='Présent'){u.rh='Parti';k++;}}
+  users.filter(u=>u.rh==='Parti').forEach((u,i)=>{if(i===0)u.cpt='Désactivé';}); // un départ correctement traité
+  const nInac=ri(3,6);for(let k=0;k<nInac;){const u=users[idx()];if(u.rh==='Présent'&&u.cpt==='Actif'&&AUDIT-u.last<90*DAY){u.last=new Date(AUDIT-ri(95,300)*DAY);k++;}}
+  const nAdm=ri(2,3);for(let k=0;k<nAdm;){const u=users[idx()];if(u.prof!=='Admin'){u.prof='Admin';k++;}}
+  const nPwd=ri(4,7);for(let k=0;k<nPwd;){const u=users[idx()];if(AUDIT-u.pwd<180*DAY){u.pwd=new Date(AUDIT-ri(190,600)*DAY);k++;}}
+  // journal
+  const active=users.filter(u=>u.cpt==='Actif'&&u.rh==='Présent');const log=[];
+  for(let i=0;i<180;i++){const u=pick(active);const d=new Date(2025,11,ri(1,31),ri(8,18),ri(0,59));if(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+(d.getDay()===6?2:1));if(d.getMonth()!==11)d.setDate(30);
+    log.push({login:u.login,dt:d,poste:'PC-'+ri(10,60),res:rnd()<0.06?'Échec':'Succès'});}
+  const nBrute=ri(2,3);const bf=[];for(let k=0;k<nBrute;k++){const u=pick(active);if(bf.includes(u.login)){k--;continue;}bf.push(u.login);const day=ri(2,28);for(let j=0;j<ri(5,8);j++)log.push({login:u.login,dt:new Date(2025,11,day,ri(9,17),ri(0,59)),poste:'PC-'+ri(10,60),res:'Échec'});}
+  const nHors=ri(4,7);for(let k=0;k<nHors;k++){const u=pick(active);const we=rnd()<0.4;let d;if(we){d=new Date(2025,11,ri(1,31),ri(10,16),ri(0,59));while(d.getDay()!==6&&d.getDay()!==0)d.setDate(d.getDate()+1);if(d.getMonth()!==11)d=new Date(2025,11,27,11,15);}else d=new Date(2025,11,ri(1,31),pick([2,3,5,22,23]),ri(0,59));if(d.getDay()===0||d.getDay()===6||d.getHours()<7||d.getHours()>=20)log.push({login:u.login,dt:d,poste:'PC-'+ri(10,60),res:'Succès'});else k--;}
+  log.sort((a,b)=>a.dt-b.dt);
+  // sauvegardes
+  const bk=[];for(let i=1;i<=31;i++)bk.push({d:new Date(2025,11,i,1,0),type:new Date(2025,11,i).getDay()===0?'Complète':'Incrémentale',res:'Réussie',duree:ri(20,95),rest:'Non'});
+  const nBk=ri(2,4);for(let k=0;k<nBk;){const b=pick(bk);if(b.res==='Réussie'){b.res='Échec';b.duree=ri(1,5);k++;}}
+  bk.filter(b=>b.type==='Complète').forEach((b,i)=>{if(i<1)b.rest='Oui';});
+  // factures
+  const fac=[];let num=1001;for(let i=0;i<55;i++){if(rnd()<0.05&&i>3)num+=ri(1,2);const saisi=pick(users.filter(u=>u.serv==='Comptabilité'||u.serv==='Ventes')).login;
+    let val=pick(users.filter(u=>u.serv==='Direction'||u.serv==='Comptabilité')).login;if(val===saisi)val=users.find(u=>u.serv==='Direction'&&u.login!==saisi)?.login||val;
+    fac.push({num:'F'+num,date:new Date(2025,ri(0,11),ri(1,28)),four:pick(FOUR),mont:ri(15,480)*100,saisi,val});num++;}
+  const nDup=ri(2,3);for(let k=0;k<nDup;k++){const f=pick(fac.slice(0,50));fac.push({...f,num:'F'+num++,date:new Date(f.date.getTime()+ri(3,40)*DAY)});}
+  const nSod=ri(3,4);for(let k=0;k<nSod;){const f=pick(fac);if(f.saisi!==f.val){f.val=f.saisi;k++;}}
+  fac.sort((a,b)=>+a.num.slice(1)-+b.num.slice(1));
+  D={users,log,bk,fac};
+}
+/* ---------- Feuilles ---------- */
+const SHEETS={
+ comptes:{nom:'Comptes',desc:'Annuaire des comptes du domaine (Active Directory) croisé avec le fichier RH',cols:['Matricule','Nom','Login','Service','Statut RH','Compte','Dernière connexion','Profil','Mot de passe changé le'],
+   rows:()=>D.users.map(u=>[u.mat,u.nom,u.login,u.serv,u.rh,u.cpt,d2s(u.last),u.prof,d2s(u.pwd)])},
+ journal:{nom:'Journal',desc:'Journal des connexions au progiciel de gestion – décembre 2025',cols:['Login','Date et heure','Poste','Résultat'],rows:()=>D.log.map(l=>[l.login,dt2s(l.dt),l.poste,l.res])},
+ sauvegardes:{nom:'Sauvegardes',desc:'Rapport du logiciel de sauvegarde – décembre 2025',cols:['Date','Type','Statut','Durée (min)','Restauration testée'],rows:()=>D.bk.map(b=>[d2s(b.d),b.type,b.res,b.duree,b.rest])},
+ factures:{nom:'Factures',desc:'Registre des factures fournisseurs 2025',cols:['N° facture','Date','Fournisseur','Montant (MAD)','Saisie par','Validée par'],rows:()=>D.fac.map(f=>[f.num,d2s(f.date),f.four,f.mont.toLocaleString('fr-FR'),f.saisi,f.val])}};
+/* ---------- Contrôles ---------- */
+const brute=()=>{const c={};D.log.forEach(l=>{if(l.res==='Échec')c[l.login]=(c[l.login]||0)+1;});return c;};
+const TESTS=[
+ {id:'orph',sh:'comptes',titre:'Comptes d\'employés partis',obj:'Vérifier que les comptes des personnes ayant quitté l\'entreprise sont désactivés.',risque:'Un ancien employé peut encore accéder au système et aux données.',
+  f:'=SI(ET(E2="Parti";F2="Actif");"Anomalie";"")',flag:(r,i)=>D.users[i].rh==='Parti'&&D.users[i].cpt==='Actif',crit:'Élevé',
+  recos:['Désactiver immédiatement ces comptes et formaliser une procédure de sortie RH ↔ informatique','Changer le mot de passe de ces comptes chaque mois','Supprimer tous les comptes inactifs de l\'annuaire'],good:0},
+ {id:'inac',sh:'comptes',titre:'Comptes inactifs depuis plus de 90 jours',obj:'Repérer les comptes actifs non utilisés depuis plus de 90 jours au 31/12/2025.',risque:'Comptes dormants : cibles faciles pour une usurpation d\'identité.',
+  f:'=SI(ET(F2="Actif";DATE(2025;12;31)-G2>90);"Anomalie";"")',flag:(r,i)=>D.users[i].cpt==='Actif'&&D.users[i].rh==='Présent'&&(AUDIT-D.users[i].last)/DAY>90,crit:'Moyen',
+  recos:['Revue trimestrielle des comptes et désactivation automatique après 90 jours d\'inactivité','Obliger les utilisateurs à se connecter chaque semaine','Acheter un nouvel antivirus'],good:0},
+ {id:'adm',sh:'comptes',titre:'Droits administrateur hors service informatique',obj:'Identifier les profils « Admin » attribués en dehors du service Informatique.',risque:'Des utilisateurs peuvent modifier la configuration, les droits ou les données sans contrôle.',
+  f:'=SI(ET(H2="Admin";D2<>"Informatique");"Anomalie";"")',flag:(r,i)=>D.users[i].prof==='Admin'&&D.users[i].serv!=='Informatique',crit:'Élevé',
+  recos:['Former ces utilisateurs à l\'administration système','Retirer ces droits (principe du moindre privilège) et faire valider toute attribution par le RSSI','Créer un second compte administrateur pour chacun'],good:1},
+ {id:'pwd',sh:'comptes',titre:'Mots de passe non changés depuis plus de 180 jours',obj:'Contrôler le respect de la politique de renouvellement des mots de passe (180 jours).',risque:'Un mot de passe ancien a plus de chances d\'avoir été divulgué ou deviné.',
+  f:'=SI(DATE(2025;12;31)-I2>180;"Anomalie";"")',flag:(r,i)=>(AUDIT-D.users[i].pwd)/DAY>180,crit:'Moyen',
+  recos:['Afficher la politique de mots de passe dans les bureaux','Imposer techniquement le changement (stratégie de groupe) et l\'authentification à deux facteurs pour les comptes sensibles','Utiliser le même mot de passe pour tous les comptes d\'un service'],good:1},
+ {id:'brute',sh:'journal',titre:'Échecs de connexion répétés',obj:'Repérer les comptes ayant au moins 5 échecs de connexion dans le mois (lignes concernées).',risque:'Tentative probable de découverte de mot de passe (attaque par force brute).',
+  f:'=SI(NB.SI.ENS(A:A;A2;D:D;"Échec")>=5;"Anomalie";"")',flag:(r,i)=>{const c=brute();return c[D.log[i].login]>=5;},crit:'Élevé',
+  recos:['Verrouiller le compte après 5 échecs, alerter l\'équipe informatique et analyser l\'origine','Augmenter la durée de conservation du journal','Supprimer les comptes concernés'],good:0,count:'login'},
+ {id:'hors',sh:'journal',titre:'Connexions hors horaires de travail',obj:'Repérer les connexions réussies avant 7 h, après 20 h ou le week-end.',risque:'Accès inhabituels pouvant traduire une fraude ou un compte compromis.',
+  f:'=SI(ET(D2="Succès";OU(HEURE(B2)<7;HEURE(B2)>=20;JOURSEM(B2;2)>5));"Anomalie";"")',flag:(r,i)=>{const l=D.log[i],h=l.dt.getHours(),w=l.dt.getDay();return l.res==='Succès'&&(h<7||h>=20||w===0||w===6);},crit:'Moyen',
+  recos:['Couper le réseau la nuit','Restreindre les plages horaires d\'accès et faire justifier chaque connexion hors horaires par le responsable','Interdire le télétravail'],good:1},
+ {id:'bk',sh:'sauvegardes',titre:'Sauvegardes en échec',obj:'Compter les sauvegardes quotidiennes en échec sur le mois.',risque:'Perte de données en cas d\'incident (panne, rançongiciel).',
+  f:'=SI(C2="Échec";"Anomalie";"")',flag:(r,i)=>D.bk[i].res==='Échec',crit:'Élevé',
+  recos:['Mettre en place une alerte automatique en cas d\'échec et relancer la sauvegarde le jour même','Faire les sauvegardes une fois par mois seulement','Remplacer les sauvegardes par une copie manuelle sur clé USB'],good:0},
+ {id:'rest',sh:'sauvegardes',titre:'Tests de restauration',obj:'Compter les sauvegardes complètes dont la restauration n\'a jamais été testée.',risque:'Une sauvegarde non testée peut se révéler inutilisable le jour où l\'on en a besoin.',
+  f:'=SI(ET(B2="Complète";E2="Non");"Anomalie";"")',flag:(r,i)=>D.bk[i].type==='Complète'&&D.bk[i].rest==='Non',crit:'Moyen',
+  recos:['Planifier un test de restauration au moins mensuel et en garder la preuve écrite','Doubler la durée des sauvegardes','Ne garder que les sauvegardes incrémentales'],good:0},
+ {id:'sod',sh:'factures',titre:'Séparation des tâches',obj:'Repérer les factures saisies et validées par la même personne.',risque:'Une même personne peut créer et approuver une dépense : risque de fraude.',
+  f:'=SI(E2=F2;"Anomalie";"")',flag:(r,i)=>D.fac[i].saisi===D.fac[i].val,crit:'Élevé',
+  recos:['Bloquer dans le progiciel la validation par l\'auteur de la saisie (contrôle applicatif)','Faire valider toutes les factures par le comptable','Supprimer l\'étape de validation pour gagner du temps'],good:0},
+ {id:'dup',sh:'factures',titre:'Factures en double',obj:'Repérer les factures ayant le même fournisseur et le même montant (doublons potentiels).',risque:'Double paiement d\'une même facture.',
+  f:'=SI(NB.SI.ENS(C:C;C2;D:D;D2)>1;"Anomalie";"")',flag:(r,i)=>{const f=D.fac[i];return D.fac.filter(g=>g.four===f.four&&g.mont===f.mont).length>1;},crit:'Moyen',
+  recos:['Payer les fournisseurs en espèces','Ajouter un contrôle de doublons à la saisie (fournisseur + montant + référence) et vérifier les paiements concernés','Classer les factures par ordre alphabétique'],good:1}];
+/* ---------- Affichage des feuilles ---------- */
+function flagsFor(t){const rows=SHEETS[t.sh].rows();return rows.map((r,i)=>t.flag(r,i));}
+function countFor(t){return flagsFor(t).filter(Boolean).length;}
+function renderSheets(){$('sheets').innerHTML=Object.entries(SHEETS).map(([k,s])=>`<button type="button" data-s="${k}" class="${k===sheet?'sel':''}">${s.nom} <small>${s.rows().length} lignes</small></button>`).join('');
+  $('sheets').querySelectorAll('button').forEach(b=>b.onclick=()=>{sheet=b.dataset.s;renderSheets();renderSheet();});}
+function renderSheet(){const s=SHEETS[sheet],rows=s.rows();$('sh-name').textContent=s.nom;$('sh-desc').textContent=s.desc;
+  const done=TESTS.filter(t=>t.sh===sheet&&REP[t.id]&&REP[t.id].run);const F=done.map(t=>flagsFor(t));
+  const L='ABCDEFGHIJKLMN';let h='<tr><th></th>'+s.cols.map((c,i)=>`<th>${L[i]}</th>`).join('')+done.map((t,j)=>`<th class="ctl">${L[s.cols.length+j]}</th>`).join('')+'</tr>';
+  h+='<tr><th>1</th>'+s.cols.map(c=>`<td class="hd">${esc(c)}</td>`).join('')+done.map(t=>`<td class="hd ctl">${esc(t.titre)}</td>`).join('')+'</tr>';
+  rows.forEach((r,i)=>{const bad=F.some(f=>f[i]);h+=`<tr class="${bad?'bad':''}"><th>${i+2}</th>`+r.map(v=>`<td>${esc(v)}</td>`).join('')+F.map(f=>`<td class="ctl">${f[i]?'Anomalie':''}</td>`).join('')+'</tr>';});
+  $('sheet').innerHTML=h;}
+/* ---------- Contrôles ---------- */
+function renderTests(){$('tests').innerHTML=TESTS.map((t,i)=>{const r=REP[t.id];const st=r&&r.done?'✔':r&&r.run?'◐':'○';
+  return `<button type="button" class="${i===cur?'sel':''} ${r&&r.done?'done':''}" data-i="${i}"><span>${st}</span><b>${i+1}. ${t.titre}</b><small>Feuille ${SHEETS[t.sh].nom}</small></button>`;}).join('');
+  $('tests').querySelectorAll('button').forEach(b=>b.onclick=()=>{cur=+b.dataset.i;renderTests();renderWork();sheet=TESTS[cur].sh;renderSheets();renderSheet();});}
+function renderWork(){const t=TESTS[cur],r=REP[t.id]||{};const n=SHEETS[t.sh].cols.length;const col='ABCDEFGHIJ'[n];
+  let h=`<span class="qtag">Contrôle ${cur+1} · feuille ${SHEETS[t.sh].nom}</span><h3>${t.titre}</h3>
+  <p><b>Objectif :</b> ${t.obj}</p><p><b>Risque :</b> ${t.risque}</p>
+  <div class="steps"><h3>Formule Excel à recopier en ${col}2, puis à étirer vers le bas</h3><p class="mono fm">${esc(t.f)}</p>
+  <p style="font-size:14px;color:var(--muted);margin:0">Comptez ensuite les anomalies avec <span class="mono">=NB.SI(${col}:${col};"Anomalie")</span>${t.count?' (ici, comptez les lignes)':''}.</p></div>
+  <div class="stepn"><b>1.</b> Combien de lignes sont en anomalie ?</div>
+  <div class="row"><label>Votre réponse<input id="w-n" value="${r.ans??''}" ${r.run?'disabled':''} inputmode="numeric"></label><button class="btn" id="w-run" type="button" ${r.run?'disabled':''}>Exécuter le contrôle</button></div>`;
+  if(r.run){const c=countFor(t);h+=`<p class="${r.okN?'ok callout':'err'}">${r.okN?'✔':'✘'} Le contrôle trouve <b>${c}</b> ligne(s) en anomalie${r.okN?'.':' (vous aviez répondu '+esc(r.ans)+').'} Elles sont surlignées en rouge dans la feuille ${SHEETS[t.sh].nom}.</p>
+    <div class="stepn"><b>2.</b> Quel est le niveau de risque de ce constat ?</div>
+    <div class="seg" id="w-crit">${['Faible','Moyen','Élevé'].map(c=>`<button type="button" data-c="${c}" class="${r.crit===c?'sel':''}" ${r.done?'disabled':''}>${c}</button>`).join('')}</div>
+    <div class="stepn"><b>3.</b> Quelle recommandation formulez-vous ?</div>
+    <div class="recos" id="w-reco">${t.recos.map((x,j)=>`<label class="${r.done?(j===t.good?'good':r.reco===j?'wrong':''):''}"><input type="radio" name="reco" value="${j}" ${r.reco===j?'checked':''} ${r.done?'disabled':''}> ${x}</label>`).join('')}</div>
+    ${r.done?`<p class="${r.okC&&r.okR?'ok callout':'err'}">Niveau de risque attendu : <b>${t.crit}</b>${r.okC?' ✔':' ✘'} · recommandation ${r.okR?'✔ correcte':'✘ : la bonne réponse est surlignée en vert'}.</p>`:`<button class="btn" id="w-val" type="button">Valider le constat</button>`}`;}
+  $('work').innerHTML=h;
+  if(!r.run)$('w-run').onclick=()=>{const v=$('w-n').value.trim();if(v===''){$('w-n').focus();return;}REP[t.id]={ans:v,run:true,okN:+v===countFor(t)};save();renderAll();};
+  if(r.run&&!r.done){$('w-crit').querySelectorAll('button').forEach(b=>b.onclick=()=>{REP[t.id].crit=b.dataset.c;renderWork();});
+    $('w-reco').querySelectorAll('input').forEach(i=>i.onchange=()=>{REP[t.id].reco=+i.value;});
+    $('w-val').onclick=()=>{const R=REP[t.id];if(!R.crit||R.reco==null){alertBox();return;}R.done=true;R.okC=R.crit===t.crit;R.okR=R.reco===t.good;save();renderAll();};}}
+function alertBox(){const p=document.createElement('p');p.className='err';p.textContent='Choisissez un niveau de risque et une recommandation.';$('work').appendChild(p);}
+/* ---------- Rapport ---------- */
+function renderReport(){let pts=0,high=0,done=0;
+  let h='<tr><th>N°</th><td class="hd">Contrôle</td><td class="hd">Anomalies</td><td class="hd">Risque</td><td class="hd">Recommandation retenue</td><td class="hd">Points</td></tr>';
+  TESTS.forEach((t,i)=>{const r=REP[t.id];if(!r||!r.run){h+=`<tr><th>${i+1}</th><td>${t.titre}</td><td colspan="4" style="text-align:left;color:var(--muted)">non réalisé</td></tr>`;return;}
+    const p=(r.okN?1:0)+(r.done&&r.okC?1:0)+(r.done&&r.okR?1:0);pts+=p;if(r.done)done++;const c=countFor(t);if(c>0&&t.crit==='Élevé')high++;
+    h+=`<tr><th>${i+1}</th><td>${t.titre}</td><td>${c}</td><td><span class="crit c-${(r.crit||'').replace('É','E')}">${r.crit||'—'}</span></td><td style="text-align:left;white-space:normal">${r.reco!=null?esc(t.recos[r.reco]):'—'}</td><td>${p} / 3</td></tr>`;});
+  $('report').innerHTML=h;$('score').textContent=pts+' / 30';$('score-bar').style.width=(100*pts/30)+'%';$('nb-high').textContent=high;
+  $('maturity').textContent=done<10?'mission en cours':high>=4?'Insuffisant':high>=2?'À améliorer':'Satisfaisant';
+  $('hero-score').innerHTML=done+' / 10<span class="cur"></span>';$('m-prog').textContent=done+' contrôle(s) terminé(s) sur 10';}
+function renderAll(){renderTests();renderWork();renderSheets();renderSheet();renderReport();}
+/* ---------- Mission, sauvegarde locale, export ---------- */
+function save(){try{localStorage.setItem('auditlab',JSON.stringify({seed,REP}));}catch(e){}}
+function start(s,rep){gen(s);REP=rep||{};$('m-id').textContent=String(s).slice(-4);cur=0;sheet='comptes';renderAll();}
+$('new-m').onclick=()=>{if(Object.keys(REP).length&&!confirmNew())return;start(Math.floor(Math.random()*1e9));save();};
+function confirmNew(){return window.confirm?confirm('Commencer une nouvelle mission ? Les réponses en cours seront effacées.'):true;}
+$('print').onclick=()=>window.print();
+$('csv-all').onclick=()=>{Object.entries(SHEETS).forEach(([k,s],i)=>setTimeout(()=>{const lines=[s.cols.join(';'),...s.rows().map(r=>r.map(v=>String(v).replace(/ | /g,'')).join(';'))];
+  const blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='audit-oasis-'+k+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500);},i*400));};
+let saved=null;try{saved=JSON.parse(localStorage.getItem('auditlab'));}catch(e){}
+if(saved&&saved.seed)start(saved.seed,saved.REP);else start(20251231);
+</script>
+
+</body>
+</html>
