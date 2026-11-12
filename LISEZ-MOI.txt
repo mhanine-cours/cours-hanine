@@ -37,3 +37,6 @@ scratch.js, langues.js, tourisme.js, droit.js). Une question = une ligne :
   (0 = choix 1, 1 = choix 2…). L'ordre des choix est mélangé à l'affichage.
 
 - numerix.html : logiciel didactique NumériLab (numération, complément à 2, IEEE 754, ASCII, exercices corrigés). Lien dans le menu de toutes les pages.
+
+- logiciels.html : page des logiciels didactiques (NumériLab, GénéLab, application de pilotage à venir).
+- generateur.html : GénéLab, simulateur SCPI du banc SEFRAM 4463 / 5062DC.

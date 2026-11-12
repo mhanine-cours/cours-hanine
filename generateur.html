@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GénéLab – Simulateur du banc SEFRAM (SCPI) – Cours Pr. Hanine</title>
+<meta name="description" content="GénéLab : simulateur du générateur SEFRAM 4463 et de l'oscilloscope SEFRAM 5062DC, pilotés avec les commandes SCPI réelles des appareils.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== NumériLab – design ===== */
+.nx-hero{display:grid;grid-template-columns:1.25fr .9fr;gap:36px;align-items:center;margin:4px 0 34px}
+.nx-hero .lead{margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font:500 13px var(--mono);padding:6px 11px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+.chips b{color:var(--accent);font-weight:600}
+.screen{background:#0d1d22;color:#d7f2ee;border-radius:16px;padding:22px 24px;font-family:var(--mono);box-shadow:0 18px 40px -18px rgba(8,40,45,.55);position:relative;overflow:hidden}
+.screen:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px);pointer-events:none}
+.screen .dots{display:flex;gap:6px;margin-bottom:16px}.screen .dots i{width:10px;height:10px;border-radius:50%;background:#2f4a50}.screen .dots i:first-child{background:#e36f5c}.screen .dots i:nth-child(2){background:#e0a64a}.screen .dots i:nth-child(3){background:#3fb6ad}
+.screen .ln{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed #23393f;font-size:15px}
+.screen .ln:last-child{border:0}.screen .ln small{color:#7fa5a2}.screen .ln b{color:#7ee0d6;font-weight:500;letter-spacing:.04em}
+.screen .big{font:600 34px var(--mono);color:#fff;margin:2px 0 10px;letter-spacing:.02em}
+.screen .cur{display:inline-block;width:10px;height:1.1em;background:#3fb6ad;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px}
+.picker button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px 14px 13px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s}
+.picker button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.picker .ic{font:600 14px var(--mono);width:44px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--sand-soft);color:var(--sand)}
+.picker .tt{font:600 15px var(--body)}.picker .dd{font-size:12.5px;color:var(--muted);line-height:1.35}
+.picker button[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),0 10px 24px -16px var(--accent)}
+.picker button[aria-selected="true"] .ic{background:var(--accent);color:var(--accent-ink)}
+.tool{display:none;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 26px;animation:fade .25s ease}
+.tool.on{display:block}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.tool h2{font:700 20px var(--display);margin:0 0 4px}.tool .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.console{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px 6px;margin-bottom:18px}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-bottom:12px}
+.row label{display:flex;flex-direction:column;gap:6px;font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.row input,.row select{font:500 18px var(--mono);padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-width:170px;transition:border-color .15s,box-shadow .15s}
+.row input:focus,.row select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.row input.wide{min-width:260px}
+.ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px;font:12px var(--mono);color:var(--muted)}
+.ex button{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px dashed var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.ex button:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.res4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:0 0 18px}
+.res4 div{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px 13px;border-top:4px solid var(--accent);cursor:copy;transition:background .15s}
+.res4 div:nth-child(2){border-top-color:var(--sand)}.res4 div:nth-child(3){border-top-color:#5a7bb5}.res4 div:nth-child(4){border-top-color:#b5655a}
+.res4 div:hover{background:var(--bg)}
+.res4 small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.res4 b{font:600 20px var(--mono);word-break:break-all}
+.res4 div.copied:after{content:"copié ✓";position:absolute;top:10px;right:12px;font:500 11px var(--mono);color:var(--accent)}
+.steps{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:15.5px;line-height:1.6}
+.steps h3{display:flex;align-items:center;gap:10px;margin:18px 0 10px;font:600 16px var(--body)}
+.steps h3:first-child{margin-top:0}
+.steps h3:before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+.steps ol{margin:0;padding:0;list-style:none;counter-reset:st}
+.steps ol li{position:relative;padding:2px 0 10px 40px;counter-increment:st}
+.steps ol li:before{content:counter(st);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--sand-soft);color:var(--sand);font:600 13px var(--mono);display:grid;place-items:center}
+.steps ol li:not(:last-child):after{content:"";position:absolute;left:12.5px;top:30px;bottom:0;width:1px;background:var(--line)}
+.steps ul{margin:0;padding-left:20px}
+.mono{font-family:var(--mono)}
+table.t{border-collapse:separate;border-spacing:0;font:14px var(--mono);margin:10px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.t td,table.t th{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:6px 14px;text-align:center}
+table.t tr:last-child td{border-bottom:0}table.t td:last-child,table.t th:last-child{border-right:0}
+table.t th{background:var(--bg);font-weight:500;color:var(--muted);font-size:12.5px}
+table.t tr td:last-child{font-weight:600;color:var(--accent)}
+.bitwrap{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 16px;overflow-x:auto}
+.bits{display:flex;gap:3px;font:600 15px var(--mono);min-width:max-content}
+.bits span{width:24px;height:32px;display:grid;place-items:center;border-radius:5px}
+.bits span:nth-child(1),.bits span:nth-child(9){margin-right:6px}
+.b-s{background:#f6d6d6;color:#7a1f1f}.b-e{background:#d7ecd9;color:#1d5a27}.b-m{background:#dbe7f6;color:#1f3d6b}
+@media (prefers-color-scheme:dark){.b-s{background:#4a2222;color:#f4c7c7}.b-e{background:#1f3d26;color:#c7ecd0}.b-m{background:#1e2f48;color:#cfe0f6}}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);flex-wrap:wrap;margin-top:10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.err{color:#c0392b;font-weight:500;background:color-mix(in srgb,#c0392b 8%,transparent);border-left:3px solid #c0392b;padding:10px 14px;border-radius:6px}
+.ok{color:#23794a;font-weight:600}
+.callout{background:color-mix(in srgb,#23794a 9%,transparent);border-left:3px solid #23794a;padding:10px 14px;border-radius:6px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.split>div>h3{font:600 15px var(--body);margin:0 0 10px}
+.exo{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.exo .q{font:600 24px var(--body);margin:2px 0 16px}
+.exo .q sub{font-size:14px}
+.qtag{display:inline-block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--sand);background:var(--sand-soft);padding:4px 9px;border-radius:6px}
+.scorebar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.scorebar>div{flex:1;min-width:120px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.scorebar small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.scorebar b{font:700 24px var(--display)}
+.scorebar .nxm{flex:none;min-width:0;padding:0;border:0;height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.nxm i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.fb-ok{animation:pop .35s}@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:none}}
+.foot-note{margin:26px 0 0;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.foot-note b{color:var(--ink)}
+@media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.picker button:last-child{grid-column:span 2}.split{grid-template-columns:1fr}.tool{padding:18px}}
+@media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
+
+.bench{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
+.inst{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.inst-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}
+.led{font:600 12px var(--mono);padding:4px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.led.on{background:#1f7a52;color:#fff;border-color:#1f7a52}
+.lcd{background:#14261a;color:#b9f5c6;border-radius:10px;padding:14px 16px;font-family:var(--mono);box-shadow:inset 0 0 0 2px #0d1a11,inset 0 0 18px rgba(0,0,0,.5);margin-bottom:14px}
+.lcd div{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;padding:3px 0}
+.lcd span{font-size:12px;color:#7fbf8c;letter-spacing:.06em}.lcd b{font-size:20px;font-weight:500}
+.lcd div:first-child b{font-size:28px}.lcd b.on{color:#fff;background:#2b7a3e;padding:0 8px;border-radius:4px;font-size:15px}
+.seg{display:flex;gap:6px;margin-bottom:12px}.seg button{flex:1;font:600 14px var(--mono);padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);cursor:pointer}
+.seg button.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.io{display:flex;gap:4px}.io input{min-width:0;width:110px}.io select{min-width:0;width:92px}
+.inst .row input{min-width:0;width:120px}.inst .row select{min-width:0}
+.btns{gap:8px}.load{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-top:4px}.load label{display:flex;gap:6px;align-items:center;color:var(--ink)}
+#scope{width:100%;height:auto;border-radius:10px;display:block;background:#0b1a1d}
+.meas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 12px}
+.meas div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}.meas small{display:block;font:500 10.5px var(--mono);color:var(--muted);text-transform:uppercase}.meas b{font:600 14px var(--mono)}
+.log{background:#0d1d22;color:#d7f2ee;border-radius:12px;padding:12px 14px;font:13.5px var(--mono);height:230px;overflow:auto}
+.log .l{display:flex;gap:10px;padding:2px 0}.log .t{width:34px;flex:none;font-size:11px;padding-top:2px;color:#7fa5a2}.log .t.gen{color:#e0a64a}.log .t.scope{color:#7ee0d6}.log .r{color:#9fd8a8}
+.lvfmt{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;word-break:break-all}
+.defi{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+.defi.done{border-color:#23794a;box-shadow:inset 4px 0 0 #23794a}.defi .dq{font-size:16px;margin-bottom:8px}.defi .row{margin:0}
+.scorebar>div{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+@media (max-width:980px){.bench{grid-template-columns:1fr}.meas{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">MH</span><span><strong>Pr. Mounir Hanine</strong><small>Génie électrique &amp; informatique · Errachidia</small></span></a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+  <div class="crumb"><a href="index.html">Accueil</a> / <a href="logiciels.html">Logiciels</a> / GénéLab</div>
+  <section class="nx-hero">
+    <div>
+      <div class="eyebrow">Logiciel didactique · Informatique industrielle</div>
+      <h1>GénéLab : le banc SEFRAM virtuel</h1>
+      <p class="lead">Pilotez un générateur SEFRAM 4463 et un oscilloscope SEFRAM 5062DC simulés, avec les <b>vraies commandes SCPI</b> des appareils du banc de TP. Chaque réglage fait à la souris affiche la commande exacte à envoyer par VISA depuis LabVIEW.</p>
+      <div class="chips"><span><b>2</b> instruments sur bus GPIB</span><span><b>syntaxe SCPI</b> des appareils</span><span><b>6</b> défis corrigés</span><span>sans matériel</span></div>
+    </div>
+    <div class="screen" aria-hidden="true">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="ln"><small>GPIB0::9::INSTR</small><b>SEFRAM 4463</b></div>
+      <div class="ln"><small>›</small><b>:FUNC SIN;:FREQ 1KHZ</b></div>
+      <div class="ln"><small>›</small><b>:VOLT:AMPL 2;:OUTP ON</b></div>
+      <div class="ln"><small>GPIB0::7::INSTR</small><b>SEFRAM 5062DC</b></div>
+      <div class="ln"><small>›</small><b>:MEASure:VPP?<span class="cur"></span></b></div>
+    </div>
+  </section>
+
+  <div class="bench">
+    <!-- ===== Générateur ===== -->
+    <section class="inst">
+      <div class="inst-h"><div><h2>Générateur SEFRAM 4463</h2><small class="mono">GPIB0::9::INSTR · adresse 9</small></div><span class="led" id="g-led">OFF</span></div>
+      <div class="lcd" id="g-lcd"></div>
+      <div class="ctrl">
+        <div class="seg" id="g-func"><button data-f="SIN">∿ SIN</button><button data-f="SQU">⊓ SQU</button><button data-f="TRI">⋀ TRI</button></div>
+        <div class="row">
+          <label>Fréquence<span class="io"><input id="g-freq" value="1"><select id="g-fu"><option value="1">Hz</option><option value="1e3" selected>kHz</option><option value="1e6">MHz</option></select></span></label>
+          <label>Amplitude (Vcc)<input id="g-ampl" value="2"></label>
+          <label>Offset (V)<input id="g-offs" value="0"></label>
+        </div>
+        <div class="row btns">
+          <button class="btn" id="g-apply" type="button">Appliquer</button>
+          <button class="btn ghost" id="g-out" type="button">OUTPUT ON</button>
+          <button class="btn ghost" id="g-rst" type="button">*RST</button>
+        </div>
+        <div class="load"><span>Câblage :</span>
+          <label><input type="radio" name="load" value="50" checked> bouchon 50 Ω</label>
+          <label><input type="radio" name="load" value="1M"> entrée 1 MΩ seule</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Oscilloscope ===== -->
+    <section class="inst">
+      <div class="inst-h"><div><h2>Oscilloscope SEFRAM 5062DC</h2><small class="mono">GPIB0::7::INSTR · syntaxe GDS-2000</small></div><span class="led on" id="s-led">RUN</span></div>
+      <canvas id="scope" width="640" height="512"></canvas>
+      <div class="meas" id="s-meas"></div>
+      <div class="ctrl">
+        <div class="row">
+          <label>Volts/div<select id="s-vdiv"></select></label>
+          <label>Temps/div<select id="s-tdiv"></select></label>
+          <label>Couplage<select id="s-coup"><option value="1">DC (1)</option><option value="0">AC (0)</option><option value="2">GND (2)</option></select></label>
+        </div>
+        <div class="row btns">
+          <button class="btn" id="s-auto" type="button">AUTOSET</button>
+          <button class="btn ghost" id="s-run" type="button">STOP</button>
+          <button class="btn ghost" id="s-meas-b" type="button">Mesurer (VPP? / FREQ?)</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== Console SCPI ===== -->
+  <section class="tool on" style="margin-top:22px">
+    <h2>Console SCPI</h2>
+    <p class="sub">Tapez les commandes comme dans NI MAX (« Communiquer avec l'instrument ») ou dans un VISA Write. Plusieurs commandes se séparent par « ; ». Les réglages faits à la souris s'affichent aussi ici.</p>
+    <div class="console">
+      <div class="row">
+        <label>Instrument<select id="c-inst"><option value="gen">Générateur – GPIB0::9::INSTR</option><option value="scope">Oscilloscope – GPIB0::7::INSTR</option></select></label>
+        <label style="flex:1">Commande<input id="c-cmd" class="wide" style="width:100%" autocomplete="off" placeholder=":FUNC SIN;:FREQ 1KHZ;:VOLT:AMPL 2;:VOLT:OFFS 0;:OUTP ON"></label>
+        <button class="btn" id="c-send" type="button">Envoyer</button>
+      </div>
+      <div class="ex" id="c-ex">Exemples : </div>
+    </div>
+    <div class="log" id="c-log" aria-live="polite"></div>
+    <div class="steps" style="margin-top:14px"><h3>Le même message dans LabVIEW</h3>
+      <p>Bloc <b>Formater en chaîne</b> (format), puis <b>VISA Write</b> sur <span class="mono">GPIB0::9::INSTR</span> :</p>
+      <p class="mono lvfmt">%.;:FUNC SIN;:FREQ %g;:VOLT:AMPL %.3f;:VOLT:OFFS %.2f;:OUTP ON\n</p>
+      <p>Chaîne effectivement envoyée avec les réglages actuels :</p>
+      <p class="mono lvfmt" id="c-lv"></p>
+      <p style="font-size:14px;color:var(--muted)">« %.; » impose le point décimal : l'appareil refuse la virgule. Le « \n » (LF, 0x0A) termine chaque message.</p>
+    </div>
+  </section>
+
+  <!-- ===== Défis ===== -->
+  <section class="tool on" style="margin-top:22px" id="defis">
+    <h2>Défis</h2><p class="sub">Réglez le banc pour obtenir le signal demandé (souris ou console), puis cliquez sur « Vérifier ».</p>
+    <div class="scorebar"><div><small>Défis réussis</small><b id="d-score">0 / 6</b><div class="nxm"><i id="d-bar"></i></div></div></div>
+    <div id="d-list"></div>
+  </section>
+
+  <!-- ===== Aide-mémoire ===== -->
+  <section class="tool on" style="margin-top:22px">
+    <h2>Aide-mémoire des commandes reconnues</h2>
+    <div class="split">
+      <div><h3>Générateur SEFRAM 4463</h3>
+        <table class="t"><tr><th>Commande</th><th>Effet</th></tr>
+        <tr><td>*IDN? · *RST · *CLS · *TST?</td><td>identité · réglages usine (sortie OFF) · effacer · autotest</td></tr>
+        <tr><td>:FUNC SIN | SQU | TRI</td><td>forme ; :FUNC? pour relire</td></tr>
+        <tr><td>:FREQ 1KHZ · :FREQ 2500</td><td>fréquence (HZ, KHZ, MHZ ou MIN, MAX) ; :FREQ? [MIN|MAX]</td></tr>
+        <tr><td>:VOLT:AMPL 2</td><td>amplitude crête à crête sur 50 Ω ; :VOLT:AMPL?</td></tr>
+        <tr><td>:VOLT:OFFS 0.5</td><td>offset ; :VOLT:OFFS? [MAX]</td></tr>
+        <tr><td>:OUTP ON | OFF</td><td>sortie ; :OUTP?</td></tr>
+        <tr><td>:SYST:ERR? · :SYST:VERS?</td><td>file d'erreurs · version SCPI</td></tr></table></div>
+      <div><h3>Oscilloscope 5062DC (syntaxe GDS-2000)</h3>
+        <table class="t"><tr><th>Commande</th><th>Effet</th></tr>
+        <tr><td>:CHANnel1:SCALe 0.5</td><td>calibre (V/div)</td></tr>
+        <tr><td>:CHANnel1:OFFSet 0</td><td>position verticale (V)</td></tr>
+        <tr><td>:CHANnel1:COUPling 1</td><td>couplage : 0 AC, 1 DC, 2 GND</td></tr>
+        <tr><td>:TIMebase:SCALe 2e-4</td><td>base de temps (s/div)</td></tr>
+        <tr><td>:RUN · :STOP · :AUTOSet</td><td>lancer, figer, réglage auto</td></tr>
+        <tr><td>:MEASure:SOURce 1;:MEASure:VPP?</td><td>tension crête à crête (aussi VMAX?, VMIN?, VRMS?)</td></tr>
+        <tr><td>:MEASure:FREQuency? · :MEASure:PERiod?</td><td>fréquence, période</td></tr></table></div>
+    </div>
+    <p class="foot-note"><span>ℹ️</span><span>Les commandes et limites suivent les manuels utilisés en TP (SEFRAM 4463, section 4 ; programmation GDS-2000 pour le 5062DC). Les réponses de *IDN? et les libellés d'erreur sont simulés : relevez les valeurs exactes sur les vrais appareils.</span></p>
+  </section>
+</main>
+<footer><div class="wrap"><span>GénéLab – logiciel didactique · Pr. Mounir Hanine · Université Moulay Ismaïl</span><span class="yr" id="copyr"></span></div></footer>
+<script>
+const $=id=>document.getElementById(id);
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+/* ================= Utilitaires ================= */
+const sci=(v,d=6)=>{const s=Number(v).toExponential(d).toUpperCase().replace(/E([+-])(\d)$/,'E$10$2');return (v>=0?'+':'')+s;};
+function eng(v,u,dg=4){if(!isFinite(v))return '—';const a=Math.abs(v);const P=[[1e6,'M'],[1e3,'k'],[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n']];
+  if(a===0)return '0 '+u;for(const[p,s]of P)if(a>=p*0.9999)return +(v/p).toPrecision(dg)+' '+s+u;return +(v/1e-9).toPrecision(dg)+' n'+u;}
+const seq125=(a,b)=>{const r=[];for(let e=-9;e<=1;e++)for(const m of[1,2,5]){const v=+(m*10**e).toPrecision(3);if(v>=a-1e-15&&v<=b+1e-15)r.push(v);}return r;};
+/* ================= État des instruments ================= */
+const G={func:'SIN',freq:1e6,ampl:5,offs:0,out:false,rem:false,err:[]};
+const S={vdiv:1,tdiv:2e-4,offs:0,coup:1,run:true,src:1,frozen:null,err:[]};
+let load='50';
+const FMAX={SIN:31e6,SQU:31e6,TRI:500e3},FMIN=10e-6;
+function levelsOK(a,o){const lim=a>=1?5:a>=0.1?0.5:0.05;return a>=0.01&&a<=10&&Math.abs(o)<=4.5&&a/2+Math.abs(o)<=lim+1e-9;}
+function gReset(){Object.assign(G,{func:'SIN',freq:1e6,ampl:5,offs:0,out:false});}
+gReset();G.func='SIN';
+/* ================= Analyse SCPI ================= */
+const kw=(tok,spec)=>{const t=tok.toUpperCase(),L=spec.toUpperCase(),Sh=spec.replace(/[a-z]/g,'');return t===L||t===Sh;};
+function num(arg,unitMap){if(arg==null)return NaN;let a=arg.trim().toUpperCase();
+  const m=a.match(/^([+-]?(\d+\.?\d*|\.\d+)(E[+-]?\d+)?)\s*([A-Z]*)$/);if(!m)return NaN;let v=parseFloat(m[1]);const u=m[4];
+  if(u){if(!(u in unitMap))return NaN;v*=unitMap[u];}return v;}
+const FU={HZ:1,KHZ:1e3,MHZ:1e6,MAHZ:1e6},VU={V:1,MV:1e-3,VPP:1};
+function splitMsg(msg){return msg.split(';').map(s=>s.trim()).filter(Boolean);}
+function parseCmd(c,prev){ // retourne {path:[...],q:bool,arg}
+  let common=c.startsWith('*');let m=c.match(/^(\S+)\s*(.*)$/);let head=m[1],arg=m[2]||'';
+  let q=head.endsWith('?');if(q)head=head.slice(0,-1);
+  if(common)return{common:head.toUpperCase(),q,arg};
+  let abs=head.startsWith(':');head=head.replace(/^:/,'');
+  return{path:head.split(':'),q,arg,abs};
+}
+function genErr(code,txt){G.err.push(code+',"'+txt+'"');}
+function gExec(msg){
+  const out=[];let pend={ampl:G.ampl,offs:G.offs,touched:false,out:null};
+  for(const c of splitMsg(msg)){
+    const p=parseCmd(c);
+    if(p.common){const k=p.common;
+      if(k==='*IDN'&&p.q)out.push('SEFRAM,4463,SIM00009,V1.00 (simulé)');
+      else if(k==='*RST'&&!p.q){gReset();pend={ampl:G.ampl,offs:G.offs,touched:false,out:null};}
+      else if(k==='*CLS'&&!p.q)G.err=[];
+      else if(k==='*TST'&&p.q)out.push('0');
+      else if(k==='*OPC'&&p.q)out.push('1');
+      else genErr(-113,'Undefined header');continue;}
+    const P=p.path,a=p.arg.trim(),A=a.toUpperCase();
+    if(kw(P[0],'FUNCtion')&&P.length===1){
+      if(p.q){out.push(G.func);continue;}
+      const f=['SIN','SINusoid','SQU','SQUare','TRI','TRIangle'].find(x=>kw(A,x));
+      if(!f){genErr(-224,'Illegal parameter value');continue;}
+      const F=f.slice(0,3).toUpperCase();
+      if(G.freq>FMAX[F]){genErr(-221,'Settings conflict');continue;}
+      G.func=F;continue;}
+    if(kw(P[0],'FREQuency')&&P.length===1){
+      if(p.q){if(kw(A,'MAXimum'))out.push(sci(FMAX[G.func],9));else if(kw(A,'MINimum'))out.push(sci(FMIN,9));else out.push(sci(G.freq,9));continue;}
+      let v=kw(A,'MAXimum')?FMAX[G.func]:kw(A,'MINimum')?FMIN:num(a,FU);
+      if(isNaN(v)){genErr(-224,'Illegal parameter value');continue;}
+      if(v<FMIN||v>FMAX[G.func]){genErr(-222,'Data out of range');continue;}
+      G.freq=v;continue;}
+    if(kw(P[0],'VOLTage')){
+      const sub=P[1]||'AMPL';
+      if(kw(sub,'AMPLitude')){if(p.q){out.push(sci(G.ampl,4));continue;}
+        let v=kw(A,'MAXimum')?10:kw(A,'MINimum')?0.01:num(a,VU);if(isNaN(v)){genErr(-224,'Illegal parameter value');continue;}
+        pend.ampl=v;pend.touched=true;continue;}
+      if(kw(sub,'OFFSet')){if(p.q){if(kw(A,'MAXimum')){const lim=G.ampl>=1?5:G.ampl>=0.1?0.5:0.05;out.push(sci(Math.min(4.5,lim-G.ampl/2),4));}else out.push(sci(G.offs,4));continue;}
+        let v=num(a,VU);if(isNaN(v)){genErr(-224,'Illegal parameter value');continue;}
+        pend.offs=v;pend.touched=true;continue;}
+      genErr(-113,'Undefined header');continue;}
+    if(kw(P[0],'OUTPut')&&P.length===1){if(p.q){out.push(G.out?'1':'0');continue;}
+      if(['ON','1'].includes(A))pend.out=true;else if(['OFF','0'].includes(A))pend.out=false;else genErr(-224,'Illegal parameter value');continue;}
+    if(kw(P[0],'SYSTem')){const s=P[1]||'';
+      if(kw(s,'ERRor')&&p.q){out.push(G.err.length?G.err.shift():'0,"No error"');continue;}
+      if(kw(s,'VERSion')&&p.q){out.push('1992.0');continue;}
+      if(kw(s,'SCReen')||kw(s,'SCR')){continue;}
+      genErr(-113,'Undefined header');continue;}
+    genErr(-113,'Undefined header');
+  }
+  // commandes couplées : amplitude, offset et sortie exécutées en groupe
+  if(pend.touched){if(levelsOK(pend.ampl,pend.offs)){G.ampl=pend.ampl;G.offs=pend.offs;}else genErr(-222,'Data out of range');}
+  if(pend.out!==null)G.out=pend.out;
+  G.rem=true;return out;
+}
+function sMeasure(){const d=dispSignal();return d;}
+function sExec(msg){const out=[];
+  for(const c of splitMsg(msg)){const p=parseCmd(c);
+    if(p.common){if(p.common==='*IDN'&&p.q)out.push('SEFRAM,5062DC,SIM00007,V1.00 (simulé)');else if(p.common==='*RST'&&!p.q){Object.assign(S,{vdiv:1,tdiv:1e-3,offs:0,coup:1,run:true});}else if(p.common==='*CLS')S.err=[];else S.err.push('-113,"Undefined header"');continue;}
+    const P=p.path,a=p.arg.trim(),A=a.toUpperCase(),n=parseFloat(a);
+    const ch=P[0].match(/^(CHANnel|CHAN)(\d)$/i);
+    if(ch||/^CHAN(nel)?1$/i.test(P[0])){const s=P[1]||'';
+      if(kw(s,'SCALe')){if(p.q)out.push(sci(S.vdiv,3));else if(n>=0.002&&n<=10)S.vdiv=n;else S.err.push('-222,"Data out of range"');continue;}
+      if(kw(s,'OFFSet')||kw(s,'POSition')){if(p.q)out.push(sci(S.offs,3));else if(!isNaN(n))S.offs=n;continue;}
+      if(kw(s,'COUPling')){const m={'0':0,'1':1,'2':2,AC:0,DC:1,GND:2}[A];if(p.q)out.push(String(S.coup));else if(m!=null)S.coup=m;else S.err.push('-224,"Illegal parameter value"');continue;}
+      S.err.push('-113,"Undefined header"');continue;}
+    if(kw(P[0],'TIMebase')&&kw(P[1]||'','SCALe')){if(p.q)out.push(sci(S.tdiv,3));else if(n>=1e-9&&n<=10)S.tdiv=n;else S.err.push('-222,"Data out of range"');continue;}
+    if(kw(P[0],'RUN')){S.run=true;S.frozen=null;continue;}
+    if(kw(P[0],'STOP')){if(S.run){S.run=false;S.frozen={...G,load,coup:S.coup};}continue;}
+    if(kw(P[0],'AUTOSet')){autoset();continue;}
+    if(kw(P[0],'TRIGger')||kw(P[0],'ACQuire')&&!p.q){continue;}
+    if(/^ACQ(uire)?1$/i.test(P[0])&&kw(P[1]||'','MEMory')&&p.q){out.push('#41008<bloc binaire : 4 octets dt + 500 points I16 – non affiché>');continue;}
+    if(kw(P[0],'MEASure')){const s=P[1]||'';
+      if(kw(s,'SOURce')){continue;}
+      const m=sMeasure();const map={VPP:m.vpp,PK2Pk:m.vpp,VMAX:m.vmax,VMIN:m.vmin,VRMS:m.vrms,FREQuency:m.f,PERiod:m.f?1/m.f:NaN};
+      const k=Object.keys(map).find(x=>kw(s,x));
+      if(k&&p.q){const v=map[k];out.push(isFinite(v)&&!(k==='FREQuency'&&!v)?sci(v,3):'9.9E+37');continue;}
+      S.err.push('-113,"Undefined header"');continue;}
+    if(kw(P[0],'SYSTem')&&kw(P[1]||'','ERRor')&&p.q){out.push(S.err.length?S.err.shift():'0,"No error"');continue;}
+    S.err.push('-113,"Undefined header"');
+  }return out;}
+/* ================= Signal affiché ================= */
+function dispSignal(){const st=S.frozen||{...G,load,coup:S.coup};
+  const k=st.load==='1M'?2:1;let on=st.out,A=on?st.ampl*k:0,O=on?st.offs*k:0;
+  if(st.coup===2){A=0;O=0;}if(st.coup===0)O=0;
+  const vmax=O+A/2,vmin=O-A/2,vrms=!on||st.coup===2?0:st.func==='SIN'?Math.sqrt(O*O+(A/2)**2/2):st.func==='SQU'?Math.sqrt(O*O+(A/2)**2):Math.sqrt(O*O+(A/2)**2/3);
+  return{st,A,O,on:on&&st.coup!==2,f:on&&A>0?st.freq:0,vpp:A,vmax,vmin,vrms};}
+const shape=(f,x)=>{const ph=x-Math.floor(x);if(f==='SIN')return Math.sin(2*Math.PI*ph);if(f==='SQU')return ph<0.5?1:-1;return ph<0.25?4*ph:ph<0.75?2-4*ph:4*ph-4;};
+const cv=$('scope'),ctx=cv.getContext('2d');
+function draw(){const W=cv.width,H=cv.height,dx=W/10,dy=H/8,d=dispSignal();
+  ctx.fillStyle='#0b1a1d';ctx.fillRect(0,0,W,H);ctx.strokeStyle='#23414a';ctx.lineWidth=1;
+  for(let i=0;i<=10;i++){ctx.beginPath();ctx.moveTo(i*dx,0);ctx.lineTo(i*dx,H);ctx.stroke();}
+  for(let j=0;j<=8;j++){ctx.beginPath();ctx.moveTo(0,j*dy);ctx.lineTo(W,j*dy);ctx.stroke();}
+  ctx.strokeStyle='#3f6670';ctx.beginPath();ctx.moveTo(W/2,0);ctx.lineTo(W/2,H);ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.stroke();
+  const Y=v=>H/2-(v+S.offs)/S.vdiv*dy;
+  ctx.strokeStyle='#7ee0d6';ctx.lineWidth=2;ctx.beginPath();
+  const T=10*S.tdiv,per=d.f?T*d.f:0,N=900;
+  if(per>120){ctx.fillStyle='rgba(126,224,214,.35)';ctx.fillRect(0,Y(d.vmax),W,Y(d.vmin)-Y(d.vmax));ctx.stroke();}
+  else{for(let i=0;i<=N;i++){const t=i/N*T,noise=(Math.random()-.5)*S.vdiv*0.02;const v=d.on?d.O+d.A/2*shape(d.st.func,t*d.st.freq):0;const y=Math.max(-5,Math.min(H+5,Y(v+noise)));i?ctx.lineTo(i/N*W,y):ctx.moveTo(0,y);}ctx.stroke();}
+  ctx.fillStyle='#9fc9c4';ctx.font='13px IBM Plex Mono, monospace';
+  ctx.fillText('CH1 '+eng(S.vdiv,'V/div',3)+'  '+['AC','DC','GND'][S.coup],10,18);ctx.fillText(eng(S.tdiv,'s/div',3),W-120,18);
+  if(!S.run){ctx.fillStyle='#e0a64a';ctx.fillText('STOP',W/2-18,18);}
+  ctx.fillStyle='#e36f5c';ctx.fillText('▶',2,Y(0)+5);
+  $('s-meas').innerHTML=[['Fréquence',d.f?eng(d.f,'Hz'):'—'],['Période',d.f?eng(1/d.f,'s'):'—'],['Vcc',eng(d.vpp,'V')],['Vmax',eng(d.vmax,'V')],['Vmin',eng(d.vmin,'V')],['Veff',eng(d.vrms,'V')]].map(([a,b])=>`<div><small>${a}</small><b>${b}</b></div>`).join('');}
+/* ================= Interface ================= */
+function syncInputs(){const u=G.freq>=1e6?1e6:G.freq>=1e3?1e3:1;$('g-fu').value=String(u===1?1:u===1e3?'1e3':'1e6');$('g-freq').value=+(G.freq/u).toPrecision(10);$('g-ampl').value=+G.ampl;$('g-offs').value=+G.offs;}
+function lcd(){$('g-lcd').innerHTML=`<div><span>${G.func}</span><b>${eng(G.freq,'Hz',7)}</b></div><div><span>AMPL</span><b>${(+G.ampl).toFixed(3)} Vpp</b><span>OFFS</span><b>${(+G.offs).toFixed(3)} V</b></div><div><span>${G.rem?'REMS':'LOCS'}</span><span>CONT</span><b class="${G.out?'on':''}">OUTPUT ${G.out?'ON':'OFF'}</b></div>`;
+  $('g-led').textContent=G.out?'ON':'OFF';$('g-led').classList.toggle('on',G.out);
+  $('g-out').textContent=G.out?'OUTPUT OFF':'OUTPUT ON';
+  document.querySelectorAll('#g-func button').forEach(b=>b.classList.toggle('sel',b.dataset.f===G.func));
+  $('s-led').textContent=S.run?'RUN':'STOP';$('s-led').classList.toggle('on',S.run);$('s-run').textContent=S.run?'STOP':'RUN';
+  $('s-vdiv').value=String(S.vdiv);$('s-tdiv').value=String(S.tdiv);$('s-coup').value=String(S.coup);
+  const fs=fmtF(G.freq);$('c-lv').textContent=`:FUNC ${G.func};:FREQ ${fs};:VOLT:AMPL ${(+G.ampl).toFixed(3)};:VOLT:OFFS ${(+G.offs).toFixed(2)};:OUTP ${G.out?'ON':'OFF'}\\n`;
+  draw();}
+function fmtF(f){return +f.toPrecision(10)+'';}
+function freqToken(f){if(f>=1e6)return +(f/1e6).toPrecision(8)+'MHZ';if(f>=1e3)return +(f/1e3).toPrecision(8)+'KHZ';return +f.toPrecision(8)+'';}
+function log(inst,cmd,resp){const el=$('c-log');const tag=inst==='gen'?'GEN':'OSC';
+  el.insertAdjacentHTML('beforeend',`<div class="l"><span class="t ${inst}">${tag}</span><span class="c">› ${cmd.replace(/</g,'&lt;')}</span></div>`+resp.map(r=>`<div class="l r"><span class="t"></span><span>← ${r.replace(/</g,'&lt;')}</span></div>`).join(''));
+  el.scrollTop=el.scrollHeight;}
+function send(inst,cmd){const r=inst==='gen'?gExec(cmd):sExec(cmd);log(inst,cmd,r);if(inst==='gen')syncInputs();lcd();return r;}
+// Générateur
+document.querySelectorAll('#g-func button').forEach(b=>b.onclick=()=>send('gen',':FUNC '+b.dataset.f));
+$('g-apply').onclick=()=>{const f=parseFloat($('g-freq').value.replace(',','.'))*+$('g-fu').value,a=$('g-ampl').value.replace(',','.'),o=$('g-offs').value.replace(',','.');
+  send('gen',`:FREQ ${isNaN(f)?$('g-freq').value:freqToken(f)};:VOLT:AMPL ${a};:VOLT:OFFS ${o}`);
+  const e=G.err.length;if(e)log('gen','(conseil) :SYST:ERR?',['erreur en file : envoyez :SYST:ERR? pour la lire']);};
+$('g-out').onclick=()=>send('gen',':OUTP '+(G.out?'OFF':'ON'));
+$('g-rst').onclick=()=>send('gen','*RST');
+document.querySelectorAll('input[name=load]').forEach(r=>r.onchange=()=>{load=r.value;lcd();});
+// Oscilloscope
+seq125(0.002,10).forEach(v=>$('s-vdiv').insertAdjacentHTML('beforeend',`<option value="${v}">${eng(v,'V',3)}</option>`));
+seq125(1e-9,10).forEach(v=>$('s-tdiv').insertAdjacentHTML('beforeend',`<option value="${v}">${eng(v,'s',3)}</option>`));
+$('s-vdiv').onchange=e=>send('scope',':CHANnel1:SCALe '+e.target.value);
+$('s-tdiv').onchange=e=>send('scope',':TIMebase:SCALe '+(+e.target.value).toExponential().replace('e','E'));
+$('s-coup').onchange=e=>send('scope',':CHANnel1:COUPling '+e.target.value);
+$('s-run').onclick=()=>send('scope',S.run?':STOP':':RUN');
+$('s-auto').onclick=()=>send('scope',':AUTOSet');
+$('s-meas-b').onclick=()=>send('scope',':MEASure:SOURce 1;:MEASure:VPP?;:MEASure:FREQuency?');
+function autoset(){const d=dispSignal();const up=(x,L)=>L.find(v=>v>=x)||L[L.length-1];
+  if(d.f)S.tdiv=up(2.5/d.f/10,seq125(1e-9,10));const span=Math.max(Math.abs(d.vmax),Math.abs(d.vmin));S.vdiv=up(Math.max(span/3.5,0.002),seq125(0.002,10));S.offs=0;S.coup=1;S.run=true;S.frozen=null;}
+// Console
+const EX={gen:['*IDN?',':FUNC SIN;:FREQ 1KHZ;:VOLT:AMPL 2;:VOLT:OFFS 0;:OUTP ON',':FREQ?',':FREQ? MAX',':VOLT:AMPL 8;:VOLT:OFFS 1.5',':SYST:ERR?',':VOLT:OFFS? MAX','*RST'],
+  scope:['*IDN?',':CHANnel1:SCALe 0.5;:TIMebase:SCALe 2e-4',':MEASure:SOURce 1;:MEASure:VPP?',':MEASure:FREQuency?',':STOP',':RUN',':ACQuire1:MEMory?']};
+function exRender(){const i=$('c-inst').value;$('c-ex').innerHTML='Exemples : '+EX[i].map(e=>`<button type="button">${e}</button>`).join('');
+  $('c-ex').querySelectorAll('button').forEach(b=>b.onclick=()=>{$('c-cmd').value=b.textContent;$('c-cmd').focus();});}
+$('c-inst').onchange=exRender;exRender();
+$('c-send').onclick=()=>{const v=$('c-cmd').value.trim();if(v)send($('c-inst').value,v);};
+$('c-cmd').addEventListener('keydown',e=>{if(e.key==='Enter')$('c-send').click();});
+/* ================= Défis ================= */
+const near=(a,b,t=0.01)=>Math.abs(a-b)<=Math.abs(b)*t+1e-9;
+const DEF=[
+ {t:'Sinus de 1 kHz, 2 Vcc, offset nul, sortie active (TP 2).',ok:()=>G.func==='SIN'&&near(G.freq,1e3)&&near(G.ampl,2)&&Math.abs(G.offs)<1e-6&&G.out,sol:':FUNC SIN;:FREQ 1KHZ;:VOLT:AMPL 2;:VOLT:OFFS 0;:OUTP ON'},
+ {t:'Sinus de période 250 µs et de valeur efficace 1 V sur 50 Ω.',ok:()=>G.func==='SIN'&&near(G.freq,4e3)&&near(G.ampl,2.83,0.005)&&G.out&&load==='50',sol:'f = 1/T = 4 kHz ; Vcc = 2 × √2 × 1 = 2,83 V → :FUNC SIN;:FREQ 4KHZ;:VOLT:AMPL 2.83;:OUTP ON'},
+ {t:'Carré de 10 kHz variant entre 0 V et +5 V sur 50 Ω (signal logique).',ok:()=>G.func==='SQU'&&near(G.freq,1e4)&&near(G.ampl,5)&&near(G.offs,2.5)&&G.out&&load==='50',sol:'Vcc = 5 V, offset = 2,5 V (5/2 + 2,5 = 5 ≤ 5) → :FUNC SQU;:FREQ 10KHZ;:VOLT:AMPL 5;:VOLT:OFFS 2.5;:OUTP ON'},
+ {t:'Triangle de période 20 µs et de 4 Vcc.',ok:()=>G.func==='TRI'&&near(G.freq,5e4)&&near(G.ampl,4)&&G.out,sol:'f = 1/20 µs = 50 kHz (≤ 500 kHz pour le triangle) → :FUNC TRI;:FREQ 50KHZ;:VOLT:AMPL 4;:OUTP ON'},
+ {t:'Sinus de 100 Hz avec Vmax = +5 V et Vmin = −1 V sur 50 Ω (TP 3, cas a).',ok:()=>G.func==='SIN'&&near(G.freq,100)&&near(G.ampl,6)&&near(G.offs,2)&&G.out&&load==='50',sol:'Vcc = 5 − (−1) = 6 V ; offset = (5 + (−1))/2 = 2 V → :FREQ 100;:VOLT:AMPL 6;:VOLT:OFFS 2;:OUTP ON'},
+ {t:'Sans bouchon (entrée 1 MΩ), lire 4 Vcc à l\'oscilloscope pour un sinus de 2 kHz.',ok:()=>{const d=dispSignal();return G.func==='SIN'&&near(G.freq,2e3)&&load==='1M'&&near(d.vpp,4)&&G.out&&S.coup===1;},sol:'Sans charge 50 Ω, la tension double : programmer 2 Vcc → :FUNC SIN;:FREQ 2KHZ;:VOLT:AMPL 2;:OUTP ON, cocher « entrée 1 MΩ seule ».'}];
+const done=new Set();
+function dRender(){$('d-list').innerHTML=DEF.map((d,i)=>`<div class="defi ${done.has(i)?'done':''}"><div class="dq"><span class="qtag">Défi ${i+1}</span> ${d.t}</div><div class="row btns"><button class="btn" data-v="${i}" type="button">Vérifier</button><button class="btn ghost" data-s="${i}" type="button">Corrigé</button></div><div class="fb" id="fb${i}"></div></div>`).join('');
+  $('d-score').textContent=done.size+' / '+DEF.length;$('d-bar').style.width=(100*done.size/DEF.length)+'%';
+  document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const i=+b.dataset.v;if(DEF[i].ok()){done.add(i);dRender();$('fb'+i).innerHTML='<p class="ok callout">✔ Réglage correct.</p>';}else $('fb'+i).innerHTML='<p class="err">✘ Pas encore : vérifiez la forme, la fréquence, les niveaux, la sortie et le câblage.</p>';});
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{$('fb'+b.dataset.s).innerHTML=`<div class="steps"><p class="mono" style="margin:0">${DEF[b.dataset.s].sol}</p></div>`;});}
+dRender();
+/* ================= Démarrage ================= */
+log('gen','(mise sous tension)',['Réglages usine : SIN, 1 MHz, 5 Vcc, offset 0 V, sortie OFF']);
+syncInputs();lcd();setInterval(()=>{if(S.run)draw();},250);
+</script>
+
+</body>
+</html>

@@ -16,6 +16,7 @@ const RUBRIQUES = ["Cours", "Diapositives", "Travaux pratiques corrigés", "Étu
 
 /* Les annonces : la plus récente en premier. */
 const ANNONCES = [
+  { jour:"12", mois:"nov", titre:"Nouveau : GénéLab", texte:"Simulateur du banc SEFRAM (générateur 4463 et oscilloscope 5062DC) piloté en SCPI. Rubrique Logiciels." },
   { jour:"11", mois:"nov", titre:"Site réorganisé", texte:"Les documents sont classés par rubrique : cours, diapositives, travaux pratiques corrigés et études de cas." },
   { jour:"11", mois:"nov", titre:"Nouvelle étude de cas", texte:"Excel appliqué au droit public des administrations territoriales." }
 ];
