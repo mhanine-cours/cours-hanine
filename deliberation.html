@@ -249,6 +249,13 @@ table.pv2-t td.val{text-align:center;font-weight:600}
  table.pv2-t thead{display:table-header-group}table.pv2-t tr{break-inside:avoid;page-break-inside:avoid}
  table.pv2-t th,table.pv2-t td,table.jury th,.pill,.pv2-sum,table.wbox td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+table.xl td.bad{background:#fde2e1!important;color:#b3261e!important;font-weight:700;outline:2px solid #e05a4f;outline-offset:-2px}
+table.xl tr.chk td{background:color-mix(in srgb,#e05a4f 7%,transparent)}
+.d-X{background:#fde2e1;color:#b3261e}
+.errbox{margin:0 0 12px;padding:12px 14px;border-radius:10px;background:#fdecea;border:1px solid #f0b4ae;color:#7a1c14;font-size:14.5px;line-height:1.5}
+.errbox b{font-weight:700}.errbox ul{margin:6px 0 0;padding-left:18px}.errbox li{margin:2px 0}
+.errbox button{font:600 13px var(--mono);border:1px solid #e05a4f;background:#fff;color:#b3261e;border-radius:6px;padding:1px 8px;cursor:pointer;margin-left:6px}
+.led.warn{background:#b3261e;border-color:#b3261e;color:#fff}
 </style>
 </head>
 <body>
@@ -325,6 +332,7 @@ table.pv2-t td.val{text-align:center;font-weight:600}
   <section class="tool on" style="margin-top:22px">
     <h2>La feuille « Délibération »</h2>
     <p class="sub">Cliquez sur une cellule verte pour voir sa formule, ou sur une note (bleue) pour la modifier.</p>
+    <div id="errbox" class="errbox" hidden></div>
     <div class="xl-bar"><span class="nm" id="xl-ref">G2</span><span class="fx">fx</span><span class="fm" id="xl-fm"></span><span class="ex" id="xl-ex"></span></div>
     <div class="xl-wrap tall"><table class="xl" id="xl"></table></div>
     <div class="row btns" style="margin-top:12px"><button class="btn" id="csv" type="button">Exporter vers Excel (.csv)</button><button class="btn ghost" id="tpl" type="button">Télécharger le modèle de fichier</button><span style="font-size:14px;color:var(--muted)">Le fichier exporté contient les formules : ouvrez-le dans Excel pour poursuivre le travail.</span></div>
@@ -335,6 +343,7 @@ table.pv2-t td.val{text-align:center;font-weight:600}
     <div id="pv-btns"><h2>Procès-verbal de délibération</h2>
     <p class="sub">Session normale : page de garde (jury et synthèse) suivie du PV des notes, prêts à imprimer ou à enregistrer en PDF.</p>
     <div class="row btns" style="align-items:end"><label hidden>Session<select id="sess"><option value="N">Session normale</option><option value="R">Session de rattrapage</option></select></label><button class="btn" id="print" type="button">🖨 Imprimer le PV</button></div></div>
+    <div id="pv-err" class="errbox" hidden></div>
     <div class="pv" id="pv"></div>
   </section>
   <p class="foot-note"><span>ℹ️</span><span>Le module d'exemple contient des étudiants et des notes fictifs. Vos fichiers importés sont lus uniquement dans votre navigateur : aucune note n'est envoyée sur Internet. Les règles (pondération, note éliminatoire, rattrapage) sont paramétrables : appliquez celles du règlement de votre établissement. Formules d'Excel en français (séparateur « ; »).</span></p>
@@ -359,22 +368,23 @@ function gen(){E=[];const used=new Set();for(let i=0;i<40;i++){let n;do n=[NOM[M
 const P=()=>({w:+$('w').value/100,seuil:+$('seuil').value,elim:+$('elim').value,mode:$('mode').value,cap:$('cap').checked});
 const dn=v=>String(v).replace('.',',');
 function calc(){const p=P();
-  E.forEach(e=>{e.sn=e.ex===null?null:r2(e.cc*p.w+e.ex*(1-p.w));
-    e.rs=e.ex===null?(e.st==='ABSJ'?'R':'NV'):(e.sn>=p.seuil&&(!p.elim||e.ex>=p.elim))?'V':'R';
-    if(e.rs==='V'){e.fin=e.sn;e.dec='V';}
+  E.forEach(e=>{const bad=e.err&&Object.keys(e.err).length;e.sn=bad||e.ex===null?null:r2(e.cc*p.w+e.ex*(1-p.w));
+    e.rs=bad?'X':e.ex===null?(e.st==='ABSJ'?'R':'NV'):(e.sn>=p.seuil&&(!p.elim||e.ex>=p.elim))?'V':'R';
+    if(e.rs==='X'){e.fin=null;e.dec='X';}
+    else if(e.rs==='V'){e.fin=e.sn;e.dec='V';}
     else if(e.rs==='NV'){e.fin=e.sn;e.dec='NV';}
     else if(e.ra===null||e.ra===undefined){e.fin=e.sn;e.dec='R';}
     else{let nr=p.mode==='ex'?r2(e.cc*p.w+e.ra*(1-p.w)):e.ra;if(p.cap)nr=Math.min(10,nr);e.fin=r2(Math.max(e.sn,nr));e.dec=e.fin>=p.seuil?'VAR':'NV';}});
   E.forEach(e=>{e.rang=e.sn===null?null:1+E.filter(x=>x.sn!==null&&x.sn>e.sn).length;});
   const n=E.length,sns=E.map(e=>e.sn).filter(v=>v!==null),moy=sns.length?sns.reduce((a,b)=>a+b,0)/sns.length:0;
-  return{p,n,moy,fmoy:0,vsn:E.filter(e=>e.rs==='V').length,ratt:E.filter(e=>e.rs==='R').length,abs:E.filter(e=>e.ex===null&&e.st!=='ABSJ').length,absj:E.filter(e=>e.ex===null&&e.st==='ABSJ').length,
+  return{p,n,moy,fmoy:0,bad:E.filter(e=>e.rs==='X').length,vsn:E.filter(e=>e.rs==='V').length,ratt:E.filter(e=>e.rs==='R').length,abs:E.filter(e=>e.ex===null&&e.st!=='ABSJ').length,absj:E.filter(e=>e.ex===null&&e.st==='ABSJ').length,
     var:E.filter(e=>e.dec==='VAR').length,nv:E.filter(e=>e.dec==='NV').length,att:E.filter(e=>e.dec==='R').length};}
-const exT=e=>e.ex===null?(e.st||'ABS'):fr(e.ex);
+const exT=e=>e.err&&'ex' in e.err?e.err.ex:e.ex===null?(e.st||'ABS'):fr(e.ex);const ccT=e=>e.err&&'cc' in e.err?e.err.cc:fr(e.cc);
 const DL={V:'Validé',VAR:'Validé après rattrapage',NV:'Non validé',R:'Rattrapage',ABS:'Absent'};
 const tag=c=>`<span class="dec d-${c}">${c==='R'&&false?'':c}</span>`;
-const VT={V:'Validé',R:'Rattrapage',NV:'Non validé'};const snT=e=>e.sn===null?'-':fr(e.sn);
+const VT={V:'Validé',R:'Rattrapage',NV:'Non validé',X:'À vérifier'};const snT=e=>e.rs==='X'?'?':e.sn===null?'-':fr(e.sn);
 const COLS=[['A','N°',(e,i)=>i+1],['B','CNE',e=>e.code],['C','Nom',e=>e.nom],['D','Prénom',e=>e.pre],
- ['E','Note CC',e=>fr(e.cc),'edit','cc'],['F','Note Écrit',e=>exT(e),'edit','ex'],['G','Note finale',e=>snT(e),'calc'],['H','Validation',e=>VT[e.rs],'calc'],['I','Rang',e=>e.rang??'-','calc']];
+ ['E','Note CC',e=>ccT(e),'edit','cc'],['F','Note Écrit',e=>exT(e),'edit','ex'],['G','Note finale',e=>snT(e),'calc'],['H','Validation',e=>VT[e.rs],'calc'],['I','Rang',e=>e.rang??'-','calc']];
 function formula(col,n){const p=C.p,w=dn(p.w),w2=dn(r2(1-p.w)),L=LR(),s=dn(p.seuil);
   switch(col){
   case'E':return['(note saisie)','Note de contrôle continu saisie par l\'enseignant'];
@@ -385,18 +395,18 @@ function formula(col,n){const p=C.p,w=dn(p.w),w2=dn(r2(1-p.w)),L=LR(),s=dn(p.seu
   return['',''];}
 function showF(){const col=COLS[sel.c][0],n=sel.r+1;const[f,x]=formula(col,n);$('xl-ref').textContent=col+n;$('xl-fm').textContent=f;$('xl-ex').textContent=x;}
 function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+'</tr><tr><th>1</th>'+COLS.map(c=>`<td class="hd">${c[1]}</td>`).join('')+'</tr>';
-  E.forEach((e,i)=>{h+=`<tr class="${e.rs==='NV'?'bad':e.rs==='R'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>{let cl=c[3]||'';if(c[4]==='ra'&&e.rs!=='R')cl='na';
-    let v=esc(c[2](e,i));if(c[0]==='H')v=`<span class="dec d-${e.rs}">${v}</span>`;
-    return `<td class="${cl}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}">${v}</td>`;}).join('')+'</tr>';});
+  E.forEach((e,i)=>{h+=`<tr class="${e.rs==='X'?'chk':e.rs==='NV'?'bad':e.rs==='R'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>{let cl=c[3]||'';if(c[4]==='ra'&&e.rs!=='R')cl='na';
+    if(e.err&&c[4]&&c[4] in e.err)cl+=' bad';let v=esc(c[2](e,i));if(c[0]==='H')v=`<span class="dec d-${e.rs}">${v}</span>`;
+    return `<td class="${cl}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}"${cl.includes(' bad')?` title="Valeur saisie : « ${esc(e.err[c[4]])} » : la note doit être un nombre entre 0 et 20${c[4]==='ex'?' (ou ABS / ABSJ)':''}"`:''}>${v}</td>`;}).join('')+'</tr>';});
   const av=k=>{const v=E.map(e=>e[k]).filter(x=>x!==null&&x!==undefined);return v.length?fr(v.reduce((a,b)=>a+b,0)/v.length):'-';};
   h+=`<tr class="tot"><th>${LR()+1}</th><td></td><td></td><td>Moyennes</td><td></td><td>${av('cc')}</td><td>${av('ex')}</td><td>${fr(C.moy)}</td><td>${C.vsn} validés</td><td></td></tr>`;
   $('xl').innerHTML=h;
   $('xl').querySelectorAll('td.calc').forEach(td=>td.onclick=()=>{sel={r:+td.dataset.r,c:+td.dataset.c};table();});
   $('xl').querySelectorAll('td.edit').forEach(td=>td.onclick=()=>{if(td.querySelector('input'))return;sel={r:+td.dataset.r,c:+td.dataset.c};const k=COLS[sel.c][4],e=E[sel.r-1];
-    const cur=e[k]===null||e[k]===undefined?(k==='ex'?(e.st||'ABS').toLowerCase():''):String(e[k]).replace('.',',');
+    const cur=e.err&&k in e.err?e.err[k]:e[k]===null||e[k]===undefined?(k==='ex'?(e.st||'ABS').toLowerCase():''):String(e[k]).replace('.',',');
     td.innerHTML=`<input class="cell" value="${cur}">`;const inp=td.querySelector('input');inp.focus();inp.select();
-    const ok=()=>{const t=inp.value.trim().toLowerCase().replace(/[\s.()]/g,'');if(k==='ex'&&/^(abs|absent|a|absj|aj|absjustifiee)$/.test(t)){e.ex=null;e.st=/j/.test(t)?'ABSJ':'ABS';}else if(k==='ra'&&(t===''||/^abs/.test(t))){e.ra=null;}else if(k==='ex'&&t===''){e.ex=null;e.st='ABS';}
-      else{const v=parseFloat(t.replace(',','.'));if(!isNaN(v)&&v>=0&&v<=20){e[k]=v;if(k==='ex')e.st=null;}}all();};
+    const ok=()=>{const t=inp.value.trim().toLowerCase().replace(/[\s.()]/g,'');if(k==='ex'&&/^(abs|absent|a|absj|aj|absjustifiee)$/.test(t)){e.ex=null;e.st=/j/.test(t)?'ABSJ':'ABS';if(e.err)delete e.err.ex;}else if(k==='ra'&&(t===''||/^abs/.test(t))){e.ra=null;}
+      else{const raw=inp.value.trim(),v=raw===''?NaN:Number(raw.replace(/\s/g,'').replace(',','.'));e.err=e.err||{};if(!isNaN(v)&&v>=0&&v<=20){e[k]=r2(v);if(k==='ex')e.st=null;delete e.err[k];}else{e.err[k]=raw===''?'(vide)':raw;}}all();};
     inp.onblur=ok;inp.onkeydown=ev=>{if(ev.key==='Enter')inp.blur();if(ev.key==='Escape'){inp.onblur=null;all();}};});
   showF();}
 function kpis(){const L=LR(),t=C.n,sns=E.map(e=>e.sn).filter(v=>v!==null);if(!sns.length)sns.push(0);$('taux').textContent='Validation '+fr(100*C.vsn/t,1)+' %';
@@ -426,7 +436,7 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
   let rows,sum,hd;
   if(S==='N'){
     hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Écrit</th><th>Note finale</th><th>Validation</th>';
-    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${exT(e)}</td><td class="fin">${snT(e)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):pill('r','Rattrapage')}</td></tr>`).join('');
+    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${ccT(e)}</td><td>${exT(e)}</td><td class="fin">${snT(e)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):e.rs==='X'?pill('nv','À vérifier'):pill('r','Rattrapage')}</td></tr>`).join('');
     sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.absj?` (dont ${C.absj} ABSJ)`:''}</span>${C.abs?`<span><b>Non validés (ABS) :</b> ${C.abs}</span>`:''}<span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
   else{const R=E.filter(e=>e.rs==='R');
     hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note rattrapage</th><th>Note finale</th><th>Validation</th>';
@@ -442,9 +452,16 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
    <p class="legend-pv">ABS : absence non justifiée à l'examen (module non validé) · ABSJ : absence justifiée (droit au rattrapage)</p>
    <div class="pv-sign"><div>Les intervenants au module</div><div>Le coordonnateur du module</div></div></section>`;
   $('pv').innerHTML=`<div class="lh" id="runlh"><img src="${LOGO}" alt="Logo"><div class="r"><b>Université Moulay Ismail</b><br>${g('i-etab')}<br>Année universitaire ${g('i-au')}</div></div><table class="pgw"><thead><tr><td></td></tr></thead><tbody><tr><td>${cover}${notes}</td></tr></tbody></table>`;}
+function errs(){const L=[];E.forEach((e,i)=>{if(e.err)for(const k of Object.keys(e.err))L.push({i,k,v:e.err[k],e});});
+  const box=$('errbox'),pe=$('pv-err');if(!L.length){box.hidden=true;pe.hidden=true;$('taux').classList.remove('warn');return;}
+  const lab={cc:'Note CC',ex:'Note Écrit'},col={cc:4,ex:5};
+  box.hidden=false;box.innerHTML=`<b>⚠ ${L.length} note${L.length>1?'s':''} à vérifier.</b> Une note doit être un nombre entre 0 et 20 (ou ABS / ABSJ pour l'écrit). Cliquez sur « Corriger » pour modifier la cellule.<ul>${L.slice(0,12).map(x=>`<li>Ligne ${x.i+2} · ${esc(x.e.nom)} ${esc(x.e.pre)} · ${lab[x.k]} : « ${esc(x.v)} » <button type="button" data-i="${x.i}" data-c="${col[x.k]}">Corriger</button></li>`).join('')}${L.length>12?`<li>… et ${L.length-12} autre${L.length-12>1?'s':''}</li>`:''}</ul>`;
+  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{const td=$('xl').querySelector(`td[data-r="${+b.dataset.i+1}"][data-c="${b.dataset.c}"]`);if(td){td.scrollIntoView({block:'center',behavior:'smooth'});td.click();}});
+  pe.hidden=false;pe.innerHTML=`<b>⚠ Le PV ne peut pas être imprimé :</b> ${L.length} note${L.length>1?'s':''} à vérifier dans la feuille « Délibération » (cellules en rouge).`;
+  $('taux').classList.add('warn');$('taux').textContent=L.length+' note'+(L.length>1?'s':'')+' à vérifier';}
 function all(){const p=P();$('o-w').textContent=fr(p.w*100,0)+' % / '+fr(100-p.w*100,0)+' %';$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-elim').textContent=p.elim?fr(p.elim,1):'aucune';
   $('nb-el').textContent=E.length;$('cls-sub').innerHTML=esc($('i-mod').value)+' · '+esc($('i-fil').value)+' · '+CLS;
-  C=calc();kpis();chart();table();rules();pv();}
+  C=calc();kpis();chart();table();rules();pv();errs();}
 /* ---------- Export ---------- */
 function dl(name,rows){const blob=new Blob(['﻿'+rows.map(r=>r.join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 $('csv').onclick=()=>{const head=['N°','CNE','Nom','Prénom','Note CC','Note Ecrit','Note Finale','Validation','Rang'];
@@ -452,7 +469,7 @@ $('csv').onclick=()=>{const head=['N°','CNE','Nom','Prénom','Note CC','Note Ec
   const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.code,q(e.nom),q(e.pre),dn(e.cc),e.ex===null?(e.st||'ABS'):dn(e.ex),formula('G',n)[0],q(formula('H',n)[0]),formula('I',n)[0]];});
   dl('deliberation-session-normale.csv',[head,...rows]);};
 $('tpl').onclick=()=>dl('modele-notes-module.csv',[['N°','NOM','Prénom','CNE','Note CC','Note Ecrit'],[1,'ALAOUI','Sara','M130004512','14,5','12'],[2,'BENNANI','Youssef','M130004587','8','7,5'],[3,'OUALI','Imane','M130004633','11','ABSJ'],[4,'TAZI','Omar','M130004691','10','ABS']]);
-$('print').onclick=()=>window.print();
+$('print').onclick=()=>{if(C.bad||E.some(e=>e.err&&Object.keys(e.err).length)){$('pv-err').scrollIntoView({block:'center',behavior:'smooth'});return;}window.print();};
 $('sess').onchange=pv;
 function setLogo(src,save){LOGO=src;$('logo-prev').src=src;try{save?localStorage.setItem('delib-logo',src):localStorage.removeItem('delib-logo');}catch(e){}pv();}
 $('logo-btn').onclick=()=>$('logo-file').click();
@@ -498,18 +515,19 @@ function importRows(rows,fname){
   if(col.cc<0||col.ex<0)throw new Error('Il faut deux colonnes de notes : le contrôle continu (CC) et l\'examen final.');
   const L=[];let miss=0,abs=0,absj=0,clip=0;const fix=x=>{if(x>20||x<0){clip++;return Math.max(0,Math.min(20,x));}return r2(x);};
   data.forEach((r,i)=>{const nom=String(r[col.nom]??'').trim(),pre=col.pre>=0?String(r[col.pre]??'').trim():'';if(!nom&&!pre)return;if(/^(moyenne|total|effectif)/.test(norm(nom)))return;
-    let cc=parseNote(r[col.cc]);if(cc===null||cc==='ABS'||cc==='ABSJ'||isNaN(cc)){miss++;cc=0;}else cc=fix(cc);
-    let ex=parseNote(r[col.ex]),st=null;if(ex==='ABSJ'){absj++;ex=null;st='ABSJ';}else if(ex===null||ex==='ABS'||isNaN(ex)){abs++;ex=null;st='ABS';}else ex=fix(ex);
+    const err={},rawv=x=>{const t=String(x??'').trim();return t===''?'(vide)':t;};
+    let cc=parseNote(r[col.cc]);if(typeof cc!=='number'||isNaN(cc)||cc<0||cc>20){err.cc=rawv(r[col.cc]);cc=0;miss++;}else cc=r2(cc);
+    let ex=parseNote(r[col.ex]),st=null;if(ex==='ABSJ'){absj++;ex=null;st='ABSJ';}else if(ex==='ABS'){abs++;ex=null;st='ABS';}else if(typeof ex!=='number'||isNaN(ex)||ex<0||ex>20){err.ex=rawv(r[col.ex]);ex=null;miss++;}else ex=r2(ex);
     let ra=col.ra>=0?parseNote(r[col.ra]):null;if(ra==='ABS'||ra==='ABSJ'||ra===null||isNaN(ra))ra=null;else ra=fix(ra);
-    L.push({code:col.code>=0?String(r[col.code]).trim():'',nom,pre,cc,ex,st,ra});});
+    L.push({code:col.code>=0?String(r[col.code]).trim():'',nom,pre,cc,ex,st,ra,err});});
   if(!L.length)throw new Error('Aucun étudiant n\'a été trouvé dans le fichier.');
   if(L.length>1000)throw new Error('Plus de 1000 lignes : importez un seul module à la fois.');
   E=L;const nm=fname.replace(/\.[^.]+$/,'');CLS='fichier « '+esc(nm)+' »';sel={r:1,c:6};all();
   const T=k=>esc(String(rows[h][col[k]]).trim());
   let t=`✔ <b>${L.length} étudiants</b> importés depuis « ${esc(fname)} ». Colonnes reconnues : CC = « <b>${T('cc')}</b> », examen = « <b>${T('ex')}</b> »${col.code>=0?`, code = « ${T('code')} »`:''}. ${meta.length?' Informations reprises du fichier : '+meta.map(esc).join(', ')+'.':' Vérifiez la pondération ci-dessous.'}`;
-  if(abs)t+=`<br>⚠ ${abs} examen${abs>1?'s':''} vide${abs>1?'s':''} ou « ABS » : absence non justifiée, module non validé (sans rattrapage).`;
+  if(abs)t+=`<br>${abs} absence${abs>1?'s':''} non justifiée${abs>1?'s':''} (« ABS ») : module non validé, sans rattrapage.`;
   if(absj)t+=`<br>${absj} absence${absj>1?'s':''} justifiée${absj>1?'s':''} (« ABSJ ») : droit au rattrapage.`;
-  if(miss)t+=`<br>⚠ ${miss} note${miss>1?'s':''} de CC manquante${miss>1?'s':''} remplacée${miss>1?'s':''} par 0.`;
+  if(miss)t+=`<br><b style="color:#b3261e">⚠ ${miss} note${miss>1?'s':''} incorrecte${miss>1?'s':''} ou manquante${miss>1?'s':''}</b> : elle${miss>1?'s sont signalées':' est signalée'} en rouge dans la feuille. Corrigez-${miss>1?'les':'la'} avant d'imprimer le PV.`;
   if(clip)t+=`<br>⚠ ${clip} note${clip>1?'s':''} hors de 0–20 ramenée${clip>1?'s':''} dans l'intervalle.`;
   msg(t);}
 $('imp').onclick=()=>$('imp-file').click();
