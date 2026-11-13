@@ -116,7 +116,7 @@ details.rappel>summary small{font:500 12px var(--mono);color:var(--muted);margin
   <div class="wrap">
     <a class="brand" href="index.html"><img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662"><span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span></a>
     <nav class="menu" aria-label="Navigation principale">
-      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a><a href="apropos.html">À propos</a>
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a><a href="apropos.html">A propos</a>
     </nav>
   </div>
 </header>
@@ -166,7 +166,7 @@ details.rappel>summary small{font:500 12px var(--mono);color:var(--muted);margin
 <p>16 = 2<sup>4</sup> : un chiffre hexadécimal correspond à <b>4 bits</b> ; 8 = 2<sup>3</sup> : un chiffre octal correspond à <b>3 bits</b>. On groupe à partir de la droite.</p>
 <div class="exm"><b class="t">Exemple : 156</b>156 = 1001 1100<sub>2</sub> → 1001 = 9, 1100 = C → <b>9C<sub>16</sub></b><br>156 = 010 011 100<sub>2</sub> → 2, 3, 4 → <b>234<sub>8</sub></b></div>
 <div class="warn">⚠ Pièges fréquents : lire les restes de haut en bas (c'est l'inverse) ; oublier de compléter le dernier groupe par des 0 <b>à gauche</b> ; écrire « 12 » au lieu de « C » en hexadécimal.</div>
-<p><b>À retenir :</b> avec <i>n</i> bits, on représente 2<sup>n</sup> valeurs, de 0 à 2<sup>n</sup> − 1 (8 bits : 0 à 255).</p></div></details>
+<p><b>A retenir :</b> avec <i>n</i> bits, on représente 2<sup>n</sup> valeurs, de 0 à 2<sup>n</sup> − 1 (8 bits : 0 à 255).</p></div></details>
     <div class="console">
       <div class="row">
         <label>Nombre<input id="cv-val" value="45" autocomplete="off"></label>
@@ -241,7 +241,7 @@ details.rappel>summary small{font:500 12px var(--mono);color:var(--muted);margin
 <p>Entre deux valeurs consécutives, <b>un seul bit change</b> : on l'utilise dans les codeurs de position (roues codeuses) et les tableaux de Karnaugh.</p>
 <div class="cols"><div><span class="fx">g<sub>n</sub> = b<sub>n</sub> ;  g<sub>i</sub> = b<sub>i+1</sub> ⊕ b<sub>i</sub></span></div><div><span class="fx">b<sub>n</sub> = g<sub>n</sub> ;  b<sub>i</sub> = b<sub>i+1</sub> ⊕ g<sub>i</sub></span></div></div>
 <div class="exm"><b class="t">Exemple : 6 = 110 en Gray</b>g<sub>2</sub> = 1 ; g<sub>1</sub> = 1 ⊕ 1 = 0 ; g<sub>0</sub> = 1 ⊕ 0 = 1 → <b>101</b><br>3 = 0010 et 4 = 0110 en Gray : un seul bit diffère.</div>
-<p><b>À retenir :</b> ⊕ (OU exclusif) vaut 1 si les deux bits sont différents, 0 s'ils sont égaux.</p></div></details>
+<p><b>A retenir :</b> ⊕ (OU exclusif) vaut 1 si les deux bits sont différents, 0 s'ils sont égaux.</p></div></details>
     <div class="split">
       <div><h3>Coder un nombre décimal</h3>
         <div class="console"><div class="row"><label>Nombre décimal<input id="cd-val" value="47" autocomplete="off" inputmode="numeric"></label></div>
@@ -460,7 +460,7 @@ function ascii(){
   const rows=[...s].slice(0,40).map(ch=>{const c=ch.charCodeAt(0);const bad=c>127;
     return `<tr><td>${ch===' '?'(espace)':ch.replace(/[<>&]/g,'')}</td><td>${c}</td><td>${c.toString(16).toUpperCase()}</td><td>${bad?'—':pad(c.toString(2),8)}</td><td>${bad?'hors ASCII':''}</td></tr>`}).join('');
   $('as-out').innerHTML=`<table class="t"><tr><th>Caractère</th><th>Décimal</th><th>Hexa</th><th>Binaire (8 bits)</th><th></th></tr>${rows}</table>
-  <div class="steps"><h3>À retenir</h3><ul><li>'A' = 65, 'a' = 97 : l'écart entre majuscule et minuscule est de 32.</li><li>'0' = 48 : pour obtenir la valeur d'un chiffre en C, on écrit <span class="mono">c - '0'</span>.</li><li>Les caractères accentués (é, à…) ne font pas partie de l'ASCII de base (0 à 127).</li></ul></div>`;}
+  <div class="steps"><h3>A retenir</h3><ul><li>'A' = 65, 'a' = 97 : l'écart entre majuscule et minuscule est de 32.</li><li>'0' = 48 : pour obtenir la valeur d'un chiffre en C, on écrit <span class="mono">c - '0'</span>.</li><li>Les caractères accentués (é, à…) ne font pas partie de l'ASCII de base (0 à 127).</li></ul></div>`;}
 $('as-val').addEventListener('input',ascii);ascii();
 
 /* ---------- 5. Exercices ---------- */

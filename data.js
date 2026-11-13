@@ -1,5 +1,5 @@
 /* =====================================================================
-   ✏️  FICHIER À MODIFIER — c'est le seul fichier à toucher pour mettre
+   ✏️  FICHIER A MODIFIER — c'est le seul fichier à toucher pour mettre
    le site à jour. Gardez les guillemets "..." et les virgules.
    ===================================================================== */
 

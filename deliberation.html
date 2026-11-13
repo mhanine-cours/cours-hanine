@@ -263,7 +263,7 @@ table.xl tr.chk td{background:color-mix(in srgb,#e05a4f 7%,transparent)}
   <div class="wrap">
     <a class="brand" href="index.html"><img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662"><span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span></a>
     <nav class="menu" aria-label="Navigation principale">
-      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a><a href="apropos.html">À propos</a>
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a><a href="apropos.html">A propos</a>
     </nav>
   </div>
 </header>
@@ -382,7 +382,7 @@ function calc(){const p=P();
 const exT=e=>e.err&&'ex' in e.err?e.err.ex:e.ex===null?(e.st||'ABS'):fr(e.ex);const ccT=e=>e.err&&'cc' in e.err?e.err.cc:fr(e.cc);
 const DL={V:'Validé',VAR:'Validé après rattrapage',NV:'Non validé',R:'Rattrapage',ABS:'Absent'};
 const tag=c=>`<span class="dec d-${c}">${c==='R'&&false?'':c}</span>`;
-const VT={V:'Validé',R:'Rattrapage',NV:'Non validé',X:'À vérifier'};const snT=e=>e.rs==='X'?'?':e.sn===null?'-':fr(e.sn);
+const VT={V:'Validé',R:'Rattrapage',NV:'Non validé',X:'A vérifier'};const snT=e=>e.rs==='X'?'?':e.sn===null?'-':fr(e.sn);
 const COLS=[['A','N°',(e,i)=>i+1],['B','CNE',e=>e.code],['C','Nom',e=>e.nom],['D','Prénom',e=>e.pre],
  ['E','Note CC',e=>ccT(e),'edit','cc'],['F','Note Écrit',e=>exT(e),'edit','ex'],['G','Note finale',e=>snT(e),'calc'],['H','Validation',e=>VT[e.rs],'calc'],['I','Rang',e=>e.rang??'-','calc']];
 function formula(col,n){const p=C.p,w=dn(p.w),w2=dn(r2(1-p.w)),L=LR(),s=dn(p.seuil);
@@ -436,7 +436,7 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
   let rows,sum,hd;
   if(S==='N'){
     hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Écrit</th><th>Note finale</th><th>Validation</th>';
-    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${ccT(e)}</td><td>${exT(e)}</td><td class="fin">${snT(e)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):e.rs==='X'?pill('nv','À vérifier'):pill('r','Rattrapage')}</td></tr>`).join('');
+    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${ccT(e)}</td><td>${exT(e)}</td><td class="fin">${snT(e)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):e.rs==='X'?pill('nv','A vérifier'):pill('r','Rattrapage')}</td></tr>`).join('');
     sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.absj?` (dont ${C.absj} ABSJ)`:''}</span>${C.abs?`<span><b>Non validés (ABS) :</b> ${C.abs}</span>`:''}<span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
   else{const R=E.filter(e=>e.rs==='R');
     hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note rattrapage</th><th>Note finale</th><th>Validation</th>';
