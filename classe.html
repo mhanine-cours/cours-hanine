@@ -250,7 +250,7 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
   <section class="tool on" style="margin-top:22px">
     <h2>Bulletin individuel</h2>
     <p class="sub">Choisissez un élève : son bulletin est construit à partir de la feuille, comme avec RECHERCHEV dans Excel.</p>
-    <div class="row"><label>Élève<select id="b-sel"></select></label></div>
+    <div class="row"><label>Elève<select id="b-sel"></select></label></div>
     <div class="bulletin" id="bulletin"></div>
   </section>
 
@@ -311,8 +311,8 @@ function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+
   showF();}
 const avg=k=>E.reduce((a,e)=>a+e[k],0)/E.length;
 function kpis(){$('taux').textContent='Réussite '+fr(100*C.adm/C.n,1)+' %';
-  $('kpis').innerHTML=[['Moyenne de la classe',fr(C.moy),`=MOYENNE(G2:G${LR()})`],['Meilleure moyenne',fr(C.max),`=MAX(G2:G${LR()})`],['Plus faible moyenne',fr(C.min),`=MIN(G2:G${LR()})`],['Écart-type',fr(C.sd),`=ECARTYPE(G2:G${LR()})`],
-   ['Élèves admis',C.adm,`=NB.SI(J2:J${LR()};"Admis")`],['Élèves en soutien',C.n-C.adm,`=NB.SI(J2:J${LR()};"Soutien")`],['Mentions Bien ou plus',E.filter(e=>e.m>=14).length,`=NB.SI(G2:G${LR()};">=14")`],['Taux de réussite',fr(100*C.adm/C.n,1)+' %',`=NB.SI(J2:J${LR()};"Admis")/NBVAL(J2:J${LR()})`]]
+  $('kpis').innerHTML=[['Moyenne de la classe',fr(C.moy),`=MOYENNE(G2:G${LR()})`],['Meilleure moyenne',fr(C.max),`=MAX(G2:G${LR()})`],['Plus faible moyenne',fr(C.min),`=MIN(G2:G${LR()})`],['Ecart-type',fr(C.sd),`=ECARTYPE(G2:G${LR()})`],
+   ['Elèves admis',C.adm,`=NB.SI(J2:J${LR()};"Admis")`],['Elèves en soutien',C.n-C.adm,`=NB.SI(J2:J${LR()};"Soutien")`],['Mentions Bien ou plus',E.filter(e=>e.m>=14).length,`=NB.SI(G2:G${LR()};">=14")`],['Taux de réussite',fr(100*C.adm/C.n,1)+' %',`=NB.SI(J2:J${LR()};"Admis")/NBVAL(J2:J${LR()})`]]
    .map(([a,b,c])=>`<div><small>${a}</small><b>${b}</b><em>${esc(c)}</em></div>`).join('');}
 function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.height,pad={l:36,r:10,t:14,b:34};const css=getComputedStyle(document.body),ink=css.getPropertyValue('--muted')||'#666',line=css.getPropertyValue('--line')||'#ddd';
   const T=[[0,5],[5,8],[8,10],[10,12],[12,14],[14,16],[16,20.01]],lab=['0–5','5–8','8–10','10–12','12–14','14–16','16–20'];const cnt=T.map(([a,b])=>E.filter(e=>e.m>=a&&e.m<b).length);const mx=Math.max(4,...cnt);
@@ -322,7 +322,7 @@ function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.heigh
 function bulletin(){const i=+$('b-sel').value||0,e=E[i];if(!e)return;const p=C.p;
   const app=e.m>=16?'Excellent travail, félicitations.':e.m>=14?'Très bon trimestre, continuez ainsi.':e.m>=12?'Bon travail, des progrès sont encore possibles.':e.m>=10?'Résultats justes : il faut fournir plus d\'efforts.':'Résultats insuffisants : un soutien est proposé.';
   $('bulletin').innerHTML=`<div class="b-head"><div><b>${esc(e.pre)} ${esc(e.nom)}</b><small>${CLS_B}</small></div><div class="b-rang">Rang <b>${e.rang}</b> / ${C.n}</div></div>
-  <table class="t"><tr><th>Évaluation</th><th>Coef.</th><th>Note</th><th>Moyenne classe</th></tr>
+  <table class="t"><tr><th>Evaluation</th><th>Coef.</th><th>Note</th><th>Moyenne classe</th></tr>
   <tr><td>${esc(EV[0])}</td><td>${p.c1}</td><td>${fr(e.dd)}</td><td>${fr(avg('dd'))}</td></tr>${NE>1?`<tr><td>${esc(EV[1])}</td><td>${p.c2}</td><td>${fr(e.r)}</td><td>${fr(avg('r'))}</td></tr>`:''}${NE>2?`<tr><td>${esc(EV[2])}</td><td>${p.c3}</td><td>${fr(e.l)}</td><td>${fr(avg('l'))}</td></tr>`:''}
   <tr><td><b>Moyenne</b></td><td>${C.S}</td><td><b>${fr(e.m)}</b></td><td>${fr(C.moy)}</td></tr></table>
   <p><b>Mention :</b> ${e.men} · <b>Décision :</b> ${e.dec}</p><p><b>Appréciation :</b> ${app}</p>
@@ -385,7 +385,7 @@ function importRows(rows,fname){
     if(vals.length&&ok>=Math.max(1,vals.length*0.6)){const ints=vals.every(v=>Number.isInteger(v));const seq=ints&&vals.every((v,k)=>k===0||v===vals[k-1]+1);if(seq&&!t)continue;cand.push(j);}}
   if(!cand.length)throw new Error('Aucune colonne de notes (valeurs entre 0 et 20) n\'a été trouvée.');
   const use=cand.slice(0,3);
-  const lab=use.map((j,k)=>(head&&String(head[j]).trim())||('Évaluation '+(k+1)));
+  const lab=use.map((j,k)=>(head&&String(head[j]).trim())||('Evaluation '+(k+1)));
   const L=[];let miss=0,clip=0;
   data.forEach(r=>{const nom=String(r[iNom]??'').trim(),pre=iPre>=0?String(r[iPre]??'').trim():'';if(!nom&&!pre)return;
     if(/^(moyenne|total|effectif)/.test(norm(nom)))return;

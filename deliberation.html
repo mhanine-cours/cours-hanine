@@ -315,7 +315,7 @@ table.xl tr.chk td{background:color-mix(in srgb,#e05a4f 7%,transparent)}
     <p class="sub">Elles figurent sur le procès-verbal de délibération, avec le logo de votre établissement.</p>
     <div class="row btns" style="align-items:center;margin-bottom:14px"><img id="logo-prev" src="images/logo-faculte.svg" alt="Logo" style="height:56px;border:1px solid var(--line);border-radius:8px;padding:4px;background:#fff"><button class="btn" id="logo-btn" type="button">🖼 Importer le logo de la faculté</button><button class="btn ghost" id="logo-reset" type="button">Logo par défaut</button><input type="file" id="logo-file" accept="image/*" hidden><span style="font-size:13.5px;color:var(--muted)">PNG ou JPG ; le logo reste enregistré dans ce navigateur.</span></div>
     <div class="info">
-      <label hidden>Établissement<input id="i-etab" value=""></label>
+      <label hidden>Etablissement<input id="i-etab" value=""></label>
       <label>Filière<input id="i-fil" value="Licence Sciences Mathématiques et Informatique"></label>
       <label>Module<input id="i-mod" value="Programmation C 1"></label>
       <label>Semestre<input id="i-sem" value="S1"></label>
@@ -384,7 +384,7 @@ const DL={V:'Validé',VAR:'Validé après rattrapage',NV:'Non validé',R:'Rattra
 const tag=c=>`<span class="dec d-${c}">${c==='R'&&false?'':c}</span>`;
 const VT={V:'Validé',R:'Rattrapage',NV:'Non validé',X:'A vérifier'};const snT=e=>e.rs==='X'?'?':e.sn===null?'-':fr(e.sn);
 const COLS=[['A','N°',(e,i)=>i+1],['B','CNE',e=>e.code],['C','Nom',e=>e.nom],['D','Prénom',e=>e.pre],
- ['E','Note CC',e=>ccT(e),'edit','cc'],['F','Note Écrit',e=>exT(e),'edit','ex'],['G','Note finale',e=>snT(e),'calc'],['H','Validation',e=>VT[e.rs],'calc'],['I','Rang',e=>e.rang??'-','calc']];
+ ['E','Note CC',e=>ccT(e),'edit','cc'],['F','Note Ecrit',e=>exT(e),'edit','ex'],['G','Note finale',e=>snT(e),'calc'],['H','Validation',e=>VT[e.rs],'calc'],['I','Rang',e=>e.rang??'-','calc']];
 function formula(col,n){const p=C.p,w=dn(p.w),w2=dn(r2(1-p.w)),L=LR(),s=dn(p.seuil);
   switch(col){
   case'E':return['(note saisie)','Note de contrôle continu saisie par l\'enseignant'];
@@ -429,13 +429,13 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
   const cover=`<section class="sheet">${lh}
    <div class="ttl"><div class="k">Procès-verbal</div><div class="s">[ Délibération du jury de module ]</div></div>
    <dl class="meta"><dt>Année universitaire</dt><dd>${g('i-au')}</dd><dt>Filière</dt><dd>${g('i-fil')}</dd><dt>Semestre</dt><dd>${g('i-sem')}</dd><dt>Session</dt><dd>${SN}</dd><dt>Intitulé du module</dt><dd>${g('i-mod')}</dd></dl>
-   <table class="jury"><tr><th style="width:44%">Prénom et NOM</th><th style="width:22%">Qualité</th><th>Émargement</th></tr><tr><td>${sp($('j-pres').value)}</td><td style="text-align:center">Président</td><td></td></tr><tr><td>${sp($('j-m1').value)}</td><td style="text-align:center">Membre</td><td></td></tr><tr><td>${sp($('j-m2').value)}</td><td style="text-align:center">Membre</td><td></td></tr></table>
+   <table class="jury"><tr><th style="width:44%">Prénom et NOM</th><th style="width:22%">Qualité</th><th>Emargement</th></tr><tr><td>${sp($('j-pres').value)}</td><td style="text-align:center">Président</td><td></td></tr><tr><td>${sp($('j-m1').value)}</td><td style="text-align:center">Membre</td><td></td></tr><tr><td>${sp($('j-m2').value)}</td><td style="text-align:center">Membre</td><td></td></tr></table>
    <div class="syn"><div class="h4">Synthèse de la délibération</div><p>Les enseignants cités ci-dessus approuvent les résultats suivants :</p><table class="syt">${syn}</table></div>
    <div class="fait">Fait à ${g('i-lieu')||'……………'}, le ${g('i-date')||'……………'}<div class="sg">Signature du président du jury</div></div></section>`;
   const pill=(c,t)=>`<span class="pill p-${c}">${t}</span>`;
   let rows,sum,hd;
   if(S==='N'){
-    hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Écrit</th><th>Note finale</th><th>Validation</th>';
+    hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Ecrit</th><th>Note finale</th><th>Validation</th>';
     rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${ccT(e)}</td><td>${exT(e)}</td><td class="fin">${snT(e)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):e.rs==='X'?pill('nv','A vérifier'):pill('r','Rattrapage')}</td></tr>`).join('');
     sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.absj?` (dont ${C.absj} ABSJ)`:''}</span>${C.abs?`<span><b>Non validés (ABS) :</b> ${C.abs}</span>`:''}<span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
   else{const R=E.filter(e=>e.rs==='R');
@@ -446,7 +446,7 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
   const notes=`<section class="sheet">${lh}
    <div class="ttl sm"><div class="k">Procès-verbal des notes</div><div class="s">Session ${SN.toLowerCase()}</div></div>
    <div class="mhead"><dl class="meta"><dt>Filière</dt><dd>${g('i-fil')}</dd><dt>Module</dt><dd>${g('i-mod')}</dd><dt>Enseignant(s)</dt><dd>${g('i-resp')}</dd><dt>Semestre</dt><dd>${g('i-sem')}</dd><dt>Année universitaire</dt><dd>${g('i-au')}</dd></dl>
-   <table class="wbox"><caption>Pondération</caption><tr><td>Note CC</td><td>${fr(p.w*100,0)} %</td></tr><tr><td>Note Écrit</td><td>${fr(100-p.w*100,0)} %</td></tr><tr><td>Validation</td><td>${fr(p.seuil,1)} / 20</td></tr>${p.elim?`<tr><td>Note éliminatoire</td><td>${fr(p.elim,1)}</td></tr>`:''}</table></div>
+   <table class="wbox"><caption>Pondération</caption><tr><td>Note CC</td><td>${fr(p.w*100,0)} %</td></tr><tr><td>Note Ecrit</td><td>${fr(100-p.w*100,0)} %</td></tr><tr><td>Validation</td><td>${fr(p.seuil,1)} / 20</td></tr>${p.elim?`<tr><td>Note éliminatoire</td><td>${fr(p.elim,1)}</td></tr>`:''}</table></div>
    <table class="pv2-t"><thead><tr>${hd}</tr></thead><tbody>${rows}</tbody></table>
    <div class="pv2-sum">${sum}</div>
    <p class="legend-pv">ABS : absence non justifiée à l'examen (module non validé) · ABSJ : absence justifiée (droit au rattrapage)</p>
@@ -454,7 +454,7 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
   $('pv').innerHTML=`<div class="lh" id="runlh"><img src="${LOGO}" alt="Logo"><div class="r">Année universitaire ${g('i-au')}</div></div><table class="pgw"><thead><tr><td></td></tr></thead><tbody><tr><td>${cover}${notes}</td></tr></tbody></table>`;}
 function errs(){const L=[];E.forEach((e,i)=>{if(e.err)for(const k of Object.keys(e.err))L.push({i,k,v:e.err[k],e});});
   const box=$('errbox'),pe=$('pv-err');if(!L.length){box.hidden=true;pe.hidden=true;$('taux').classList.remove('warn');return;}
-  const lab={cc:'Note CC',ex:'Note Écrit'},col={cc:4,ex:5};
+  const lab={cc:'Note CC',ex:'Note Ecrit'},col={cc:4,ex:5};
   box.hidden=false;box.innerHTML=`<b>⚠ ${L.length} note${L.length>1?'s':''} à vérifier.</b> Une note doit être un nombre entre 0 et 20 (ou ABS / ABSJ pour l'écrit). Cliquez sur « Corriger » pour modifier la cellule.<ul>${L.slice(0,12).map(x=>`<li>Ligne ${x.i+2} · ${esc(x.e.nom)} ${esc(x.e.pre)} · ${lab[x.k]} : « ${esc(x.v)} » <button type="button" data-i="${x.i}" data-c="${col[x.k]}">Corriger</button></li>`).join('')}${L.length>12?`<li>… et ${L.length-12} autre${L.length-12>1?'s':''}</li>`:''}</ul>`;
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{const td=$('xl').querySelector(`td[data-r="${+b.dataset.i+1}"][data-c="${b.dataset.c}"]`);if(td){td.scrollIntoView({block:'center',behavior:'smooth'});td.click();}});
   pe.hidden=false;pe.innerHTML=`<b>⚠ Le PV ne peut pas être imprimé :</b> ${L.length} note${L.length>1?'s':''} à vérifier dans la feuille « Délibération » (cellules en rouge).`;

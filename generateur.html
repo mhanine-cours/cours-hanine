@@ -261,7 +261,7 @@ const sci=(v,d=6)=>{const s=Number(v).toExponential(d).toUpperCase().replace(/E(
 function eng(v,u,dg=4){if(!isFinite(v))return '—';const a=Math.abs(v);const P=[[1e6,'M'],[1e3,'k'],[1,''],[1e-3,'m'],[1e-6,'µ'],[1e-9,'n']];
   if(a===0)return '0 '+u;for(const[p,s]of P)if(a>=p*0.9999)return +(v/p).toPrecision(dg)+' '+s+u;return +(v/1e-9).toPrecision(dg)+' n'+u;}
 const seq125=(a,b)=>{const r=[];for(let e=-9;e<=1;e++)for(const m of[1,2,5]){const v=+(m*10**e).toPrecision(3);if(v>=a-1e-15&&v<=b+1e-15)r.push(v);}return r;};
-/* ================= État des instruments ================= */
+/* ================= Etat des instruments ================= */
 const G={func:'SIN',freq:1e6,ampl:5,offs:0,out:false,rem:false,err:[]};
 const S={vdiv:1,tdiv:2e-4,offs:0,coup:1,run:true,src:1,frozen:null,err:[]};
 let load='50';

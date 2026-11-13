@@ -199,7 +199,7 @@ table.rep{min-width:760px}table.rep td{white-space:normal}
     <div class="screen" aria-hidden="true">
       <div class="dots"><i></i><i></i><i></i></div>
       <div class="ln"><small>Comptes</small><b>=SI(ET(D2="Parti";E2="Actif");"Anomalie";"")</b></div>
-      <div class="ln"><small>Journal</small><b>=NB.SI.ENS(A:A;A2;D:D;"Échec")</b></div>
+      <div class="ln"><small>Journal</small><b>=NB.SI.ENS(A:A;A2;D:D;"Echec")</b></div>
       <div class="ln"><small>Factures</small><b>=SI(E2=F2;"Anomalie";"")</b></div>
       <div class="ln"><small>Score</small><b id="hero-score">0 / 10<span class="cur"></span></b></div>
     </div>
@@ -268,13 +268,13 @@ function gen(s){seed=s;rnd=rng(s);const users=[];const used=new Set();
   // journal
   const active=users.filter(u=>u.cpt==='Actif'&&u.rh==='Présent');const log=[];
   for(let i=0;i<180;i++){const u=pick(active);const d=new Date(2025,11,ri(1,31),ri(8,18),ri(0,59));if(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+(d.getDay()===6?2:1));if(d.getMonth()!==11)d.setDate(30);
-    log.push({login:u.login,dt:d,poste:'PC-'+ri(10,60),res:rnd()<0.06?'Échec':'Succès'});}
-  const nBrute=ri(2,3);const bf=[];for(let k=0;k<nBrute;k++){const u=pick(active);if(bf.includes(u.login)){k--;continue;}bf.push(u.login);const day=ri(2,28);for(let j=0;j<ri(5,8);j++)log.push({login:u.login,dt:new Date(2025,11,day,ri(9,17),ri(0,59)),poste:'PC-'+ri(10,60),res:'Échec'});}
+    log.push({login:u.login,dt:d,poste:'PC-'+ri(10,60),res:rnd()<0.06?'Echec':'Succès'});}
+  const nBrute=ri(2,3);const bf=[];for(let k=0;k<nBrute;k++){const u=pick(active);if(bf.includes(u.login)){k--;continue;}bf.push(u.login);const day=ri(2,28);for(let j=0;j<ri(5,8);j++)log.push({login:u.login,dt:new Date(2025,11,day,ri(9,17),ri(0,59)),poste:'PC-'+ri(10,60),res:'Echec'});}
   const nHors=ri(4,7);for(let k=0;k<nHors;k++){const u=pick(active);const we=rnd()<0.4;let d;if(we){d=new Date(2025,11,ri(1,31),ri(10,16),ri(0,59));while(d.getDay()!==6&&d.getDay()!==0)d.setDate(d.getDate()+1);if(d.getMonth()!==11)d=new Date(2025,11,27,11,15);}else d=new Date(2025,11,ri(1,31),pick([2,3,5,22,23]),ri(0,59));if(d.getDay()===0||d.getDay()===6||d.getHours()<7||d.getHours()>=20)log.push({login:u.login,dt:d,poste:'PC-'+ri(10,60),res:'Succès'});else k--;}
   log.sort((a,b)=>a.dt-b.dt);
   // sauvegardes
   const bk=[];for(let i=1;i<=31;i++)bk.push({d:new Date(2025,11,i,1,0),type:new Date(2025,11,i).getDay()===0?'Complète':'Incrémentale',res:'Réussie',duree:ri(20,95),rest:'Non'});
-  const nBk=ri(2,4);for(let k=0;k<nBk;){const b=pick(bk);if(b.res==='Réussie'){b.res='Échec';b.duree=ri(1,5);k++;}}
+  const nBk=ri(2,4);for(let k=0;k<nBk;){const b=pick(bk);if(b.res==='Réussie'){b.res='Echec';b.duree=ri(1,5);k++;}}
   bk.filter(b=>b.type==='Complète').forEach((b,i)=>{if(i<1)b.rest='Oui';});
   // factures
   const fac=[];let num=1001;for(let i=0;i<55;i++){if(rnd()<0.05&&i>3)num+=ri(1,2);const saisi=pick(users.filter(u=>u.serv==='Comptabilité'||u.serv==='Ventes')).login;
@@ -293,34 +293,34 @@ const SHEETS={
  sauvegardes:{nom:'Sauvegardes',desc:'Rapport du logiciel de sauvegarde – décembre 2025',cols:['Date','Type','Statut','Durée (min)','Restauration testée'],rows:()=>D.bk.map(b=>[d2s(b.d),b.type,b.res,b.duree,b.rest])},
  factures:{nom:'Factures',desc:'Registre des factures fournisseurs 2025',cols:['N° facture','Date','Fournisseur','Montant (MAD)','Saisie par','Validée par'],rows:()=>D.fac.map(f=>[f.num,d2s(f.date),f.four,f.mont.toLocaleString('fr-FR'),f.saisi,f.val])}};
 /* ---------- Contrôles ---------- */
-const brute=()=>{const c={};D.log.forEach(l=>{if(l.res==='Échec')c[l.login]=(c[l.login]||0)+1;});return c;};
+const brute=()=>{const c={};D.log.forEach(l=>{if(l.res==='Echec')c[l.login]=(c[l.login]||0)+1;});return c;};
 const TESTS=[
  {id:'orph',sh:'comptes',titre:'Comptes d\'employés partis',obj:'Vérifier que les comptes des personnes ayant quitté l\'entreprise sont désactivés.',risque:'Un ancien employé peut encore accéder au système et aux données.',
-  f:'=SI(ET(E2="Parti";F2="Actif");"Anomalie";"")',flag:(r,i)=>D.users[i].rh==='Parti'&&D.users[i].cpt==='Actif',crit:'Élevé',
+  f:'=SI(ET(E2="Parti";F2="Actif");"Anomalie";"")',flag:(r,i)=>D.users[i].rh==='Parti'&&D.users[i].cpt==='Actif',crit:'Elevé',
   recos:['Désactiver immédiatement ces comptes et formaliser une procédure de sortie RH ↔ informatique','Changer le mot de passe de ces comptes chaque mois','Supprimer tous les comptes inactifs de l\'annuaire'],good:0},
  {id:'inac',sh:'comptes',titre:'Comptes inactifs depuis plus de 90 jours',obj:'Repérer les comptes actifs non utilisés depuis plus de 90 jours au 31/12/2025.',risque:'Comptes dormants : cibles faciles pour une usurpation d\'identité.',
   f:'=SI(ET(F2="Actif";DATE(2025;12;31)-G2>90);"Anomalie";"")',flag:(r,i)=>D.users[i].cpt==='Actif'&&D.users[i].rh==='Présent'&&(AUDIT-D.users[i].last)/DAY>90,crit:'Moyen',
   recos:['Revue trimestrielle des comptes et désactivation automatique après 90 jours d\'inactivité','Obliger les utilisateurs à se connecter chaque semaine','Acheter un nouvel antivirus'],good:0},
  {id:'adm',sh:'comptes',titre:'Droits administrateur hors service informatique',obj:'Identifier les profils « Admin » attribués en dehors du service Informatique.',risque:'Des utilisateurs peuvent modifier la configuration, les droits ou les données sans contrôle.',
-  f:'=SI(ET(H2="Admin";D2<>"Informatique");"Anomalie";"")',flag:(r,i)=>D.users[i].prof==='Admin'&&D.users[i].serv!=='Informatique',crit:'Élevé',
+  f:'=SI(ET(H2="Admin";D2<>"Informatique");"Anomalie";"")',flag:(r,i)=>D.users[i].prof==='Admin'&&D.users[i].serv!=='Informatique',crit:'Elevé',
   recos:['Former ces utilisateurs à l\'administration système','Retirer ces droits (principe du moindre privilège) et faire valider toute attribution par le RSSI','Créer un second compte administrateur pour chacun'],good:1},
  {id:'pwd',sh:'comptes',titre:'Mots de passe non changés depuis plus de 180 jours',obj:'Contrôler le respect de la politique de renouvellement des mots de passe (180 jours).',risque:'Un mot de passe ancien a plus de chances d\'avoir été divulgué ou deviné.',
   f:'=SI(DATE(2025;12;31)-I2>180;"Anomalie";"")',flag:(r,i)=>(AUDIT-D.users[i].pwd)/DAY>180,crit:'Moyen',
   recos:['Afficher la politique de mots de passe dans les bureaux','Imposer techniquement le changement (stratégie de groupe) et l\'authentification à deux facteurs pour les comptes sensibles','Utiliser le même mot de passe pour tous les comptes d\'un service'],good:1},
- {id:'brute',sh:'journal',titre:'Échecs de connexion répétés',obj:'Repérer les comptes ayant au moins 5 échecs de connexion dans le mois (lignes concernées).',risque:'Tentative probable de découverte de mot de passe (attaque par force brute).',
-  f:'=SI(NB.SI.ENS(A:A;A2;D:D;"Échec")>=5;"Anomalie";"")',flag:(r,i)=>{const c=brute();return c[D.log[i].login]>=5;},crit:'Élevé',
+ {id:'brute',sh:'journal',titre:'Echecs de connexion répétés',obj:'Repérer les comptes ayant au moins 5 échecs de connexion dans le mois (lignes concernées).',risque:'Tentative probable de découverte de mot de passe (attaque par force brute).',
+  f:'=SI(NB.SI.ENS(A:A;A2;D:D;"Echec")>=5;"Anomalie";"")',flag:(r,i)=>{const c=brute();return c[D.log[i].login]>=5;},crit:'Elevé',
   recos:['Verrouiller le compte après 5 échecs, alerter l\'équipe informatique et analyser l\'origine','Augmenter la durée de conservation du journal','Supprimer les comptes concernés'],good:0,count:'login'},
  {id:'hors',sh:'journal',titre:'Connexions hors horaires de travail',obj:'Repérer les connexions réussies avant 7 h, après 20 h ou le week-end.',risque:'Accès inhabituels pouvant traduire une fraude ou un compte compromis.',
   f:'=SI(ET(D2="Succès";OU(HEURE(B2)<7;HEURE(B2)>=20;JOURSEM(B2;2)>5));"Anomalie";"")',flag:(r,i)=>{const l=D.log[i],h=l.dt.getHours(),w=l.dt.getDay();return l.res==='Succès'&&(h<7||h>=20||w===0||w===6);},crit:'Moyen',
   recos:['Couper le réseau la nuit','Restreindre les plages horaires d\'accès et faire justifier chaque connexion hors horaires par le responsable','Interdire le télétravail'],good:1},
  {id:'bk',sh:'sauvegardes',titre:'Sauvegardes en échec',obj:'Compter les sauvegardes quotidiennes en échec sur le mois.',risque:'Perte de données en cas d\'incident (panne, rançongiciel).',
-  f:'=SI(C2="Échec";"Anomalie";"")',flag:(r,i)=>D.bk[i].res==='Échec',crit:'Élevé',
+  f:'=SI(C2="Echec";"Anomalie";"")',flag:(r,i)=>D.bk[i].res==='Echec',crit:'Elevé',
   recos:['Mettre en place une alerte automatique en cas d\'échec et relancer la sauvegarde le jour même','Faire les sauvegardes une fois par mois seulement','Remplacer les sauvegardes par une copie manuelle sur clé USB'],good:0},
  {id:'rest',sh:'sauvegardes',titre:'Tests de restauration',obj:'Compter les sauvegardes complètes dont la restauration n\'a jamais été testée.',risque:'Une sauvegarde non testée peut se révéler inutilisable le jour où l\'on en a besoin.',
   f:'=SI(ET(B2="Complète";E2="Non");"Anomalie";"")',flag:(r,i)=>D.bk[i].type==='Complète'&&D.bk[i].rest==='Non',crit:'Moyen',
   recos:['Planifier un test de restauration au moins mensuel et en garder la preuve écrite','Doubler la durée des sauvegardes','Ne garder que les sauvegardes incrémentales'],good:0},
  {id:'sod',sh:'factures',titre:'Séparation des tâches',obj:'Repérer les factures saisies et validées par la même personne.',risque:'Une même personne peut créer et approuver une dépense : risque de fraude.',
-  f:'=SI(E2=F2;"Anomalie";"")',flag:(r,i)=>D.fac[i].saisi===D.fac[i].val,crit:'Élevé',
+  f:'=SI(E2=F2;"Anomalie";"")',flag:(r,i)=>D.fac[i].saisi===D.fac[i].val,crit:'Elevé',
   recos:['Bloquer dans le progiciel la validation par l\'auteur de la saisie (contrôle applicatif)','Faire valider toutes les factures par le comptable','Supprimer l\'étape de validation pour gagner du temps'],good:0},
  {id:'dup',sh:'factures',titre:'Factures en double',obj:'Repérer les factures ayant le même fournisseur et le même montant (doublons potentiels).',risque:'Double paiement d\'une même facture.',
   f:'=SI(NB.SI.ENS(C:C;C2;D:D;D2)>1;"Anomalie";"")',flag:(r,i)=>{const f=D.fac[i];return D.fac.filter(g=>g.four===f.four&&g.mont===f.mont).length>1;},crit:'Moyen',
@@ -349,7 +349,7 @@ function renderWork(){const t=TESTS[cur],r=REP[t.id]||{};const n=SHEETS[t.sh].co
   <div class="row"><label>Votre réponse<input id="w-n" value="${r.ans??''}" ${r.run?'disabled':''} inputmode="numeric"></label><button class="btn" id="w-run" type="button" ${r.run?'disabled':''}>Exécuter le contrôle</button></div>`;
   if(r.run){const c=countFor(t);h+=`<p class="${r.okN?'ok callout':'err'}">${r.okN?'✔':'✘'} Le contrôle trouve <b>${c}</b> ligne(s) en anomalie${r.okN?'.':' (vous aviez répondu '+esc(r.ans)+').'} Elles sont surlignées en rouge dans la feuille ${SHEETS[t.sh].nom}.</p>
     <div class="stepn"><b>2.</b> Quel est le niveau de risque de ce constat ?</div>
-    <div class="seg" id="w-crit">${['Faible','Moyen','Élevé'].map(c=>`<button type="button" data-c="${c}" class="${r.crit===c?'sel':''}" ${r.done?'disabled':''}>${c}</button>`).join('')}</div>
+    <div class="seg" id="w-crit">${['Faible','Moyen','Elevé'].map(c=>`<button type="button" data-c="${c}" class="${r.crit===c?'sel':''}" ${r.done?'disabled':''}>${c}</button>`).join('')}</div>
     <div class="stepn"><b>3.</b> Quelle recommandation formulez-vous ?</div>
     <div class="recos" id="w-reco">${t.recos.map((x,j)=>`<label class="${r.done?(j===t.good?'good':r.reco===j?'wrong':''):''}"><input type="radio" name="reco" value="${j}" ${r.reco===j?'checked':''} ${r.done?'disabled':''}> ${x}</label>`).join('')}</div>
     ${r.done?`<p class="${r.okC&&r.okR?'ok callout':'err'}">Niveau de risque attendu : <b>${t.crit}</b>${r.okC?' ✔':' ✘'} · recommandation ${r.okR?'✔ correcte':'✘ : la bonne réponse est surlignée en vert'}.</p>`:`<button class="btn" id="w-val" type="button">Valider le constat</button>`}`;}
@@ -363,8 +363,8 @@ function alertBox(){const p=document.createElement('p');p.className='err';p.text
 function renderReport(){let pts=0,high=0,done=0;
   let h='<tr><th>N°</th><td class="hd">Contrôle</td><td class="hd">Anomalies</td><td class="hd">Risque</td><td class="hd">Recommandation retenue</td><td class="hd">Points</td></tr>';
   TESTS.forEach((t,i)=>{const r=REP[t.id];if(!r||!r.run){h+=`<tr><th>${i+1}</th><td>${t.titre}</td><td colspan="4" style="text-align:left;color:var(--muted)">non réalisé</td></tr>`;return;}
-    const p=(r.okN?1:0)+(r.done&&r.okC?1:0)+(r.done&&r.okR?1:0);pts+=p;if(r.done)done++;const c=countFor(t);if(c>0&&t.crit==='Élevé')high++;
-    h+=`<tr><th>${i+1}</th><td>${t.titre}</td><td>${c}</td><td><span class="crit c-${(r.crit||'').replace('É','E')}">${r.crit||'—'}</span></td><td style="text-align:left;white-space:normal">${r.reco!=null?esc(t.recos[r.reco]):'—'}</td><td>${p} / 3</td></tr>`;});
+    const p=(r.okN?1:0)+(r.done&&r.okC?1:0)+(r.done&&r.okR?1:0);pts+=p;if(r.done)done++;const c=countFor(t);if(c>0&&t.crit==='Elevé')high++;
+    h+=`<tr><th>${i+1}</th><td>${t.titre}</td><td>${c}</td><td><span class="crit c-${(r.crit||'').replace('E','E')}">${r.crit||'—'}</span></td><td style="text-align:left;white-space:normal">${r.reco!=null?esc(t.recos[r.reco]):'—'}</td><td>${p} / 3</td></tr>`;});
   $('report').innerHTML=h;$('score').textContent=pts+' / 30';$('score-bar').style.width=(100*pts/30)+'%';$('nb-high').textContent=high;
   $('maturity').textContent=done<10?'mission en cours':high>=4?'Insuffisant':high>=2?'A améliorer':'Satisfaisant';
   $('hero-score').innerHTML=done+' / 10<span class="cur"></span>';$('m-prog').textContent=done+' contrôle(s) terminé(s) sur 10';}

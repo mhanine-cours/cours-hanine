@@ -170,7 +170,7 @@ details.rappel>summary small{font:500 12px var(--mono);color:var(--muted);margin
     <div class="console">
       <div class="row">
         <label>Nombre<input id="cv-val" value="45" autocomplete="off"></label>
-        <label>Écrit en base<select id="cv-base"><option value="10">10 (décimal)</option><option value="2">2 (binaire)</option><option value="8">8 (octal)</option><option value="16">16 (hexadécimal)</option></select></label>
+        <label>Ecrit en base<select id="cv-base"><option value="10">10 (décimal)</option><option value="2">2 (binaire)</option><option value="8">8 (octal)</option><option value="16">16 (hexadécimal)</option></select></label>
         <label>Méthode vers<select id="cv-to"><option value="2">base 2</option><option value="8">base 8</option><option value="16">base 16</option></select></label>
       </div>
       <div class="ex">Exemples : <button data-v="255" data-b="10">255</button><button data-v="1024" data-b="10">1024</button><button data-v="101101" data-b="2">101101₂</button><button data-v="FF" data-b="16">FF₁₆</button><button data-v="777" data-b="8">777₈</button></div>
@@ -393,13 +393,13 @@ function ieee(){
   else{const a=Math.abs(x),ip=Math.floor(a);let fp=a-ip,fb='',rows='';
     for(let i=0;i<12&&fp>0;i++){const y=fp*2,bit=y>=1?1:0;rows+=`<tr><td>${+fp.toFixed(6)} × 2</td><td>${+y.toFixed(6)}</td><td>${bit}</td></tr>`;fb+=bit;fp=y-bit;}
     const e=E-127;
-    h+=`<h3>Étapes de l'encodage</h3><ol>
+    h+=`<h3>Etapes de l'encodage</h3><ol>
     <li><b>Signe</b> : ${x<0?'x est négatif, bit de signe = 1':'x est positif, bit de signe = 0'}.</li>
     <li><b>Partie entière</b> ${ip} en binaire : <span class="mono">${ip.toString(2)}</span>.</li>
     <li><b>Partie décimale</b> par multiplications successives par 2 (on garde la partie entière de chaque produit) :
     ${rows?`<table class="t"><tr><th>Calcul</th><th>Résultat</th><th>Bit</th></tr>${rows}</table>`:' aucune.'}
     ${fp>0?'<span class="mono">La suite ne s\'arrête pas : le nombre n\'est pas représentable exactement, il sera arrondi.</span>':''}</li>
-    <li><b>Écriture binaire</b> : <span class="mono">${ip.toString(2)}${fb?','+fb:''}</span>.</li>
+    <li><b>Ecriture binaire</b> : <span class="mono">${ip.toString(2)}${fb?','+fb:''}</span>.</li>
     <li><b>Normalisation</b> sous la forme 1,… × 2<sup>e</sup> : e = ${e}.</li>
     <li><b>Exposant stocké</b> = e + 127 (biais) = ${e} + 127 = ${E} = <span class="mono">${exp}</span>.</li>
     <li><b>Mantisse</b> : les 23 bits après la virgule (le 1 avant la virgule n'est pas stocké) : <span class="mono">${man}</span>.</li></ol>

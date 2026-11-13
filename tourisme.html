@@ -185,7 +185,7 @@ table.xl tr.tot td{font-weight:600;background:var(--bg)}
     <!-- Décisions -->
     <section class="inst">
       <div class="inst-h"><div><h2>Vos décisions</h2><small>Les résultats se mettent à jour immédiatement</small></div><button class="btn ghost" id="reset" type="button">Réglages de départ</button></div>
-      <h3 class="grp">🏨 Établissement et prix</h3>
+      <h3 class="grp">🏨 Etablissement et prix</h3>
       <div class="sl"><label for="rooms">Nombre de chambres</label><input type="range" id="rooms" min="6" max="40" step="1"><output id="o-rooms"></output></div>
       <div class="sl"><label for="ph">Prix haute saison (oct.–avr.)</label><input type="range" id="ph" min="300" max="2500" step="50"><output id="o-ph"></output></div>
       <div class="sl"><label for="pb">Prix basse saison (mai–sept.)</label><input type="range" id="pb" min="200" max="2000" step="50"><output id="o-pb"></output></div>
@@ -310,7 +310,7 @@ function advice(){const s=get(),T=R.T,a=[];
   if(T.to<0.4)a.push('Taux d\'occupation faible : prix trop élevés ou visibilité digitale insuffisante.');
   if(R.direct<0.3)a.push('Moins de 30 % de réservations directes : les commissions des plateformes pèsent lourd. Investissez dans le site web.');
   if(s.pb>=s.ph)a.push('Votre prix de basse saison est au moins égal à celui de haute saison : la demande d\'été à Merzouga est faible.');
-  if(!a.length)a.push('Équilibre correct. Comparez l\'effet d\'une hausse de prix sur l\'ADR et sur le RevPAR.');
+  if(!a.length)a.push('Equilibre correct. Comparez l\'effet d\'une hausse de prix sur l\'ADR et sur le RevPAR.');
   $('advice').innerHTML='<b>Analyse :</b> '+a.join(' ');}
 /* ---------- Objectifs ---------- */
 const GOALS=[
