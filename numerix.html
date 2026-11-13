@@ -94,6 +94,21 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 @media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
 .byline{font-size:14px;color:var(--muted);margin:14px 0 0}.byline b{color:var(--ink)}
 #cd-out .res4{grid-template-columns:1fr 1fr}#cd-out .res4 b{word-break:normal;font-size:17px}
+details.rappel{background:color-mix(in srgb,#2f6fb0 6%,var(--paper));border:1px solid color-mix(in srgb,#2f6fb0 30%,var(--line));border-radius:12px;margin:0 0 18px;padding:0 18px}
+details.rappel>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;padding:13px 0;font:600 15.5px var(--body);color:#1f4f86}
+details.rappel>summary::-webkit-details-marker{display:none}
+details.rappel>summary:before{content:"▸";font-size:13px;transition:transform .15s}details.rappel[open]>summary:before{transform:rotate(90deg)}
+details.rappel>summary small{font:500 12px var(--mono);color:var(--muted);margin-left:auto}
+.rp{padding:2px 0 16px;font-size:15px;line-height:1.6}
+.rp h4{font:600 15px var(--body);margin:14px 0 6px;color:var(--ink)}.rp h4:first-child{margin-top:4px}
+.rp p{margin:0 0 8px}.rp ul{margin:0 0 8px;padding-left:20px}
+.rp .fx{font-family:var(--mono);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:6px 0 10px;display:block;overflow-x:auto;white-space:nowrap}
+.rp .exm{background:var(--paper);border-left:3px solid var(--sand);border-radius:6px;padding:9px 13px;margin:8px 0;font-size:14.5px}
+.rp .exm b.t{display:block;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--sand);margin-bottom:3px}
+.rp .warn{background:color-mix(in srgb,#c0392b 7%,transparent);border-left:3px solid #c0392b;border-radius:6px;padding:8px 13px;margin:8px 0;font-size:14.5px}
+.rp .cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rp table.t{margin:6px 0 10px}
+@media (max-width:760px){.rp .cols{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -138,6 +153,20 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <!-- 1. Changement de base -->
   <section class="tool on" id="conv">
     <h2>Changement de base</h2><p class="sub">Saisissez un nombre dans la base de votre choix : les quatre écritures s'affichent, avec la méthode détaillée.</p>
+    <details class="rappel"><summary>📘 Rappel de cours et exemples <small>afficher / masquer</small></summary><div class="rp"><h4>1. Le principe : une numération de position</h4>
+<p>Dans une base <i>b</i>, on utilise <i>b</i> chiffres (de 0 à <i>b</i> − 1) et chaque chiffre a un <b>poids</b> qui est une puissance de <i>b</i> selon sa position (en partant de la droite, position 0).</p>
+<span class="fx">N = a<sub>n</sub>×b<sup>n</sup> + … + a<sub>2</sub>×b<sup>2</sup> + a<sub>1</sub>×b<sup>1</sup> + a<sub>0</sub>×b<sup>0</sup></span>
+<table class="t"><tr><th>Base</th><th>Nom</th><th>Chiffres</th><th>Notation en C</th></tr><tr><td>2</td><td>binaire</td><td>0, 1</td><td>0b1011 (selon compilateur)</td></tr><tr><td>8</td><td>octal</td><td>0 à 7</td><td>013</td></tr><tr><td>10</td><td>décimal</td><td>0 à 9</td><td>11</td></tr><tr><td>16</td><td>hexadécimal</td><td>0 à 9, A(10) à F(15)</td><td>0xB</td></tr></table>
+<h4>2. Base b → décimal : on développe en puissances</h4>
+<div class="exm"><b class="t">Exemple</b>1011<sub>2</sub> = 1×2<sup>3</sup> + 0×2<sup>2</sup> + 1×2<sup>1</sup> + 1×2<sup>0</sup> = 8 + 0 + 2 + 1 = <b>11</b><br>2D<sub>16</sub> = 2×16<sup>1</sup> + 13×16<sup>0</sup> = 32 + 13 = <b>45</b></div>
+<h4>3. Décimal → base b : divisions successives par b</h4>
+<p>On divise par <i>b</i> jusqu'à obtenir un quotient nul ; le résultat est la suite des <b>restes lus de bas en haut</b>.</p>
+<div class="exm"><b class="t">Exemple : 13 en binaire</b>13 ÷ 2 = 6 reste <b>1</b> · 6 ÷ 2 = 3 reste <b>0</b> · 3 ÷ 2 = 1 reste <b>1</b> · 1 ÷ 2 = 0 reste <b>1</b><br>Lecture de bas en haut : 13 = <b>1101<sub>2</sub></b></div>
+<h4>4. Binaire ↔ hexadécimal et octal : par groupes de bits</h4>
+<p>16 = 2<sup>4</sup> : un chiffre hexadécimal correspond à <b>4 bits</b> ; 8 = 2<sup>3</sup> : un chiffre octal correspond à <b>3 bits</b>. On groupe à partir de la droite.</p>
+<div class="exm"><b class="t">Exemple : 156</b>156 = 1001 1100<sub>2</sub> → 1001 = 9, 1100 = C → <b>9C<sub>16</sub></b><br>156 = 010 011 100<sub>2</sub> → 2, 3, 4 → <b>234<sub>8</sub></b></div>
+<div class="warn">⚠ Pièges fréquents : lire les restes de haut en bas (c'est l'inverse) ; oublier de compléter le dernier groupe par des 0 <b>à gauche</b> ; écrire « 12 » au lieu de « C » en hexadécimal.</div>
+<p><b>À retenir :</b> avec <i>n</i> bits, on représente 2<sup>n</sup> valeurs, de 0 à 2<sup>n</sup> − 1 (8 bits : 0 à 255).</p></div></details>
     <div class="console">
       <div class="row">
         <label>Nombre<input id="cv-val" value="45" autocomplete="off"></label>
@@ -152,6 +181,19 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <!-- 2. Complément à 2 -->
   <section class="tool" id="c2">
     <h2>Complément à 2</h2><p class="sub">C'est ainsi que le type <span class="mono">char</span> (8 bits) ou <span class="mono">short</span> (16 bits) stocke un entier négatif.</p>
+    <details class="rappel"><summary>📘 Rappel de cours et exemples <small>afficher / masquer</small></summary><div class="rp"><h4>1. Pourquoi le complément à 2 ?</h4>
+<p>L'ordinateur n'a pas de signe « − » : il code les entiers négatifs de sorte que l'addition binaire ordinaire donne le bon résultat. C'est la représentation des types signés en C (<span class="mono">char</span>, <span class="mono">short</span>, <span class="mono">int</span>).</p>
+<span class="fx">Sur n bits : de −2<sup>n−1</sup> à 2<sup>n−1</sup> − 1   (8 bits : −128 à 127 ; 16 bits : −32 768 à 32 767)</span>
+<h4>2. Coder un entier négatif −x sur n bits</h4>
+<ol><li>écrire x en binaire sur n bits ;</li><li>inverser tous les bits (complément à 1) ;</li><li>ajouter 1.</li></ol>
+<div class="exm"><b class="t">Exemple : −5 sur 8 bits</b>5 = 0000 0101 → inversion : 1111 1010 → +1 : <b>1111 1011</b> (= FB<sub>16</sub>)<br>Vérification : 256 − 5 = 251 = 1111 1011<sub>2</sub></div>
+<p><b>Astuce rapide :</b> en partant de la droite, on recopie les bits jusqu'au premier 1 inclus, puis on inverse tous les bits suivants.</p>
+<h4>3. Décoder un mot</h4>
+<p>Si le bit de poids fort vaut <b>0</b>, le nombre est positif ; s'il vaut <b>1</b>, il est négatif : on refait « inverser + 1 » pour trouver sa valeur absolue.</p>
+<div class="exm"><b class="t">Exemple</b>1111 1011 → bit de poids fort à 1 → inversion : 0000 0100 → +1 : 0000 0101 = 5 → le nombre vaut <b>−5</b></div>
+<h4>4. L'addition marche directement</h4>
+<div class="exm"><b class="t">Exemple : 5 + (−3) sur 8 bits</b>0000 0101 + 1111 1101 = <s>1</s> 0000 0010 = <b>2</b> (la retenue qui sort du 8<sup>e</sup> bit est ignorée)</div>
+<div class="warn">⚠ Débordement : en C, <span class="mono">char c = 100 + 50;</span> ne vaut pas 150 (hors de −128…127) mais 150 − 256 = <b>−106</b>.</div></div></details>
     <div class="split">
       <div><h3>Encoder un entier signé</h3>
         <div class="console"><div class="row">
@@ -169,6 +211,15 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <!-- 3. IEEE 754 -->
   <section class="tool" id="ieee">
     <h2>Réels en virgule flottante (IEEE 754)</h2><p class="sub">Comment un <span class="mono">float</span> du langage C est rangé dans 32 bits.</p>
+    <details class="rappel"><summary>📘 Rappel de cours et exemples <small>afficher / masquer</small></summary><div class="rp"><h4>1. Le format d'un float (32 bits)</h4>
+<table class="t"><tr><th>Signe s</th><th>Exposant E</th><th>Mantisse M</th></tr><tr><td>1 bit</td><td>8 bits (biais 127)</td><td>23 bits</td></tr></table>
+<span class="fx">x = (−1)<sup>s</sup> × 1,M × 2<sup>E − 127</sup></span>
+<p>Le « 1, » devant la mantisse n'est pas stocké (bit implicite). Le <span class="mono">double</span> suit le même principe sur 64 bits (11 bits d'exposant, biais 1023, 52 bits de mantisse).</p>
+<h4>2. Méthode d'encodage en 5 étapes</h4>
+<ol><li>signe : 0 si positif, 1 si négatif ;</li><li>écrire |x| en binaire (partie entière par divisions, partie décimale par multiplications successives par 2) ;</li><li>normaliser sous la forme 1,… × 2<sup>e</sup> ;</li><li>exposant stocké E = e + 127, sur 8 bits ;</li><li>mantisse = les bits après la virgule, complétés par des 0 jusqu'à 23 bits.</li></ol>
+<div class="exm"><b class="t">Exemple : 5,75</b>5 = 101 ; 0,75 × 2 = 1,5 → 1 ; 0,5 × 2 = 1,0 → 1 ; donc 5,75 = 101,11<sub>2</sub> = 1,0111 × 2<sup>2</sup><br>s = 0 ; E = 2 + 127 = 129 = 1000 0001 ; M = 0111 0000…<br>→ 0 10000001 01110000000000000000000 = <b>40B80000<sub>16</sub></b></div>
+<div class="exm"><b class="t">Exemple : −0,5</b>0,5 = 0,1<sub>2</sub> = 1,0 × 2<sup>−1</sup> ; s = 1 ; E = −1 + 127 = 126 = 0111 1110 ; M = 0 → <b>BF000000<sub>16</sub></b></div>
+<div class="warn">⚠ 0,1 s'écrit 0,000110011001100… en binaire (suite infinie) : il est arrondi. C'est pourquoi, en C, on ne teste jamais l'égalité de deux réels avec <span class="mono">==</span> mais <span class="mono">fabs(a − b) &lt; 1e-6</span>.</div></div></details>
     <div class="console"><div class="row"><label>Nombre réel<input id="ie-val" value="12.625" autocomplete="off"></label></div>
       <div class="ex">Exemples : <button data-f="0.1">0.1</button><button data-f="-0.75">−0.75</button><button data-f="1">1</button><button data-f="3.14159">3.14159</button><button data-f="1e-40">1e-40</button></div></div>
     <div id="ie-out"></div>
@@ -177,6 +228,20 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <!-- 4 bis. Codes binaires -->
   <section class="tool" id="codes">
     <h2>Codes binaires : BCD, Excess-3, Aiken et Gray</h2><p class="sub">Ces codes ne servent pas à calculer mais à <b>représenter</b> l'information : afficheurs 7 segments, compteurs, codeurs de position…</p>
+    <details class="rappel"><summary>📘 Rappel de cours et exemples <small>afficher / masquer</small></summary><div class="rp"><h4>1. Le code BCD (Binary Coded Decimal, 8421)</h4>
+<p>Chaque <b>chiffre décimal</b> est codé séparément sur 4 bits, avec les poids 8, 4, 2, 1. Seuls les mots 0000 à 1001 sont utilisés ; 1010 à 1111 sont <b>interdits</b>.</p>
+<div class="exm"><b class="t">Exemple</b>59 → 5 = 0101, 9 = 1001 → <b>0101 1001</b> (BCD) — alors que 59 en binaire naturel = 11 1011</div>
+<div class="exm"><b class="t">Addition en BCD : 8 + 5</b>1000 + 0101 = 1101 : résultat supérieur à 9 (code interdit) → on ajoute <b>6</b> (0110) : 1101 + 0110 = 1 0011 → <b>0001 0011</b> = 13</div>
+<h4>2. Le code Excess-3 (XS-3)</h4>
+<p>On code chaque chiffre <b>augmenté de 3</b>. Avantage : le complément à 9 s'obtient en inversant les bits (pratique pour les soustractions).</p>
+<div class="exm"><b class="t">Exemple</b>47 → 4 + 3 = 7 = 0111 ; 7 + 3 = 10 = 1010 → <b>0111 1010</b></div>
+<h4>3. Le code Aiken (2421)</h4>
+<p>Code pondéré (poids 2, 4, 2, 1), lui aussi auto-complémentaire : 5 = 1011, 9 = 1111.</p>
+<h4>4. Le code Gray (binaire réfléchi)</h4>
+<p>Entre deux valeurs consécutives, <b>un seul bit change</b> : on l'utilise dans les codeurs de position (roues codeuses) et les tableaux de Karnaugh.</p>
+<div class="cols"><div><span class="fx">g<sub>n</sub> = b<sub>n</sub> ;  g<sub>i</sub> = b<sub>i+1</sub> ⊕ b<sub>i</sub></span></div><div><span class="fx">b<sub>n</sub> = g<sub>n</sub> ;  b<sub>i</sub> = b<sub>i+1</sub> ⊕ g<sub>i</sub></span></div></div>
+<div class="exm"><b class="t">Exemple : 6 = 110 en Gray</b>g<sub>2</sub> = 1 ; g<sub>1</sub> = 1 ⊕ 1 = 0 ; g<sub>0</sub> = 1 ⊕ 0 = 1 → <b>101</b><br>3 = 0010 et 4 = 0110 en Gray : un seul bit diffère.</div>
+<p><b>À retenir :</b> ⊕ (OU exclusif) vaut 1 si les deux bits sont différents, 0 s'ils sont égaux.</p></div></details>
     <div class="split">
       <div><h3>Coder un nombre décimal</h3>
         <div class="console"><div class="row"><label>Nombre décimal<input id="cd-val" value="47" autocomplete="off" inputmode="numeric"></label></div>
@@ -195,6 +260,13 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <!-- 4. ASCII -->
   <section class="tool" id="ascii">
     <h2>Caractères ASCII</h2><p class="sub">En C, un caractère est un petit entier : <span class="mono">'A' == 65</span>.</p>
+    <details class="rappel"><summary>📘 Rappel de cours et exemples <small>afficher / masquer</small></summary><div class="rp"><h4>1. Un caractère est un nombre</h4>
+<p>Le code ASCII associe à chaque caractère un entier de 0 à 127 (7 bits). En C, le type <span class="mono">char</span> stocke ce nombre.</p>
+<table class="t"><tr><th>Caractères</th><th>Codes décimaux</th><th>Hexadécimal</th></tr><tr><td>espace</td><td>32</td><td>20</td></tr><tr><td>'0' à '9'</td><td>48 à 57</td><td>30 à 39</td></tr><tr><td>'A' à 'Z'</td><td>65 à 90</td><td>41 à 5A</td></tr><tr><td>'a' à 'z'</td><td>97 à 122</td><td>61 à 7A</td></tr><tr><td>saut de ligne '\n'</td><td>10</td><td>0A</td></tr></table>
+<h4>2. Exemples en langage C</h4>
+<div class="exm"><b class="t">Calculs sur les caractères</b><span class="mono">'A' + 1</span> vaut 66, c'est-à-dire <span class="mono">'B'</span><br><span class="mono">'7' - '0'</span> vaut 7 : c'est ainsi qu'on convertit un chiffre lu en sa valeur<br><span class="mono">'a' - 32</span> vaut <span class="mono">'A'</span> : majuscule et minuscule sont séparées de 32</div>
+<div class="exm"><b class="t">Afficher un code</b><span class="mono">printf("%c = %d = 0x%X\n", 'A', 'A', 'A');</span> affiche <span class="mono">A = 65 = 0x41</span></div>
+<div class="warn">⚠ Ne pas confondre le caractère <span class="mono">'5'</span> (code 53) et le nombre <span class="mono">5</span>. Les lettres accentuées (é, à…) ne font pas partie de l'ASCII de base.</div></div></details>
     <div class="console"><div class="row"><label>Texte<input id="as-val" class="wide" value="Hanine C1" autocomplete="off"></label></div></div>
     <div id="as-out"></div>
   </section>
@@ -202,6 +274,14 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <!-- 5. Exercices -->
   <section class="tool" id="exo">
     <h2>Exercices corrigés</h2><p class="sub">Un nouvel énoncé à chaque clic ; la correction reprend la méthode du cours.</p>
+    <details class="rappel"><summary>📘 Rappel de cours et exemples <small>afficher / masquer</small></summary><div class="rp"><h4>Méthode pour réussir les exercices</h4>
+<ul><li><b>Vers le décimal</b> : écrivez les poids (1, 2, 4, 8, 16… ou 1, 16, 256…) au-dessus des chiffres, puis additionnez.</li>
+<li><b>Depuis le décimal</b> : posez les divisions successives et lisez les restes de bas en haut.</li>
+<li><b>Binaire ↔ hexadécimal</b> : groupes de 4 bits en partant de la droite.</li>
+<li><b>Complément à 2</b> : valeur absolue sur 8 bits, inversion, +1. Vérifiez : 256 − |x|.</li>
+<li><b>BCD / Excess-3</b> : 4 bits <b>par chiffre</b> (et +3 pour l'Excess-3).</li>
+<li><b>Gray</b> : premier bit recopié, puis OU exclusif des bits voisins.</li></ul>
+<p>Vérifiez toujours votre réponse par la conversion inverse. Si vous vous trompez, la correction détaillée s'affiche : refaites ensuite un exercice du même type.</p></div></details>
     <div class="scorebar">
       <div><small>Réussis</small><b id="sc-ok">0</b></div>
       <div><small>Tentés</small><b id="sc-tot">0</b></div>
