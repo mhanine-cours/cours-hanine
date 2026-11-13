@@ -7,7 +7,7 @@
 <meta name="description" content="Délibération numérique : calcul de la note de module (contrôle continu et examen final), session de rattrapage, décisions V / VAR / NV et procès-verbal, avec les formules Excel.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Oswald:wght@600&display=swap">
 <link rel="stylesheet" href="style.css">
 <style>
 /* ===== NumériLab – design ===== */
@@ -224,6 +224,15 @@ table.pv2-t td.fin{font-weight:700}
 table.pv2-t td.val{font-weight:700;text-align:center}table.pv2-t tr td.val.r{background:#fbdcc8}table.pv2-t tr td.val.nv{background:#f6c9c9}
 .pv2-sum{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:14px;margin:12px 0}
 @media print{table.pv2-t th,table.pv2-t td,table.pv2-w td{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+.pvc{font-family:Calibri,"IBM Plex Sans",Arial,sans-serif;color:#000;font-size:15px}
+.pvc img{max-height:80px;max-width:300px}
+.pvc h3{font:600 34px/1.15 Impact,"Oswald","Arial Narrow",sans-serif;text-align:center;margin:36px 0 34px;color:#000;letter-spacing:.01em}
+.pvc .inf{line-height:2.05;margin:0 0 18px 6px}.pvc .inf b{font-weight:700}
+table.jury{width:100%;border-collapse:collapse;margin:6px 0 22px}table.jury th,table.jury td{border:1px solid #000;padding:8px;text-align:center;height:26px}table.jury th{font-weight:700}
+.pvc .syn{margin:0 0 0 6px;line-height:2.1}.pvc .syn u{font-weight:700}.pvc .syn p{margin:0}.pvc .syn .it{padding-left:46px}
+.pvc .fait{margin:44px 0 0 50%;line-height:2}
+.pgbrk{border-top:2px dashed var(--line);margin:30px 0}
+@media print{.pgbrk{border:0;margin:0;break-after:page;page-break-after:always}}
 </style>
 </head>
 <body>
@@ -289,6 +298,11 @@ table.pv2-t td.val{font-weight:700;text-align:center}table.pv2-t tr td.val.r{bac
       <label>Semestre<input id="i-sem" value="S1"></label>
       <label>Année universitaire<input id="i-au" value="2025/2026"></label>
       <label>Enseignant(s)<input id="i-resp" value="Pr Mounir HANINE"></label>
+      <label>Jury : président<input id="j-pres" placeholder="Prénom et NOM"></label>
+      <label>Jury : membre<input id="j-m1" placeholder="Prénom et NOM"></label>
+      <label>Jury : membre<input id="j-m2" placeholder="Prénom et NOM"></label>
+      <label>Fait à<input id="i-lieu" value="Errachidia"></label>
+      <label>Le (date)<input id="i-date" placeholder="jj/mm/aaaa"></label>
     </div>
   </section>
 
@@ -303,7 +317,7 @@ table.pv2-t td.val{font-weight:700;text-align:center}table.pv2-t tr td.val.r{bac
 
   <section class="tool on" style="margin-top:22px" id="pv-sec">
     <div id="pv-btns"><h2>Procès-verbal de délibération</h2>
-    <p class="sub">Aperçu du PV du module, prêt à imprimer ou à enregistrer en PDF.</p>
+    <p class="sub">Page de garde (jury et synthèse) suivie du PV des notes, prêts à imprimer ou à enregistrer en PDF.</p>
     <div class="row btns" style="align-items:end"><label>Session<select id="sess"><option value="N">Session normale</option><option value="R">Session de rattrapage</option></select></label><button class="btn" id="print" type="button">🖨 Imprimer le PV</button></div></div>
     <div class="pv" id="pv"></div>
   </section>
@@ -395,7 +409,15 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S=$('sess').value;
     rows=R.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${e.ra==null?'ABS':fr(e.ra)}</td><td class="fin">${fr(e.fin)}</td><td class="val${e.dec==='VAR'?'':' nv'}">${e.dec==='VAR'?'Validé':e.dec==='NV'?'Non validé':'En attente'}</td></tr>`).join('');
     rows=R.length?`<table class="pv2-t"><tr><th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Rattrapage</th><th>Note Finale</th><th>Validation</th></tr>${rows}</table>`:'<p>Aucun étudiant au rattrapage.</p>';
     sum=`<span><b>Étudiants au rattrapage :</b> ${R.length}</span><span><b>Validés après rattrapage :</b> ${C.var}</span><span><b>Non validés :</b> ${C.nv}</span>${C.att?`<span><b>Notes de rattrapage non saisies :</b> ${C.att}</span>`:''}`;}
-  $('pv').innerHTML=`<div class="pv2">${head}${rows}<div class="pv2-sum">${sum}</div><div class="pv-sign"><div>L'enseignant(e) responsable du module</div><div>Le coordonnateur de la filière</div><div>Le président du jury</div></div></div>`;}
+  const N=v=>`<b>${v}</b>`,sp=v=>v?esc(v):'';
+  const syn=S==='N'?`<p class="it">Nombre d'étudiants inscrits au module : ${N(C.n)}</p><p class="it">Nombre d'étudiants ayant validé le module : ${N(C.vsn)}</p><p class="it">Nombre d'étudiants ayant droit à une session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants absents : ${N(C.abs)}</p>`
+    :`<p class="it">Nombre d'étudiants convoqués à la session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants ayant validé le module après rattrapage : ${N(C.var)}</p><p class="it">Nombre d'étudiants n'ayant pas validé le module : ${N(C.nv)}</p><p class="it">Nombre d'étudiants absents : ${N(E.filter(e=>e.rs!=='V'&&e.ra==null).length)}</p>`;
+  const cover=`<div class="pvc"><img src="${LOGO}" alt="Logo"><h3>Procès-verbal<br>[Délibération du jury de module]</h3>
+  <div class="inf"><b>Année universitaire</b> : ${g('i-au')}<br><b>Filière</b> : ${g('i-fil')}<br><b>Semestre</b> : ${g('i-sem')}<br><b>Session</b> : ${S==='N'?'Normale':'Rattrapage'}<br><b>Intitulé du module</b> : ${g('i-mod')}</div>
+  <table class="jury"><tr><th style="width:42%">Prénom et NOM</th><th style="width:25%">Qualité</th><th>Emargement</th></tr><tr><td>${sp($('j-pres').value)}</td><td>Président</td><td></td></tr><tr><td>${sp($('j-m1').value)}</td><td>Membre</td><td></td></tr><tr><td>${sp($('j-m2').value)}</td><td>Membre</td><td></td></tr></table>
+  <div class="syn"><p><u>Synthèse de la délibération</u> :</p><p style="margin-top:12px">Les enseignants cités ci-dessus approuvent les résultats suivants :</p>${syn}</div>
+  <div class="fait">Fait à ${g('i-lieu')||'……………'}, le : ${g('i-date')||'……………'}<br>Signature du président du jury</div></div><div class="pgbrk"></div>`;
+  $('pv').innerHTML=cover+`<div class="pv2">${head}${rows}<div class="pv2-sum">${sum}</div><div class="pv-sign"><div>L'enseignant(e) responsable du module</div><div>Le coordonnateur de la filière</div><div>Le président du jury</div></div></div>`;}
 function all(){const p=P();$('o-w').textContent=fr(p.w*100,0)+' % / '+fr(100-p.w*100,0)+' %';$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-elim').textContent=p.elim?fr(p.elim,1):'aucune';
   $('nb-el').textContent=E.length;$('cls-sub').innerHTML=esc($('i-mod').value)+' · '+esc($('i-fil').value)+' · '+CLS;
   C=calc();kpis();chart();table();rules();pv();}
@@ -477,8 +499,8 @@ $('imp-file').onchange=async ev=>{const f=ev.target.files[0];ev.target.value='';
 function defaults(){$('w').value=40;$('seuil').value=10;$('elim').value=0;$('mode').value='ex';$('cap').checked=false;}
 $('newc').onclick=()=>{CLS='Module d\'exemple · étudiants fictifs';$('imp-msg').hidden=true;gen();all();};
 ['w','seuil','elim','mode','cap'].forEach(id=>$(id).addEventListener('input',all));$('mode').addEventListener('change',all);$('cap').addEventListener('change',all);
-['i-etab','i-fil','i-mod','i-sem','i-au','i-resp'].forEach(id=>$(id).addEventListener('input',()=>{$('cls-sub').innerHTML=esc($('i-mod').value)+' · '+esc($('i-fil').value)+' · '+CLS;pv();}));
-defaults();$('logo-prev').src=LOGO;gen();all();
+['i-etab','i-fil','i-mod','i-sem','i-au','i-resp','j-pres','j-m1','j-m2','i-lieu','i-date'].forEach(id=>$(id).addEventListener('input',()=>{$('cls-sub').innerHTML=esc($('i-mod').value)+' · '+esc($('i-fil').value)+' · '+CLS;pv();}));
+defaults();$('i-date').value=new Date().toLocaleDateString('fr-FR');$('logo-prev').src=LOGO;gen();all();
 </script>
 </body>
 </html>
