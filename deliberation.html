@@ -196,51 +196,59 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
 table.xl td.na{background:#f4f4f2;color:#aaa;cursor:default}
 .rules{font-size:14.5px;line-height:1.6;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin-top:12px}
 .rules b{font-weight:600}
-.pv{background:#fff;color:#111;border:1px solid var(--line);border-radius:12px;padding:26px 30px;font-family:"IBM Plex Sans",Arial,sans-serif}
-.pv-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:2px solid #1f3864;padding-bottom:10px;margin-bottom:14px}
-.pv-top img{height:64px}.pv-top div{text-align:right;font-size:13px;line-height:1.5}
-.pv h3{text-align:center;font:700 19px "Fraunces",Georgia,serif;margin:6px 0 2px;color:#1f3864}.pv .pv-sub{text-align:center;font-size:13.5px;margin:0 0 12px}
-.pv-meta{display:grid;grid-template-columns:1fr 1fr;gap:2px 20px;font-size:13.5px;margin:0 0 12px}
-table.pvt{width:100%;border-collapse:collapse;font-size:12.5px}
-table.pvt th{background:#1f3864;color:#fff;padding:5px 6px;font-weight:600;border:1px solid #1f3864}
-table.pvt td{border:1px solid #bbb;padding:4px 6px;text-align:center}table.pvt td.l{text-align:left}
-table.pvt tr:nth-child(even) td{background:#f3f5f9}
-.pv-sum{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13.5px;margin:12px 0}
-.pv-sign{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px;font-size:13.5px}.pv-sign div{border-top:1px solid #999;padding-top:6px;min-height:70px}
-@media print{header.top,footer,.nx-hero,.sim,.tool:not(#pv-sec),.foot-note,.crumb,#pv-btns{display:none!important}#pv-sec{border:0;padding:0}.pv{border:0;padding:0}main.page{padding:0}body{background:#fff}}
 @media (max-width:760px){.info{grid-template-columns:1fr 1fr}.pv-meta{grid-template-columns:1fr}}
-.pv2{font-family:Calibri,"IBM Plex Sans",Arial,sans-serif;color:#000}
-.pv2-logo{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px}.pv2-logo img{max-height:80px;max-width:260px}.pv2-logo .t{font:700 17px Calibri,Arial,sans-serif;text-align:center;flex:1;color:#1f3864}
-.pv2-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:12px}
-.pv2-info{font-size:15px;line-height:1.75}.pv2-info b{font-weight:700}
-table.pv2-w{border-collapse:collapse;font-size:15px;min-width:230px}table.pv2-w td{border:1px solid #999;padding:3px 12px;text-align:center}table.pv2-w td:last-child{font-weight:700}
-table.pv2-t{width:100%;border-collapse:collapse;font-size:14px}
-table.pv2-t th{background:#5b8fd0;color:#fff;font-weight:700;padding:6px 8px;border:1px solid #fff;text-align:center}
+/* ===== Procès-verbal : mise en page ===== */
+.pv{background:transparent;border:0;padding:0;font-family:"IBM Plex Sans",Calibri,Arial,sans-serif;color:#111;font-variant-numeric:tabular-nums}
+.sheet{background:#fff;color:#111;width:100%;max-width:21cm;margin:0 auto 22px;padding:1.2cm 1.6cm 1.6cm;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 28px -18px rgba(0,0,0,.35);font-size:10.5pt;line-height:1.45}
+.lh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:6px;border-bottom:.75pt solid #1f3864;margin-bottom:.8cm}
+.lh img{height:1.6cm;max-width:6.5cm;object-fit:contain;object-position:left bottom;display:block}
+.lh .r{text-align:right;font-size:8.5pt;line-height:1.4;color:#44506a}.lh .r b{font-weight:600;color:#1f3864}
+#runlh{display:none}
+.ttl{text-align:center;margin:.3cm 0 .9cm}
+.ttl .k{font:600 26pt/1.1 "Oswald",Impact,"Arial Narrow",sans-serif;letter-spacing:.03em;text-transform:uppercase;color:#111}
+.ttl .s{font:500 14pt/1.3 "Oswald","Arial Narrow",sans-serif;letter-spacing:.02em;color:#1f3864;margin-top:4px}
+.ttl.sm{margin:0 0 .6cm}.ttl.sm .k{font-size:17pt}.ttl.sm .s{font-size:11.5pt}
+dl.meta{display:grid;grid-template-columns:4.6cm 1fr;gap:.12cm .3cm;margin:0 0 .7cm;font-size:11pt}
+.sheet dl,.sheet dt,.sheet dd{font-family:"IBM Plex Sans",Calibri,Arial,sans-serif;font-size:inherit;letter-spacing:0;text-transform:none}dl.meta dt{font-weight:600;color:#1f3864}dl.meta dt:after{content:" :"}dl.meta dd{margin:0}
+.mhead{display:flex;justify-content:space-between;align-items:flex-start;gap:.8cm}.mhead dl.meta{flex:1;grid-template-columns:4.2cm 1fr;margin-bottom:.5cm}
+table.wbox{border-collapse:collapse;font-size:10pt;min-width:4.6cm}table.wbox caption{font:600 8pt var(--mono,monospace);letter-spacing:.06em;text-transform:uppercase;color:#44506a;text-align:left;padding-bottom:3px}
+table.wbox td{border:.75pt solid #9aa6bd;padding:3px 10px}table.wbox td:last-child{text-align:right;font-weight:700}
+table.jury{width:100%;border-collapse:collapse;margin:0 0 .9cm;font-size:10.5pt}
+table.jury th{background:#eef2f8;font-weight:600;color:#1f3864;border:.75pt solid #444;padding:6px 8px;text-align:center}
+table.jury td{border:.75pt solid #444;padding:6px 10px;height:1.05cm;text-align:center}table.jury td:first-child{text-align:left}
+.h4{font:600 11pt "IBM Plex Sans",Arial,sans-serif;color:#1f3864;text-transform:uppercase;letter-spacing:.06em;border-bottom:.5pt solid #c5cede;padding-bottom:3px;margin:0 0 .3cm}
+.syn p{margin:0 0 .25cm}
+table.syt{border-collapse:collapse;width:100%;margin:.15cm 0 0;font-size:10.5pt}
+table.syt td{padding:4px 0;border-bottom:.5pt dotted #b7c0d0}table.syt td:first-child{padding-left:.8cm}table.syt td:last-child{text-align:right;font-weight:700;width:2.4cm;padding-right:.2cm}
+table.syt small{font-weight:400;color:#555}
+.fait{margin:1.2cm 0 0 auto;width:8cm;line-height:1.8}.fait .sg{margin-top:.2cm;font-weight:600;height:2cm}
+table.pv2-t{width:100%;border-collapse:collapse;font-size:9.5pt}
+table.pv2-t th{background:#1f3864;color:#fff;font-weight:600;padding:5px 6px;border:.5pt solid #1f3864;text-align:center;font-size:9pt;letter-spacing:.02em}
 table.pv2-t th.l{text-align:left}
-table.pv2-t td{padding:5px 8px;border:1px solid #fff;border-bottom:1px solid #c9d6ea;text-align:right}
-table.pv2-t td.c{text-align:center}table.pv2-t td.l{text-align:left}
-table.pv2-t tbody tr:nth-child(odd) td{background:#dde8f6}table.pv2-t tbody tr:nth-child(even) td{background:#fff}
+table.pv2-t td{padding:3.5px 6px;border-bottom:.5pt solid #d3dbe8;text-align:right}
+table.pv2-t td.c{text-align:center}table.pv2-t td.l{text-align:left}table.pv2-t td.nm{text-transform:uppercase;font-weight:500}
+table.pv2-t tbody tr:nth-child(even) td{background:#f1f5fb}
 table.pv2-t td.fin{font-weight:700}
-table.pv2-t td.val{font-weight:700;text-align:center}table.pv2-t tr td.val.r{background:#fbdcc8}table.pv2-t tr td.val.nv{background:#f6c9c9}
-.pv2-sum{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:14px;margin:12px 0}
-@media print{table.pv2-t th,table.pv2-t td,table.pv2-w td{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-.pvc{font-family:Calibri,"IBM Plex Sans",Arial,sans-serif;color:#000;font-size:15px}
-.pvc img{max-height:80px;max-width:300px}
-.pvc h3{font:600 34px/1.15 Impact,"Oswald","Arial Narrow",sans-serif;text-align:center;margin:36px 0 34px;color:#000;letter-spacing:.01em}
-.pvc .inf{line-height:2.05;margin:0 0 18px 6px}.pvc .inf b{font-weight:700}
-table.jury{width:100%;border-collapse:collapse;margin:6px 0 22px}table.jury th,table.jury td{border:1px solid #000;padding:8px;text-align:center;height:26px}table.jury th{font-weight:700}
-.pvc .syn{margin:0 0 0 6px;line-height:2.1}.pvc .syn u{font-weight:700}.pvc .syn p{margin:0}.pvc .syn .it{padding-left:46px}
-.pvc .fait{margin:44px 0 0 50%;line-height:2}
-.pgbrk{border-top:2px dashed var(--line);margin:30px 0}
-@page{size:A4 portrait;margin:2.5cm}
-@media print{.pgbrk{border:0;margin:0;break-after:page;page-break-after:always}
- html,body{width:auto!important}main.page,.wrap{max-width:none!important;width:auto!important;margin:0!important;padding:0!important}
- .pv{max-width:none}.pvc{font-size:11.5pt}.pvc img,.pv2-logo img{max-height:2.2cm}.pvc h3{font-size:24pt;margin:1cm 0 .9cm}
- .pvc .inf{line-height:1.9}.pvc .fait{margin-top:1.4cm}
- .pv2-info{font-size:11pt;line-height:1.6}table.pv2-w{font-size:11pt;min-width:5cm}
- table.pv2-t{font-size:9.5pt}table.pv2-t th{padding:4px 4px}table.pv2-t td{padding:3px 5px}
+table.pv2-t td.val{text-align:center;font-weight:600}
+.pill{display:inline-block;min-width:2.1cm;padding:1px 6px;border-radius:3px;font-size:8.5pt;letter-spacing:.02em}
+.p-v{color:#1d5a27;background:#e3f1e5}.p-r{color:#8a4b00;background:#fde7cf}.p-nv{color:#8f1d1d;background:#f8dada}.p-at{color:#555;background:#eee}
+.pv2-sum{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:9.5pt;margin:.35cm 0 0;padding:.2cm .3cm;background:#f4f6fa;border-left:2pt solid #1f3864}
+.pv2-sum b{font-weight:600}
+.legend-pv{font-size:8.5pt;color:#555;margin:.15cm 0 0}
+.pv-sign{display:grid;grid-template-columns:repeat(3,1fr);gap:.7cm;margin-top:1cm;font-size:9.5pt;break-inside:avoid}
+.pv-sign div{border-top:.75pt solid #777;padding-top:4px;min-height:2.2cm;color:#333}
+.pgbrk{display:none}
+@page{size:A4 portrait;margin:1cm 2.5cm 2.5cm;@bottom-center{content:"Page " counter(page) " / " counter(pages);font:8pt "IBM Plex Sans",Arial,sans-serif;color:#666}}
+@media print{
+ header.top,footer,.nx-hero,.sim,.tool:not(#pv-sec),.foot-note,.crumb,#pv-btns{display:none!important}
+ #pv-sec{border:0!important;padding:0!important;margin:0!important;background:none!important}main.page,.wrap{max-width:none!important;width:auto!important;margin:0!important;padding:0!important}body{background:#fff!important}
+ .sheet{max-width:none;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;break-after:page;page-break-after:always}.sheet:last-child{break-after:auto;page-break-after:auto}
+ .sheet>.lh{display:none}
+ #runlh{display:flex;position:fixed;top:0;left:0;right:0;margin:0;background:#fff}
+ table.pgw{width:100%;border-collapse:collapse}table.pgw>thead>tr>td{height:2.75cm;padding:0}table.pgw>tbody>tr>td{padding:0}
  table.pv2-t thead{display:table-header-group}table.pv2-t tr{break-inside:avoid;page-break-inside:avoid}
- .pv2-sum{font-size:10pt}.pv-sign{font-size:10pt;break-inside:avoid}}
+ table.pv2-t th,table.pv2-t td,table.jury th,.pill,.pv2-sum,table.wbox td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 </head>
 <body>
@@ -406,28 +414,38 @@ function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.heigh
   cnt.forEach((v,i)=>{const h=(H-pad.t-pad.b)*v/mx,x=pad.l+i*bw;c.fillStyle=T[i][1]<=C.p.seuil?'#c98a4b':'#2f8f87';c.fillRect(x+bw*.15,H-pad.b-h,bw*.7,h);c.fillStyle=ink;c.fillText(lab[i],x+bw*.28,H-12);if(v)c.fillText(v,x+bw*.46,H-pad.b-h-5);});}
 function rules(){const p=C.p;$('rules').innerHTML=`<b>Règles appliquées :</b> note de session normale = CC × ${fr(p.w*100,0)} % + examen × ${fr(100-p.w*100,0)} % ; module validé (V) si la note est au moins égale à ${fr(p.seuil,1)}${p.elim?` et l'examen au moins égal à ${fr(p.elim,1)} (note éliminatoire)`:''} ; sinon, l'étudiant passe le rattrapage. Une absence non justifiée à l'examen (ABS) entraîne la non-validation du module, sans rattrapage ; une absence justifiée (ABSJ) donne droit au rattrapage. Après rattrapage, la note retenue est la meilleure des deux notes${p.mode==='ex'?', la note de rattrapage remplaçant celle de l\'examen (le CC est conservé)':', la note de rattrapage remplaçant celle du module'}${p.cap?', plafonnée à 10':''} : validé après rattrapage (VAR) ou non validé (NV).`;}
 let LOGO='images/logo-fs-errachidia.png';try{const L0=localStorage.getItem('delib-logo');if(L0)LOGO=L0;}catch(e){}
-function pv(){const p=C.p,g=id=>esc($(id).value),S=$('sess').value;
-  const head=`<div class="pv2-logo"><img src="${LOGO}" alt="Logo"><div class="t">Procès-verbal de délibération</div><div style="width:80px"></div></div>
-  <div class="pv2-head"><div class="pv2-info"><b>Filière :</b> ${g('i-fil')}<br><b>Module :</b> ${g('i-mod')}<br><b>Enseignant(s) :</b> ${g('i-resp')}<br><b>Session :</b> ${S==='N'?'Normale':'Rattrapage'}<br><b>Semestre :</b> ${g('i-sem')}<br><b>Année universitaire :</b> ${g('i-au')}</div>
-  <table class="pv2-w"><tr><td>Note CC</td><td>${fr(p.w*100,0)}%</td></tr><tr><td>Note Ecrit</td><td>${fr(100-p.w*100,0)}%</td></tr>${p.elim?`<tr><td>Note éliminatoire</td><td>${fr(p.elim,1)}</td></tr>`:''}</table></div>`;
-  let rows,sum;
+function pv(){const p=C.p,g=id=>esc($(id).value),S=$('sess').value,SN=S==='N'?'Normale':'Rattrapage';
+  const lh=`<div class="lh"><img src="${LOGO}" alt="Logo"><div class="r"><b>Université Moulay Ismail</b><br>${g('i-etab')}<br>Année universitaire ${g('i-au')}</div></div>`;
+  const N=v=>v,sp=v=>v?esc(v):'';
+  const syn=(S==='N'?[["Nombre d'étudiants inscrits au module",C.n],["Nombre d'étudiants ayant validé le module",C.vsn],["Nombre d'étudiants ayant droit à une session de rattrapage",C.ratt],["Nombre d'étudiants absents",C.abs+C.absj,C.abs+C.absj?`${C.abs} non justifiée${C.abs>1?'s':''}, ${C.absj} justifiée${C.absj>1?'s':''}`:'']]
+    :[["Nombre d'étudiants convoqués à la session de rattrapage",C.ratt],["Nombre d'étudiants ayant validé le module après rattrapage",C.var],["Nombre d'étudiants n'ayant pas validé le module",C.nv],["Nombre d'étudiants absents au rattrapage",E.filter(e=>e.rs==='R'&&e.ra==null).length]])
+    .map(([a,b,c])=>`<tr><td>${a}${c?` <small>(${c})</small>`:''}</td><td>${b}</td></tr>`).join('');
+  const cover=`<section class="sheet">${lh}
+   <div class="ttl"><div class="k">Procès-verbal</div><div class="s">[ Délibération du jury de module ]</div></div>
+   <dl class="meta"><dt>Année universitaire</dt><dd>${g('i-au')}</dd><dt>Filière</dt><dd>${g('i-fil')}</dd><dt>Semestre</dt><dd>${g('i-sem')}</dd><dt>Session</dt><dd>${SN}</dd><dt>Intitulé du module</dt><dd>${g('i-mod')}</dd></dl>
+   <table class="jury"><tr><th style="width:44%">Prénom et NOM</th><th style="width:22%">Qualité</th><th>Émargement</th></tr><tr><td>${sp($('j-pres').value)}</td><td style="text-align:center">Président</td><td></td></tr><tr><td>${sp($('j-m1').value)}</td><td style="text-align:center">Membre</td><td></td></tr><tr><td>${sp($('j-m2').value)}</td><td style="text-align:center">Membre</td><td></td></tr></table>
+   <div class="syn"><div class="h4">Synthèse de la délibération</div><p>Les enseignants cités ci-dessus approuvent les résultats suivants :</p><table class="syt">${syn}</table></div>
+   <div class="fait">Fait à ${g('i-lieu')||'……………'}, le ${g('i-date')||'……………'}<div class="sg">Signature du président du jury</div></div></section>`;
+  const pill=(c,t)=>`<span class="pill p-${c}">${t}</span>`;
+  let rows,sum,hd;
   if(S==='N'){
-    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${exT(e)}</td><td class="fin">${fr(e.sn)}</td><td class="val${e.rs==='V'?'':e.rs==='NV'?' nv':' r'}">${e.rs==='V'?'Validé':e.rs==='NV'?'Non validé':'Rattrapage'}</td></tr>`).join('');
-    rows=`<table class="pv2-t"><thead><tr><th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Ecrit</th><th>Note Finale</th><th>Validation</th></tr></thead><tbody>${rows}</tbody></table>`;
-    sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.absj?` (dont ${C.absj} absence${C.absj>1?'s':''} justifiée${C.absj>1?'s':''})`:''}</span>${C.abs?`<span><b>Non validés (ABS) :</b> ${C.abs}</span>`:''}<span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
+    hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Écrit</th><th>Note finale</th><th>Validation</th>';
+    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${exT(e)}</td><td class="fin">${fr(e.sn)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):pill('r','Rattrapage')}</td></tr>`).join('');
+    sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.absj?` (dont ${C.absj} ABSJ)`:''}</span>${C.abs?`<span><b>Non validés (ABS) :</b> ${C.abs}</span>`:''}<span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
   else{const R=E.filter(e=>e.rs==='R');
-    rows=R.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${e.ra==null?'ABS':fr(e.ra)}</td><td class="fin">${fr(e.fin)}</td><td class="val${e.dec==='VAR'?'':' nv'}">${e.dec==='VAR'?'Validé':e.dec==='NV'?'Non validé':'En attente'}</td></tr>`).join('');
-    rows=R.length?`<table class="pv2-t"><thead><tr><th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Rattrapage</th><th>Note Finale</th><th>Validation</th></tr></thead><tbody>${rows}</tbody></table>`:'<p>Aucun étudiant au rattrapage.</p>';
-    sum=`<span><b>Étudiants au rattrapage :</b> ${R.length}</span><span><b>Validés après rattrapage :</b> ${C.var}</span><span><b>Non validés :</b> ${C.nv}</span>${C.att?`<span><b>Notes de rattrapage non saisies :</b> ${C.att}</span>`:''}`;}
-  const N=v=>`<b>${v}</b>`,sp=v=>v?esc(v):'';
-  const syn=S==='N'?`<p class="it">Nombre d'étudiants inscrits au module : ${N(C.n)}</p><p class="it">Nombre d'étudiants ayant validé le module : ${N(C.vsn)}</p><p class="it">Nombre d'étudiants ayant droit à une session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants absents : ${N(C.abs+C.absj)}${C.abs+C.absj?` (${C.abs} non justifiée${C.abs>1?'s':''}, ${C.absj} justifiée${C.absj>1?'s':''})`:''}</p>`
-    :`<p class="it">Nombre d'étudiants convoqués à la session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants ayant validé le module après rattrapage : ${N(C.var)}</p><p class="it">Nombre d'étudiants n'ayant pas validé le module : ${N(C.nv)}</p><p class="it">Nombre d'étudiants absents : ${N(E.filter(e=>e.rs==='R'&&e.ra==null).length)}</p>`;
-  const cover=`<div class="pvc"><img src="${LOGO}" alt="Logo"><h3>Procès-verbal<br>[Délibération du jury de module]</h3>
-  <div class="inf"><b>Année universitaire</b> : ${g('i-au')}<br><b>Filière</b> : ${g('i-fil')}<br><b>Semestre</b> : ${g('i-sem')}<br><b>Session</b> : ${S==='N'?'Normale':'Rattrapage'}<br><b>Intitulé du module</b> : ${g('i-mod')}</div>
-  <table class="jury"><tr><th style="width:42%">Prénom et NOM</th><th style="width:25%">Qualité</th><th>Emargement</th></tr><tr><td>${sp($('j-pres').value)}</td><td>Président</td><td></td></tr><tr><td>${sp($('j-m1').value)}</td><td>Membre</td><td></td></tr><tr><td>${sp($('j-m2').value)}</td><td>Membre</td><td></td></tr></table>
-  <div class="syn"><p><u>Synthèse de la délibération</u> :</p><p style="margin-top:12px">Les enseignants cités ci-dessus approuvent les résultats suivants :</p>${syn}</div>
-  <div class="fait">Fait à ${g('i-lieu')||'……………'}, le : ${g('i-date')||'……………'}<br>Signature du président du jury</div></div><div class="pgbrk"></div>`;
-  $('pv').innerHTML=cover+`<div class="pv2">${head}${rows}<div class="pv2-sum">${sum}</div><div class="pv-sign"><div>L'enseignant(e) responsable du module</div><div>Le coordonnateur de la filière</div><div>Le président du jury</div></div></div>`;}
+    hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note rattrapage</th><th>Note finale</th><th>Validation</th>';
+    rows=R.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${e.ra==null?'ABS':fr(e.ra)}</td><td class="fin">${fr(e.fin)}</td><td class="val">${e.dec==='VAR'?pill('v','Validé'):e.dec==='NV'?pill('nv','Non validé'):pill('at','En attente')}</td></tr>`).join('');
+    if(!R.length)rows=`<tr><td colspan="8" class="c">Aucun étudiant au rattrapage.</td></tr>`;
+    sum=`<span><b>Convoqués :</b> ${R.length}</span><span><b>Validés après rattrapage :</b> ${C.var}</span><span><b>Non validés :</b> ${C.nv}</span>${C.att?`<span><b>Notes non saisies :</b> ${C.att}</span>`:''}`;}
+  const notes=`<section class="sheet">${lh}
+   <div class="ttl sm"><div class="k">Procès-verbal des notes</div><div class="s">Session ${SN.toLowerCase()}</div></div>
+   <div class="mhead"><dl class="meta"><dt>Filière</dt><dd>${g('i-fil')}</dd><dt>Module</dt><dd>${g('i-mod')}</dd><dt>Enseignant(s)</dt><dd>${g('i-resp')}</dd><dt>Semestre</dt><dd>${g('i-sem')}</dd><dt>Année universitaire</dt><dd>${g('i-au')}</dd></dl>
+   <table class="wbox"><caption>Pondération</caption><tr><td>Note CC</td><td>${fr(p.w*100,0)} %</td></tr><tr><td>Note Écrit</td><td>${fr(100-p.w*100,0)} %</td></tr><tr><td>Validation</td><td>${fr(p.seuil,1)} / 20</td></tr>${p.elim?`<tr><td>Note éliminatoire</td><td>${fr(p.elim,1)}</td></tr>`:''}</table></div>
+   <table class="pv2-t"><thead><tr>${hd}</tr></thead><tbody>${rows}</tbody></table>
+   <div class="pv2-sum">${sum}</div>
+   <p class="legend-pv">ABS : absence non justifiée à l'examen (module non validé) · ABSJ : absence justifiée (droit au rattrapage)</p>
+   <div class="pv-sign"><div>L'enseignant(e) responsable du module</div><div>Le coordonnateur de la filière</div><div>Le président du jury</div></div></section>`;
+  $('pv').innerHTML=`<div class="lh" id="runlh"><img src="${LOGO}" alt="Logo"><div class="r"><b>Université Moulay Ismail</b><br>${g('i-etab')}<br>Année universitaire ${g('i-au')}</div></div><table class="pgw"><thead><tr><td></td></tr></thead><tbody><tr><td>${cover}${notes}</td></tr></tbody></table>`;}
 function all(){const p=P();$('o-w').textContent=fr(p.w*100,0)+' % / '+fr(100-p.w*100,0)+' %';$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-elim').textContent=p.elim?fr(p.elim,1):'aucune';
   $('nb-el').textContent=E.length;$('cls-sub').innerHTML=esc($('i-mod').value)+' · '+esc($('i-fil').value)+' · '+CLS;
   C=calc();kpis();chart();table();rules();pv();}
