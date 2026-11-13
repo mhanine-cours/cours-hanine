@@ -182,6 +182,9 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
 .bulletin{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 20px;max-width:640px}
 .b-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.b-head b{font:700 18px var(--display);display:block}.b-head small{color:var(--muted)}
 .b-rang{font:500 14px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 10px}.b-rang b{font-size:18px}
+.imp-msg{margin:12px 0 4px;padding:10px 12px;border-radius:10px;font-size:14px;line-height:1.5;background:#e8f4f2;border:1px solid #b9ddd8}
+.imp-msg.err{background:#fbecea;border-color:#efc4be}
+.imp-msg b{font-weight:600}
 </style>
 </head>
 <body>
@@ -200,7 +203,7 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
       <div class="eyebrow">Logiciel didactique · Informatique pour l'enseignement du français</div>
       <h1 class="bv-title">Classe numérique : le carnet de notes de l'enseignant<span>Le tableur au service de l'enseignant de français</span></h1>
       <p class="lead">Vous êtes professeur de français d'une classe de <b>3<sup>e</sup> année collège</b>. Saisissez ou modifiez les notes, réglez les coefficients, et observez comment les <b>formules Excel</b> calculent automatiquement moyennes, mentions, rangs et statistiques de la classe.</p>
-      <div class="chips"><span><b>30</b> élèves</span><span>moyenne · SI · RANG · NB.SI</span><span>bulletin individuel</span><span>export vers Excel</span></div>
+      <div class="chips"><span><b id="nb-el">30</b> élèves</span><span>moyenne · SI · RANG · NB.SI</span><span>bulletin individuel</span><span>import et export Excel</span></div>
       <p class="byline">Conçu et développé par <b>Pr Mounir HANINE</b> · Faculté des Sciences Errachidia · Université Moulay Ismail</p>
     </div>
     <div class="screen" aria-hidden="true">
@@ -214,18 +217,20 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
 
   <div class="sim">
     <section class="inst">
-      <div class="inst-h"><div><h2>Réglages de l'évaluation</h2><small>Les calculs se mettent à jour immédiatement</small></div><button class="btn ghost" id="newc" type="button">↻ Nouvelle classe</button></div>
+      <div class="inst-h"><div><h2>Réglages de l'évaluation</h2><small>Les calculs se mettent à jour immédiatement</small></div><div class="row btns" style="gap:8px;margin:0"><button class="btn" id="imp" type="button">⬆ Importer mes notes</button><button class="btn ghost" id="newc" type="button">↻ Classe d'exemple</button></div></div>
+      <input type="file" id="imp-file" accept=".xlsx,.xls,.ods,.csv,.txt" hidden>
+      <div id="imp-msg" class="imp-msg" hidden></div>
       <h3 class="grp">⚖️ Coefficients</h3>
-      <div class="sl"><label for="c1">Dictée</label><input type="range" id="c1" min="0" max="4" step="1"><output id="o-c1"></output></div>
-      <div class="sl"><label for="c2">Rédaction</label><input type="range" id="c2" min="0" max="4" step="1"><output id="o-c2"></output></div>
-      <div class="sl"><label for="c3">Lecture et compréhension</label><input type="range" id="c3" min="0" max="4" step="1"><output id="o-c3"></output></div>
+      <div class="sl"><label for="c1" id="lb1">Dictée</label><input type="range" id="c1" min="0" max="4" step="1"><output id="o-c1"></output></div>
+      <div class="sl"><label for="c2" id="lb2">Rédaction</label><input type="range" id="c2" min="0" max="4" step="1"><output id="o-c2"></output></div>
+      <div class="sl"><label for="c3" id="lb3">Lecture et compréhension</label><input type="range" id="c3" min="0" max="4" step="1"><output id="o-c3"></output></div>
       <h3 class="grp">🎯 Règles</h3>
       <div class="sl"><label for="seuil">Seuil de réussite</label><input type="range" id="seuil" min="8" max="12" step="0.5"><output id="o-seuil"></output></div>
-      <div class="sl"><label for="bonus">Points de bonus en dictée (barème revu)</label><input type="range" id="bonus" min="0" max="3" step="0.5"><output id="o-bonus"></output></div>
+      <div class="sl"><label for="bonus" id="lbb">Points de bonus en dictée (barème revu)</label><input type="range" id="bonus" min="0" max="3" step="0.5"><output id="o-bonus"></output></div>
       <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Astuce : cliquez sur une note dans le tableau pour la modifier, comme dans Excel.</p>
     </section>
     <section class="inst">
-      <div class="inst-h"><div><h2>Statistiques de la classe</h2><small>Classe de 3<sup>e</sup> année collège · français</small></div><span class="led on" id="taux"></span></div>
+      <div class="inst-h"><div><h2>Statistiques de la classe</h2><small id="cls-sub">Classe de 3<sup>e</sup> année collège · français</small></div><span class="led on" id="taux"></span></div>
       <div class="kpis" id="kpis"></div>
       <canvas id="chart" width="720" height="260" aria-label="Répartition des moyennes par tranche"></canvas>
       <div class="legend"><span><i style="background:#2f8f87"></i>nombre d'élèves par tranche de moyenne (=NB.SI.ENS)</span></div>
@@ -237,7 +242,7 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
     <p class="sub">Cliquez sur une cellule verte pour voir sa formule, ou sur une note pour la modifier.</p>
     <div class="xl-bar"><span class="nm" id="xl-ref">G2</span><span class="fx">fx</span><span class="fm" id="xl-fm"></span><span class="ex" id="xl-ex"></span></div>
     <div class="xl-wrap tall"><table class="xl" id="xl"></table></div>
-    <div class="row btns" style="margin-top:12px"><button class="btn" id="csv" type="button">Exporter vers Excel (.csv)</button><span style="font-size:14px;color:var(--muted)">Le fichier contient les formules : ouvrez-le dans Excel pour poursuivre le travail.</span></div>
+    <div class="row btns" style="margin-top:12px"><button class="btn" id="csv" type="button">Exporter vers Excel (.csv)</button><button class="btn ghost" id="tpl" type="button">Télécharger le modèle de fichier</button><span style="font-size:14px;color:var(--muted)">Le fichier exporté contient les formules : ouvrez-le dans Excel pour poursuivre le travail.</span></div>
   </section>
 
   <section class="tool on" style="margin-top:22px">
@@ -256,7 +261,7 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
       <div id="q-fb"></div></div>
     <div class="scorebar" style="margin-top:12px"><div><small>Réussis</small><b id="sc">0 / 0</b></div></div>
   </section>
-  <p class="foot-note"><span>ℹ️</span><span>Élèves et notes fictifs, générés pour l'exercice. Les formules affichées sont celles d'Excel en français (séparateur « ; »).</span></p>
+  <p class="foot-note"><span>ℹ️</span><span>La classe d'exemple contient des élèves et des notes fictifs. Vos fichiers importés sont lus uniquement dans votre navigateur : aucune note n'est envoyée sur Internet. Les formules affichées sont celles d'Excel en français (séparateur « ; »).</span></p>
 </main>
 <footer><div class="wrap"><span>Classe numérique – logiciel didactique · Pr Mounir HANINE · Faculté des Sciences Errachidia · UMI</span><span class="yr" id="copyr"></span></div></footer>
 <script>
@@ -267,6 +272,8 @@ const fr=(v,d=2)=>Number(v).toLocaleString('fr-FR',{minimumFractionDigits:d,maxi
 const PRE=['Yassine','Fatima','Omar','Salma','Hamza','Khadija','Youssef','Imane','Mehdi','Hajar','Anas','Sara','Ayoub','Meryem','Ilyas','Nada','Adam','Zineb','Reda','Asmae','Bilal','Douae','Amine','Rim','Taha','Houda','Ismail','Ikram','Nabil','Aya','Othmane','Chaimae'];
 const NOM=['Alaoui','Bennani','El Idrissi','Ouali','Amrani','Tazi','Bouzid','Chraibi','Haddou','Lahlou','Ait Taleb','Zahraoui','Ennaji','Mansouri','Belkadi','Ouchen','Rami','Sabri','Hilali','Kettani','Moussaoui','Berrada'];
 let E=[],sel={r:1,c:6};
+const EV0=['Dictée','Rédaction','Lecture'],EVL0=['Dictée','Rédaction','Lecture et compréhension'];let EV=EV0.slice(),EVL=EVL0.slice(),CLS='Classe de 3<sup>e</sup> année collège · français',CLS_B='Classe de 3<sup>e</sup> année collège · Français · Trimestre 1';
+const LR=()=>E.length+1;
 const r2=v=>Math.round(v*100)/100;
 function gen(){E=[];const used=new Set();for(let i=0;i<30;i++){let n;do n=[NOM[Math.floor(Math.random()*NOM.length)],PRE[Math.floor(Math.random()*PRE.length)]];while(used.has(n.join()));used.add(n.join());
   const lvl=6+Math.random()*11;const note=()=>Math.max(0,Math.min(20,Math.round((lvl+(Math.random()-.5)*6)*4)/4));E.push({nom:n[0],pre:n[1],d:note(),r:note(),l:note()});}
@@ -279,19 +286,19 @@ function calc(){const p=P(),S=p.c1+p.c2+p.c3||1;
   const ms=E.map(e=>e.m),n=ms.length,moy=ms.reduce((a,b)=>a+b,0)/n,sd=Math.sqrt(ms.reduce((a,b)=>a+(b-moy)**2,0)/(n-1));
   return{p,S,moy,max:Math.max(...ms),min:Math.min(...ms),adm:E.filter(e=>e.dec==='Admis').length,sd,n};}
 let C;
-const COLS=[['A','N°',(e,i)=>i+1],['B','Nom',e=>e.nom],['C','Prénom',e=>e.pre],['D','Dictée',e=>fr(e.dd),'edit','d'],['E','Rédaction',e=>fr(e.r),'edit','r'],['F','Lecture',e=>fr(e.l),'edit','l'],
- ['G','Moyenne',e=>fr(e.m),'calc'],['H','Mention',e=>e.men,'calc'],['I','Rang',e=>e.rang,'calc'],['J','Décision',e=>e.dec,'calc']];
+let COLS;const mkCols=()=>COLS=[['A','N°',(e,i)=>i+1],['B','Nom',e=>e.nom],['C','Prénom',e=>e.pre],['D',EV[0],e=>fr(e.dd),'edit','d'],['E',EV[1],e=>fr(e.r),'edit','r'],['F',EV[2],e=>fr(e.l),'edit','l'],
+ ['G','Moyenne',e=>fr(e.m),'calc'],['H','Mention',e=>e.men,'calc'],['I','Rang',e=>e.rang,'calc'],['J','Décision',e=>e.dec,'calc']];mkCols();
 function formula(col,n){const p=C.p;switch(col){
-  case'D':return[p.bonus?`=MIN(20;note_dictée+${String(p.bonus).replace('.',',')})`:'(note saisie)',p.bonus?'Note de dictée + bonus du barème, plafonnée à 20':'Note saisie par l\'enseignant'];
+  case'D':return[p.bonus?`=MIN(20;note_saisie+${String(p.bonus).replace('.',',')})`:'(note saisie)',p.bonus?'Note de « '+EV[0]+' » + bonus du barème, plafonnée à 20':'Note saisie par l\'enseignant'];
   case'G':return[`=ARRONDI((D${n}*${p.c1}+E${n}*${p.c2}+F${n}*${p.c3})/${C.S};2)`,'Moyenne pondérée par les coefficients, arrondie à 2 décimales'];
   case'H':return[`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,'Fonction SI imbriquée : la mention dépend de la moyenne'];
-  case'I':return[`=RANG(G${n};$G$2:$G$31)`,'Rang de l\'élève dans la classe ($ : référence absolue, qui ne bouge pas quand on étire la formule)'];
+  case'I':return[`=RANG(G${n};$G$2:$G$${LR()})`,'Rang de l\'élève dans la classe ($ : référence absolue, qui ne bouge pas quand on étire la formule)'];
   case'J':return[`=SI(G${n}>=${String(p.seuil).replace('.',',')};"Admis";"Soutien")`,'Décision selon le seuil de réussite'];}
   return['',''];}
 function showF(){const col=COLS[sel.c][0],n=sel.r+1;const[f,x]=formula(col,n);$('xl-ref').textContent=col+n;$('xl-fm').textContent=f;$('xl-ex').textContent=x;}
 function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+'</tr><tr><th>1</th>'+COLS.map(c=>`<td class="hd">${c[1]}</td>`).join('')+'</tr>';
   E.forEach((e,i)=>{h+=`<tr class="${e.dec==='Soutien'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>`<td class="${c[3]||''}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}">${esc(c[2](e,i))}</td>`).join('')+'</tr>';});
-  h+=`<tr class="tot"><th>32</th><td></td><td>Moyenne classe</td><td>${fr(avg('dd'))}</td><td>${fr(avg('r'))}</td><td>${fr(avg('l'))}</td><td>${fr(C.moy)}</td><td></td><td></td><td>${C.adm} admis</td></tr>`;
+  h+=`<tr class="tot"><th>${LR()+1}</th><td></td><td>Moyenne classe</td><td>${fr(avg('dd'))}</td><td>${fr(avg('r'))}</td><td>${fr(avg('l'))}</td><td>${fr(C.moy)}</td><td></td><td></td><td>${C.adm} admis</td></tr>`;
   $('xl').innerHTML=h;
   $('xl').querySelectorAll('td.calc').forEach(td=>td.onclick=()=>{sel={r:+td.dataset.r,c:+td.dataset.c};table();});
   $('xl').querySelectorAll('td.edit').forEach(td=>td.onclick=()=>{if(td.querySelector('input'))return;sel={r:+td.dataset.r,c:+td.dataset.c};const k=COLS[sel.c][4],e=E[sel.r-1];
@@ -300,8 +307,8 @@ function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+
   showF();}
 const avg=k=>E.reduce((a,e)=>a+e[k],0)/E.length;
 function kpis(){$('taux').textContent='Réussite '+fr(100*C.adm/C.n,1)+' %';
-  $('kpis').innerHTML=[['Moyenne de la classe',fr(C.moy),'=MOYENNE(G2:G31)'],['Meilleure moyenne',fr(C.max),'=MAX(G2:G31)'],['Plus faible moyenne',fr(C.min),'=MIN(G2:G31)'],['Écart-type',fr(C.sd),'=ECARTYPE(G2:G31)'],
-   ['Élèves admis',C.adm,`=NB.SI(J2:J31;"Admis")`],['Élèves en soutien',C.n-C.adm,`=NB.SI(J2:J31;"Soutien")`],['Mentions Bien ou plus',E.filter(e=>e.m>=14).length,'=NB.SI(G2:G31;">=14")'],['Taux de réussite',fr(100*C.adm/C.n,1)+' %','=NB.SI(J2:J31;"Admis")/NBVAL(J2:J31)']]
+  $('kpis').innerHTML=[['Moyenne de la classe',fr(C.moy),`=MOYENNE(G2:G${LR()})`],['Meilleure moyenne',fr(C.max),`=MAX(G2:G${LR()})`],['Plus faible moyenne',fr(C.min),`=MIN(G2:G${LR()})`],['Écart-type',fr(C.sd),`=ECARTYPE(G2:G${LR()})`],
+   ['Élèves admis',C.adm,`=NB.SI(J2:J${LR()};"Admis")`],['Élèves en soutien',C.n-C.adm,`=NB.SI(J2:J${LR()};"Soutien")`],['Mentions Bien ou plus',E.filter(e=>e.m>=14).length,`=NB.SI(G2:G${LR()};">=14")`],['Taux de réussite',fr(100*C.adm/C.n,1)+' %',`=NB.SI(J2:J${LR()};"Admis")/NBVAL(J2:J${LR()})`]]
    .map(([a,b,c])=>`<div><small>${a}</small><b>${b}</b><em>${esc(c)}</em></div>`).join('');}
 function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.height,pad={l:36,r:10,t:14,b:34};const css=getComputedStyle(document.body),ink=css.getPropertyValue('--muted')||'#666',line=css.getPropertyValue('--line')||'#ddd';
   const T=[[0,5],[5,8],[8,10],[10,12],[12,14],[14,16],[16,20.01]],lab=['0–5','5–8','8–10','10–12','12–14','14–16','16–20'];const cnt=T.map(([a,b])=>E.filter(e=>e.m>=a&&e.m<b).length);const mx=Math.max(4,...cnt);
@@ -310,26 +317,27 @@ function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.heigh
   cnt.forEach((v,i)=>{const h=(H-pad.t-pad.b)*v/mx,x=pad.l+i*bw;c.fillStyle=i<3?'#c98a4b':'#2f8f87';c.fillRect(x+bw*.15,H-pad.b-h,bw*.7,h);c.fillStyle=ink;c.fillText(lab[i],x+bw*.28,H-12);if(v){c.fillText(v,x+bw*.46,H-pad.b-h-5);}});}
 function bulletin(){const i=+$('b-sel').value||0,e=E[i];if(!e)return;const p=C.p;
   const app=e.m>=16?'Excellent travail, félicitations.':e.m>=14?'Très bon trimestre, continuez ainsi.':e.m>=12?'Bon travail, des progrès sont encore possibles.':e.m>=10?'Résultats justes : il faut fournir plus d\'efforts.':'Résultats insuffisants : un soutien est proposé.';
-  $('bulletin').innerHTML=`<div class="b-head"><div><b>${esc(e.pre)} ${esc(e.nom)}</b><small>Classe de 3<sup>e</sup> année collège · Français · Trimestre 1</small></div><div class="b-rang">Rang <b>${e.rang}</b> / ${C.n}</div></div>
+  $('bulletin').innerHTML=`<div class="b-head"><div><b>${esc(e.pre)} ${esc(e.nom)}</b><small>${CLS_B}</small></div><div class="b-rang">Rang <b>${e.rang}</b> / ${C.n}</div></div>
   <table class="t"><tr><th>Évaluation</th><th>Coef.</th><th>Note</th><th>Moyenne classe</th></tr>
-  <tr><td>Dictée</td><td>${p.c1}</td><td>${fr(e.dd)}</td><td>${fr(avg('dd'))}</td></tr><tr><td>Rédaction</td><td>${p.c2}</td><td>${fr(e.r)}</td><td>${fr(avg('r'))}</td></tr><tr><td>Lecture</td><td>${p.c3}</td><td>${fr(e.l)}</td><td>${fr(avg('l'))}</td></tr>
+  <tr><td>${esc(EV[0])}</td><td>${p.c1}</td><td>${fr(e.dd)}</td><td>${fr(avg('dd'))}</td></tr><tr><td>${esc(EV[1])}</td><td>${p.c2}</td><td>${fr(e.r)}</td><td>${fr(avg('r'))}</td></tr><tr><td>${esc(EV[2])}</td><td>${p.c3}</td><td>${fr(e.l)}</td><td>${fr(avg('l'))}</td></tr>
   <tr><td><b>Moyenne</b></td><td>${C.S}</td><td><b>${fr(e.m)}</b></td><td>${fr(C.moy)}</td></tr></table>
   <p><b>Mention :</b> ${e.men} · <b>Décision :</b> ${e.dec}</p><p><b>Appréciation :</b> ${app}</p>
-  <p class="mono" style="font-size:12.5px;color:var(--muted)">Dans Excel : =RECHERCHEV(${i+1};A2:J31;7;FAUX) renvoie la moyenne de l'élève n° ${i+1} (colonne G). On cherche par le numéro, qui est unique, et non par le nom.</p>`;}
+  <p class="mono" style="font-size:12.5px;color:var(--muted)">Dans Excel : =RECHERCHEV(${i+1};A2:J${LR()};7;FAUX) renvoie la moyenne de l'élève n° ${i+1} (colonne G). On cherche par le numéro, qui est unique, et non par le nom.</p>`;}
 function selList(){const v=$('b-sel').value;$('b-sel').innerHTML=E.map((e,i)=>`<option value="${i}">${esc(e.nom)} ${esc(e.pre)}</option>`).join('');if(v)$('b-sel').value=v;}
-function all(){const p=P();$('o-c1').textContent='× '+p.c1;$('o-c2').textContent='× '+p.c2;$('o-c3').textContent='× '+p.c3;$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-bonus').textContent='+ '+fr(p.bonus,1);
+function labels(){mkCols();$('lb1').textContent=EVL[0];$('lb2').textContent=EVL[1];$('lb3').textContent=EVL[2];$('lbb').textContent='Points de bonus en « '+EV[0]+' » (barème revu)';$('cls-sub').innerHTML=CLS;$('nb-el').textContent=E.length;}
+function all(){const p=P();labels();$('o-c1').textContent='× '+p.c1;$('o-c2').textContent='× '+p.c2;$('o-c3').textContent='× '+p.c3;$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-bonus').textContent='+ '+fr(p.bonus,1);
   C=calc();kpis();chart();table();selList();bulletin();}
 /* ---------- Exercices ---------- */
 let Q=null,ok=0,tot=0,answered=false;
 function newQ(){const i=Math.floor(Math.random()*E.length),e=E[i],n=i+2,k=Math.floor(Math.random()*6);answered=false;$('q-fb').innerHTML='';
   if(k===0)Q={tag:'Moyenne pondérée',txt:`Quelle est la moyenne de ${e.pre} ${e.nom} (ligne ${n}) ?`,num:e.m,f:formula('G',n)[0]};
-  else if(k===1)Q={tag:'Rang',txt:`Quel est le rang de ${e.pre} ${e.nom} dans la classe ?`,num:e.rang,f:`=RANG(G${n};$G$2:$G$31)`};
-  else if(k===2)Q={tag:'NB.SI',txt:`Combien d'élèves ont une moyenne d'au moins 12 ?`,num:E.filter(x=>x.m>=12).length,f:'=NB.SI(G2:G31;">=12")'};
-  else if(k===3)Q={tag:'MOYENNE',txt:`Quelle est la moyenne de la classe en rédaction ?`,num:r2(avg('r')),f:'=MOYENNE(E2:E31)'};
-  else{const ch=[[`=SI(G${n}>=10;"Admis";"Soutien")`,'Afficher « Admis » ou « Soutien » selon la moyenne',[`=SI(G${n}>10;Admis;Soutien)`,`=SOMME(G${n};"Admis")`]],
-    ['=RANG(G2;$G$2:$G$31)','Calculer le rang d\'un élève, formule à étirer vers le bas',['=RANG(G2;G2:G31)','=MAX(G2:G31)']],
-    ['=NB.SI(H2:H31;"Très bien")','Compter les mentions « Très bien »',['=SOMME(H2:H31;"Très bien")','=NB(H2:H31)']],
-    ['=ARRONDI(MOYENNE(D2:D31);2)','Moyenne de la classe en dictée, arrondie à 2 décimales',['=MOYENNE(D2:D31;2)','=ARRONDI(SOMME(D2:D31);2)']]][Math.floor(Math.random()*4)];
+  else if(k===1)Q={tag:'Rang',txt:`Quel est le rang de ${e.pre} ${e.nom} dans la classe ?`,num:e.rang,f:`=RANG(G${n};$G$2:$G$${LR()})`};
+  else if(k===2)Q={tag:'NB.SI',txt:`Combien d'élèves ont une moyenne d'au moins 12 ?`,num:E.filter(x=>x.m>=12).length,f:`=NB.SI(G2:G${LR()};">=12")`};
+  else if(k===3)Q={tag:'MOYENNE',txt:`Quelle est la moyenne de la classe en « ${EV[1]} » ?`,num:r2(avg('r')),f:`=MOYENNE(E2:E${LR()})`};
+  else{const L=LR();const ch=[[`=SI(G${n}>=10;"Admis";"Soutien")`,'Afficher « Admis » ou « Soutien » selon la moyenne',[`=SI(G${n}>10;Admis;Soutien)`,`=SOMME(G${n};"Admis")`]],
+    [`=RANG(G2;$G$2:$G$${L})`,'Calculer le rang d\'un élève, formule à étirer vers le bas',[`=RANG(G2;G2:G${L})`,`=MAX(G2:G${L})`]],
+    [`=NB.SI(H2:H${L};"Très bien")`,'Compter les mentions « Très bien »',[`=SOMME(H2:H${L};"Très bien")`,`=NB(H2:H${L})`]],
+    [`=ARRONDI(MOYENNE(D2:D${L});2)`,`Moyenne de la classe en « ${EV[0]} », arrondie à 2 décimales`,[`=MOYENNE(D2:D${L};2)`,`=ARRONDI(SOMME(D2:D${L});2)`]]][Math.floor(Math.random()*4)];
     const opts=[ch[0],...ch[2]].sort(()=>Math.random()-.5);Q={tag:'Choisir la formule',txt:ch[1]+' :',opts,good:ch[0]};}
   $('q-tag').textContent=Q.tag;$('q-txt').textContent=Q.txt;
   $('q-zone').innerHTML=Q.opts?`<div class="recos">${Q.opts.map((o,j)=>`<label><input type="radio" name="qo" value="${j}"> <span class="mono">${esc(o)}</span></label>`).join('')}</div>`:`<div class="row"><label>Votre réponse<input id="q-ans" class="wide" autocomplete="off" inputmode="decimal"></label></div>`;
@@ -343,13 +351,65 @@ $('q-chk').onclick=()=>{if(!Q)return;let good;
     $('q-fb').innerHTML=good?`<p class="ok callout">✔ Exact : ${fr(Q.num,Number.isInteger(Q.num)?0:2)}. Formule : <span class="mono">${esc(Q.f)}</span></p>`:`<p class="err">✘ Réponse attendue : ${fr(Q.num,Number.isInteger(Q.num)?0:2)}. Formule : <span class="mono">${esc(Q.f)}</span></p>`;}
   if(!answered){tot++;if(good)ok++;answered=true;}$('sc').textContent=ok+' / '+tot;};
 /* ---------- Export ---------- */
-$('csv').onclick=()=>{const p=P(),S=p.c1+p.c2+p.c3||1;const head=['N°','Nom','Prénom','Dictée','Rédaction','Lecture','Moyenne','Mention','Rang','Décision'];
+$('csv').onclick=()=>{const p=P(),S=p.c1+p.c2+p.c3||1;const head=['N°','Nom','Prénom',...EV,'Moyenne','Mention','Rang','Décision'];
   const num=v=>String(v).replace('.',',');
-  const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.nom,e.pre,num(e.dd),num(e.r),num(e.l),`=ARRONDI((D${n}*${p.c1}+E${n}*${p.c2}+F${n}*${p.c3})/${S};2)`,`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,`=RANG(G${n};$G$2:$G$31)`,`=SI(G${n}>=${num(p.seuil)};"Admis";"Soutien")`].join(';');});
+  const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.nom,e.pre,num(e.dd),num(e.r),num(e.l),`=ARRONDI((D${n}*${p.c1}+E${n}*${p.c2}+F${n}*${p.c3})/${S};2)`,`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,`=RANG(G${n};$G$2:$G$${LR()})`,`=SI(G${n}>=${num(p.seuil)};"Admis";"Soutien")`].join(';');});
   const blob=new Blob(['﻿'+[head.join(';'),...rows].join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='classe-numerique-notes.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+/* ---------- Import des notes de l'enseignant ---------- */
+const norm=t=>String(t??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+const parseNote=v=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'').replace(',','.');if(t==='')return null;const x=Number(t);return isNaN(x)?NaN:x;};
+function parseCSV(txt){txt=txt.replace(/^﻿/,'');const first=txt.split(/\r?\n/).find(l=>l.trim())||'';const sep=[';','\t',','].map(c=>[c,first.split(c).length]).sort((a,b)=>b[1]-a[1])[0][0];
+  const rows=[];let row=[],cur='',q=false;for(let i=0;i<txt.length;i++){const ch=txt[i];
+    if(q){if(ch==='"'){if(txt[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}
+    else if(ch==='"')q=true;else if(ch===sep){row.push(cur);cur='';}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&txt[i+1]==='\n')i++;row.push(cur);rows.push(row);row=[];cur='';}else cur+=ch;}
+  if(cur!==''||row.length){row.push(cur);rows.push(row);}return rows;}
+function loadXLSX(){return window.XLSX?Promise.resolve():new Promise((ok,ko)=>{const sc=document.createElement('script');sc.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';sc.onload=ok;sc.onerror=()=>ko(new Error('lib'));document.head.appendChild(sc);});}
+function msg(html,err){const m=$('imp-msg');m.hidden=false;m.className='imp-msg'+(err?' err':'');m.innerHTML=html;}
+const SKIP=/^(n|no|num|numero|n°|code|cne|massar|id|rang|moyenne|moy|mention|decision|total|observation|appreciation|remarque|resultat|classement)\b/;
+function importRows(rows,fname){
+  rows=rows.map(r=>(r||[]).map(c=>c==null?'':c)).filter(r=>r.some(c=>String(c).trim()!==''));
+  if(!rows.length)throw new Error('Le fichier est vide.');
+  let h=rows.findIndex((r,i)=>i<15&&r.some(c=>/(^|\s)(nom|name)(\s|$)|prenom|eleve|etudiant|nom et prenom|الاسم|النسب/.test(norm(c))));
+  let head=h>=0?rows[h].map(c=>String(c).trim()):null,data=rows.slice(h+1);
+  const nc=Math.max(...rows.map(r=>r.length));
+  let iNom=-1,iPre=-1;
+  if(head){head.forEach((c,j)=>{const t=norm(c);if(iNom<0&&/nom.*prenom|prenom.*nom|nom complet|full ?name|الاسم الكامل/.test(t))iNom=j;else if(iPre<0&&/prenom|first|الاسم الشخصي/.test(t))iPre=j;else if(iNom<0&&/(^|\s)(nom|name)(\s|$)|eleve|etudiant|nom et prenom|النسب|الاسم العائلي|الاسم/.test(t))iNom=j;});}
+  else{data=rows;iNom=0;if(rows.every(r=>isNaN(parseNote(r[1]))||r[1]===''))iPre=1;}
+  if(iNom<0)iNom=iPre===0?1:0;
+  const cand=[];for(let j=0;j<nc;j++){if(j===iNom||j===iPre)continue;const t=head?norm(head[j]):'';if(head&&SKIP.test(t))continue;
+    const vals=data.map(r=>parseNote(r[j])).filter(v=>v!==null);const ok=vals.filter(v=>!isNaN(v)&&v>=0&&v<=20).length;
+    if(vals.length&&ok>=Math.max(1,vals.length*0.6)){const ints=vals.every(v=>Number.isInteger(v));const seq=ints&&vals.every((v,k)=>k===0||v===vals[k-1]+1);if(seq&&!t)continue;cand.push(j);}}
+  if(!cand.length)throw new Error('Aucune colonne de notes (valeurs entre 0 et 20) n\'a été trouvée.');
+  const use=cand.slice(0,3);
+  const lab=use.map((j,k)=>(head&&String(head[j]).trim())||('Évaluation '+(k+1)));
+  const L=[];let miss=0,clip=0;
+  data.forEach(r=>{const nom=String(r[iNom]??'').trim(),pre=iPre>=0?String(r[iPre]??'').trim():'';if(!nom&&!pre)return;
+    if(/^(moyenne|total|effectif)/.test(norm(nom)))return;
+    const v=use.map(j=>{let x=parseNote(r[j]);if(x===null||isNaN(x)){miss++;return 0;}if(x>20||x<0){clip++;x=Math.max(0,Math.min(20,x));}return r2(x);});
+    L.push({nom,pre,d:v[0]??0,r:v[1]??0,l:v[2]??0});});
+  if(!L.length)throw new Error('Aucun élève n\'a été trouvé dans le fichier.');
+  if(L.length>300)throw new Error('Le fichier contient plus de 300 lignes : importez une seule classe à la fois.');
+  E=L;EV=[0,1,2].map(k=>lab[k]||'(non utilisée)');EVL=EV.slice();
+  $('c1').value=use.length>0?1:0;$('c2').value=use.length>1?1:0;$('c3').value=use.length>2?1:0;$('bonus').value=0;$('seuil').value=10;
+  const nm=fname.replace(/\.[^.]+$/,'');CLS='Classe importée · '+esc(nm);CLS_B='Classe importée · '+esc(nm);
+  sel={r:1,c:6};all();newQ();
+  let t=`✔ <b>${L.length} élèves</b> importés depuis « ${esc(fname)} », ${use.length} évaluation${use.length>1?'s':''} : <b>${lab.map(esc).join('</b>, <b>')}</b>. Coefficients réglés à 1 : ajustez-les si besoin.`;
+  if(cand.length>3)t+=`<br>Seules les 3 premières colonnes de notes ont été prises en compte.`;
+  if(miss)t+=`<br>⚠ ${miss} note${miss>1?'s':''} manquante${miss>1?'s':''} ou non numérique${miss>1?'s':''} (absence…) remplacée${miss>1?'s':''} par 0 : cliquez dessus dans le tableau pour la corriger.`;
+  if(clip)t+=`<br>⚠ ${clip} note${clip>1?'s':''} hors de l'intervalle 0–20 ramenée${clip>1?'s':''} entre 0 et 20.`;
+  msg(t);}
+$('imp').onclick=()=>$('imp-file').click();
+$('imp-file').onchange=async ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;
+  try{let rows;const ext=f.name.split('.').pop().toLowerCase();
+    if(ext==='csv'||ext==='txt'){let txt=await f.text();if(txt.includes('�')){const b=await f.arrayBuffer();txt=new TextDecoder('windows-1252').decode(b);}rows=parseCSV(txt);}
+    else{msg('Lecture du fichier Excel…');await loadXLSX();const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});}
+    importRows(rows,f.name);}
+  catch(e){msg('✘ Import impossible : '+esc(e.message==='lib'?'la lecture des fichiers Excel nécessite une connexion Internet. Enregistrez votre fichier au format CSV puis réessayez.':e.message)+'<br>Format attendu : une ligne de titres (Nom, Prénom, puis une colonne par évaluation), une ligne par élève. Téléchargez le modèle de fichier pour voir un exemple.',true);}};
+$('tpl').onclick=()=>{const rows=[['N°','Nom','Prénom','Contrôle 1','Contrôle 2','Activités'],[1,'Alaoui','Sara','14,5','12','16'],[2,'Bennani','Youssef','9,75','11,5','13'],[3,'Ouali','Imane','17','15,25','18']];
+  const blob=new Blob(['﻿'+rows.map(r=>r.join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='modele-notes-classe.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
 /* ---------- Démarrage ---------- */
 function defaults(){$('c1').value=1;$('c2').value=2;$('c3').value=1;$('seuil').value=10;$('bonus').value=0;}
-$('newc').onclick=()=>{gen();all();newQ();};
+$('newc').onclick=()=>{EV=EV0.slice();EVL=EVL0.slice();CLS='Classe de 3<sup>e</sup> année collège · français';CLS_B='Classe de 3<sup>e</sup> année collège · Français · Trimestre 1';$('imp-msg').hidden=true;defaults();gen();all();newQ();};
 ['c1','c2','c3','seuil','bonus'].forEach(id=>$(id).addEventListener('input',all));
 $('b-sel').onchange=bulletin;
 defaults();gen();all();newQ();
