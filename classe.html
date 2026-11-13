@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Classe numérique – Le carnet de notes de l’enseignant – FS Errachidia – UMI</title>
+<meta name="description" content="Classe numérique : simulateur du carnet de notes de l'enseignant de français (moyennes, SI, RANG, NB.SI, bulletin).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ===== NumériLab – design ===== */
+.nx-hero{display:grid;grid-template-columns:1.25fr .9fr;gap:36px;align-items:center;margin:4px 0 34px}
+.nx-hero .lead{margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font:500 13px var(--mono);padding:6px 11px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+.chips b{color:var(--accent);font-weight:600}
+.screen{background:#0d1d22;color:#d7f2ee;border-radius:16px;padding:22px 24px;font-family:var(--mono);box-shadow:0 18px 40px -18px rgba(8,40,45,.55);position:relative;overflow:hidden}
+.screen:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px);pointer-events:none}
+.screen .dots{display:flex;gap:6px;margin-bottom:16px}.screen .dots i{width:10px;height:10px;border-radius:50%;background:#2f4a50}.screen .dots i:first-child{background:#e36f5c}.screen .dots i:nth-child(2){background:#e0a64a}.screen .dots i:nth-child(3){background:#3fb6ad}
+.screen .ln{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed #23393f;font-size:15px}
+.screen .ln:last-child{border:0}.screen .ln small{color:#7fa5a2}.screen .ln b{color:#7ee0d6;font-weight:500;letter-spacing:.04em}
+.screen .big{font:600 34px var(--mono);color:#fff;margin:2px 0 10px;letter-spacing:.02em}
+.screen .cur{display:inline-block;width:10px;height:1.1em;background:#3fb6ad;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px}
+.picker button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px 14px 13px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s}
+.picker button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.picker .ic{font:600 14px var(--mono);width:44px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--sand-soft);color:var(--sand)}
+.picker .tt{font:600 15px var(--body)}.picker .dd{font-size:12.5px;color:var(--muted);line-height:1.35}
+.picker button[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),0 10px 24px -16px var(--accent)}
+.picker button[aria-selected="true"] .ic{background:var(--accent);color:var(--accent-ink)}
+.tool{display:none;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 26px;animation:fade .25s ease}
+.tool.on{display:block}@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.tool h2{font:700 20px var(--display);margin:0 0 4px}.tool .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.console{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px 6px;margin-bottom:18px}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:end;margin-bottom:12px}
+.row label{display:flex;flex-direction:column;gap:6px;font:500 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.row input,.row select{font:500 18px var(--mono);padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-width:170px;transition:border-color .15s,box-shadow .15s}
+.row input:focus,.row select:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.row input.wide{min-width:260px}
+.ex{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px;font:12px var(--mono);color:var(--muted)}
+.ex button{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px dashed var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.ex button:hover{border-style:solid;border-color:var(--accent);color:var(--accent)}
+.res4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:0 0 18px}
+.res4 div{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px 13px;border-top:4px solid var(--accent);cursor:copy;transition:background .15s}
+.res4 div:nth-child(2){border-top-color:var(--sand)}.res4 div:nth-child(3){border-top-color:#5a7bb5}.res4 div:nth-child(4){border-top-color:#b5655a}
+.res4 div:hover{background:var(--bg)}
+.res4 small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.res4 b{font:600 20px var(--mono);word-break:break-all}
+.res4 div.copied:after{content:"copié ✓";position:absolute;top:10px;right:12px;font:500 11px var(--mono);color:var(--accent)}
+.steps{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 22px;font-size:15.5px;line-height:1.6}
+.steps h3{display:flex;align-items:center;gap:10px;margin:18px 0 10px;font:600 16px var(--body)}
+.steps h3:first-child{margin-top:0}
+.steps h3:before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+.steps ol{margin:0;padding:0;list-style:none;counter-reset:st}
+.steps ol li{position:relative;padding:2px 0 10px 40px;counter-increment:st}
+.steps ol li:before{content:counter(st);position:absolute;left:0;top:1px;width:26px;height:26px;border-radius:50%;background:var(--sand-soft);color:var(--sand);font:600 13px var(--mono);display:grid;place-items:center}
+.steps ol li:not(:last-child):after{content:"";position:absolute;left:12.5px;top:30px;bottom:0;width:1px;background:var(--line)}
+.steps ul{margin:0;padding-left:20px}
+.mono{font-family:var(--mono)}
+table.t{border-collapse:separate;border-spacing:0;font:14px var(--mono);margin:10px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.t td,table.t th{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:6px 14px;text-align:center}
+table.t tr:last-child td{border-bottom:0}table.t td:last-child,table.t th:last-child{border-right:0}
+table.t th{background:var(--bg);font-weight:500;color:var(--muted);font-size:12.5px}
+table.t tr td:last-child{font-weight:600;color:var(--accent)}
+.bitwrap{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:0 0 16px;overflow-x:auto}
+.bits{display:flex;gap:3px;font:600 15px var(--mono);min-width:max-content}
+.bits span{width:24px;height:32px;display:grid;place-items:center;border-radius:5px}
+.bits span:nth-child(1),.bits span:nth-child(9){margin-right:6px}
+.b-s{background:#f6d6d6;color:#7a1f1f}.b-e{background:#d7ecd9;color:#1d5a27}.b-m{background:#dbe7f6;color:#1f3d6b}
+@media (prefers-color-scheme:dark){.b-s{background:#4a2222;color:#f4c7c7}.b-e{background:#1f3d26;color:#c7ecd0}.b-m{background:#1e2f48;color:#cfe0f6}}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);flex-wrap:wrap;margin-top:10px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.err{color:#c0392b;font-weight:500;background:color-mix(in srgb,#c0392b 8%,transparent);border-left:3px solid #c0392b;padding:10px 14px;border-radius:6px}
+.ok{color:#23794a;font-weight:600}
+.callout{background:color-mix(in srgb,#23794a 9%,transparent);border-left:3px solid #23794a;padding:10px 14px;border-radius:6px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.split>div>h3{font:600 15px var(--body);margin:0 0 10px}
+.exo{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.exo .q{font:600 24px var(--body);margin:2px 0 16px}
+.exo .q sub{font-size:14px}
+.qtag{display:inline-block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--sand);background:var(--sand-soft);padding:4px 9px;border-radius:6px}
+.scorebar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+.scorebar>div{flex:1;min-width:120px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.scorebar small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.scorebar b{font:700 24px var(--display)}
+.scorebar .nxm{flex:none;min-width:0;padding:0;border:0;height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.nxm i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.fb-ok{animation:pop .35s}@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:none}}
+.foot-note{margin:26px 0 0;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+.foot-note b{color:var(--ink)}
+@media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.picker button:last-child{grid-column:span 2}.split{grid-template-columns:1fr}.tool{padding:18px}}
+@media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
+
+.page h1.bv-title{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-weight:600;font-size:clamp(24px,2.6vw,32px);line-height:1.15;letter-spacing:-.01em;margin:6px 0 14px;font-variation-settings:"opsz" 72}
+.page h1.bv-title span{display:block;margin-top:8px;font:500 clamp(13px,1.3vw,15px)/1.4 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--sand)}
+.bench{display:grid;grid-template-columns:1fr 1.15fr;gap:18px;align-items:start}
+.inst{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.inst-h{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.inst-h h2{font:700 18px var(--display);margin:0}.inst-h small{color:var(--muted)}.manuals{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px;font-size:13.5px;color:var(--muted)}.manuals a{font:500 13px var(--mono);padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none}.manuals a:hover{border-color:var(--accent);color:var(--accent)}
+.inst-h small.salle{display:block;margin-top:4px;font:500 13px var(--body);color:var(--sand)}
+.led{font:600 12px var(--mono);padding:4px 10px;border-radius:999px;background:var(--bg);border:1px solid var(--line);color:var(--muted)}
+.led.on{background:#1f7a52;color:#fff;border-color:#1f7a52}
+.lcd{background:#14261a;color:#b9f5c6;border-radius:10px;padding:14px 16px;font-family:var(--mono);box-shadow:inset 0 0 0 2px #0d1a11,inset 0 0 18px rgba(0,0,0,.5);margin-bottom:14px}
+.lcd div{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;padding:3px 0}
+.lcd span{font-size:12px;color:#7fbf8c;letter-spacing:.06em}.lcd b{font-size:20px;font-weight:500}
+.lcd div:first-child b{font-size:28px}.lcd b.on{color:#fff;background:#2b7a3e;padding:0 8px;border-radius:4px;font-size:15px}
+.seg{display:flex;gap:6px;margin-bottom:12px}.seg button{flex:1;font:600 14px var(--mono);padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);cursor:pointer}
+.seg button.sel{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.io{display:flex;gap:4px}.io input{min-width:0;width:110px}.io select{min-width:0;width:92px}
+.inst .row input{min-width:0;width:120px}.inst .row select{min-width:0}
+.btns{gap:8px}.load{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin-top:4px}.load label{display:flex;gap:6px;align-items:center;color:var(--ink)}
+#scope{width:100%;height:auto;border-radius:10px;display:block;background:#0b1a1d}
+.meas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 12px}
+.meas div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}.meas small{display:block;font:500 10.5px var(--mono);color:var(--muted);text-transform:uppercase}.meas b{font:600 14px var(--mono)}
+.log{background:#0d1d22;color:#d7f2ee;border-radius:12px;padding:12px 14px;font:13.5px var(--mono);height:230px;overflow:auto}
+.log .l{display:flex;gap:10px;padding:2px 0}.log .t{width:34px;flex:none;font-size:11px;padding-top:2px;color:#7fa5a2}.log .t.gen{color:#e0a64a}.log .t.scope{color:#7ee0d6}.log .r{color:#9fd8a8}
+.lvfmt{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;word-break:break-all}
+.defi{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
+.defi.done{border-color:#23794a;box-shadow:inset 4px 0 0 #23794a}.defi .dq{font-size:16px;margin-bottom:8px}.defi .row{margin:0}
+.scorebar>div{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+@media (max-width:980px){.bench{grid-template-columns:1fr}.meas{grid-template-columns:repeat(3,1fr)}}
+
+.tool.on{animation:none}
+.sim{display:grid;grid-template-columns:.95fr 1.25fr;gap:18px;align-items:start}
+.grp{font:600 15px var(--body);margin:14px 0 8px}
+.sl{display:grid;grid-template-columns:1fr 120px;gap:2px 12px;align-items:center;margin-bottom:10px}
+.sl label{grid-column:1/3;font-size:14px;color:var(--muted)}.sl input{width:100%;accent-color:var(--accent)}.sl output{font:600 14px var(--mono);text-align:right}
+.tg{display:flex;flex-direction:column;gap:8px;margin-top:10px;font-size:14.5px}.tg label{display:flex;gap:8px;align-items:center}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpis div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.kpis small{display:block;font:500 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.kpis b{display:block;font:600 17px var(--mono);margin:2px 0}.kpis em{font:11px var(--mono);color:var(--muted);font-style:normal;word-break:break-all}
+.kpis .pos b{color:#23794a}.kpis .neg b{color:#c0392b}
+#chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:16px;font:12.5px var(--mono);color:var(--muted);margin:6px 0 10px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.advice{background:color-mix(in srgb,var(--sand) 10%,transparent);border-left:3px solid var(--sand);padding:10px 14px;border-radius:6px;font-size:14.5px}
+.xl-bar{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px 8px 0 0;background:var(--bg);padding:6px 10px;font:13.5px var(--mono);flex-wrap:wrap}
+.xl-bar .nm{min-width:44px;font-weight:600}.xl-bar .fx{font-style:italic;color:var(--muted)}.xl-bar .fm{font-weight:600;color:#1d6f42}.xl-bar .ex{color:var(--muted);font-family:var(--body);font-size:13px}
+.xl-wrap{overflow-x:auto;border:1px solid var(--line);border-top:0;border-radius:0 0 8px 8px}
+table.xl{border-collapse:collapse;font:13px var(--mono);width:100%;min-width:900px;background:var(--paper)}
+table.xl th{background:var(--bg);color:var(--muted);font-weight:500;padding:4px 6px;border:1px solid var(--line);min-width:28px}
+table.xl td{border:1px solid var(--line);padding:4px 8px;text-align:right;white-space:nowrap}
+table.xl td.hd{font-weight:600;text-align:center;background:color-mix(in srgb,#1d6f42 10%,transparent)}
+table.xl td.calc{cursor:pointer;color:#1d6f42}table.xl td.calc:hover{background:var(--bg)}table.xl td.sel{outline:2px solid #1d6f42;outline-offset:-2px}
+table.xl tr.tot td{font-weight:600;background:var(--bg)}
+.goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px}
+.goal{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);font-size:14.5px}
+.goal span{font-weight:700;width:18px;color:var(--muted)}.goal.done{border-color:#23794a}.goal.done span{color:#23794a}.goal.ok{box-shadow:inset 4px 0 0 #23794a}
+@media (max-width:980px){.sim{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+
+.mission-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:18px;font-size:15px}
+.sheets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.sheets button{font:600 14px var(--body);padding:8px 14px;border:1px solid var(--line);border-radius:8px 8px 0 0;background:var(--bg);color:var(--ink);cursor:pointer}
+.sheets button small{font:500 11px var(--mono);color:var(--muted);margin-left:4px}
+.sheets button.sel{background:#1d6f42;color:#fff;border-color:#1d6f42}.sheets button.sel small{color:#d7f0e0}
+.xl-wrap.tall{max-height:420px;overflow:auto}
+table.xl td{text-align:left}table.xl tr.bad td{background:color-mix(in srgb,#c0392b 12%,transparent);color:#9b2c1f}
+table.xl td.ctl,table.xl th.ctl{background:color-mix(in srgb,#d08a2e 12%,transparent);font-weight:600}
+.audit{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}
+.tests{display:flex;flex-direction:column;gap:6px}
+.tests button{display:grid;grid-template-columns:20px 1fr;gap:0 8px;text-align:left;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit}
+.tests button span{grid-row:1/3;font-weight:700;color:var(--muted)}.tests button b{font-size:14px;font-weight:600}.tests button small{font:11.5px var(--mono);color:var(--muted)}
+.tests button.sel{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}.tests button.done span{color:#23794a}
+.work{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.work h3{font:700 19px var(--display);margin:8px 0 10px}.work p{font-size:15px;line-height:1.55}
+.work .fm{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;color:#1d6f42;font-weight:600;word-break:break-all}
+.stepn{font:600 15px var(--body);margin:16px 0 8px}
+.recos{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.recos label{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:14.5px;cursor:pointer}
+.recos label.good{border-color:#23794a;background:color-mix(in srgb,#23794a 9%,transparent)}.recos label.wrong{border-color:#c0392b;background:color-mix(in srgb,#c0392b 8%,transparent)}
+.seg button:disabled{cursor:default}
+.crit{font:600 12px var(--mono);padding:2px 8px;border-radius:6px}.c-Eleve{background:#f6d6d6;color:#7a1f1f}.c-Moyen{background:#fbe7c6;color:#7a4b00}.c-Faible{background:#d7ecd9;color:#1d5a27}
+table.rep{min-width:760px}table.rep td{white-space:normal}
+@media (max-width:900px){.audit{grid-template-columns:1fr}}
+@media print{header.top,footer,.nx-hero,.mission-bar,.tool:not(#rapport),.foot-note,#print{display:none!important}.tool{border:0}}
+.byline{font-size:14px;color:var(--muted);margin:14px 0 0}.byline b{color:var(--ink)}
+
+table.xl tr.low td{background:color-mix(in srgb,#d08a2e 10%,transparent)}
+table.xl td.edit{cursor:text;color:var(--ink);background:color-mix(in srgb,#2f6fb0 6%,transparent)}table.xl td.edit:hover{outline:1px dashed #2f6fb0}
+input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f6fb0;border-radius:3px}
+.bulletin{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 20px;max-width:640px}
+.b-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.b-head b{font:700 18px var(--display);display:block}.b-head small{color:var(--muted)}
+.b-rang{font:500 14px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 10px}.b-rang b{font-size:18px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662"><span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span></a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="apropos.html">À propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+  <div class="crumb"><a href="index.html">Accueil</a> / <a href="logiciels.html">Logiciels</a> / Classe numérique</div>
+  <section class="nx-hero">
+    <div>
+      <div class="eyebrow">Logiciel didactique · Informatique pour l'enseignement du français</div>
+      <h1 class="bv-title">Classe numérique : le carnet de notes de l'enseignant<span>Le tableur au service de l'enseignant de français</span></h1>
+      <p class="lead">Vous êtes professeur de français d'une classe de <b>3<sup>e</sup> année collège</b>. Saisissez ou modifiez les notes, réglez les coefficients, et observez comment les <b>formules Excel</b> calculent automatiquement moyennes, mentions, rangs et statistiques de la classe.</p>
+      <div class="chips"><span><b>30</b> élèves</span><span>moyenne · SI · RANG · NB.SI</span><span>bulletin individuel</span><span>export vers Excel</span></div>
+      <p class="byline">Conçu et développé par <b>Pr Mounir HANINE</b> · Faculté des Sciences Errachidia · Université Moulay Ismail</p>
+    </div>
+    <div class="screen" aria-hidden="true">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="ln"><small>G2</small><b>=ARRONDI((D2*1+E2*2+F2*1)/4;2)</b></div>
+      <div class="ln"><small>H2</small><b>=SI(G2&gt;=16;"Très bien";…)</b></div>
+      <div class="ln"><small>I2</small><b>=RANG(G2;$G$2:$G$31)</b></div>
+      <div class="ln"><small>Classe</small><b>=MOYENNE(G2:G31)<span class="cur"></span></b></div>
+    </div>
+  </section>
+
+  <div class="sim">
+    <section class="inst">
+      <div class="inst-h"><div><h2>Réglages de l'évaluation</h2><small>Les calculs se mettent à jour immédiatement</small></div><button class="btn ghost" id="newc" type="button">↻ Nouvelle classe</button></div>
+      <h3 class="grp">⚖️ Coefficients</h3>
+      <div class="sl"><label for="c1">Dictée</label><input type="range" id="c1" min="0" max="4" step="1"><output id="o-c1"></output></div>
+      <div class="sl"><label for="c2">Rédaction</label><input type="range" id="c2" min="0" max="4" step="1"><output id="o-c2"></output></div>
+      <div class="sl"><label for="c3">Lecture et compréhension</label><input type="range" id="c3" min="0" max="4" step="1"><output id="o-c3"></output></div>
+      <h3 class="grp">🎯 Règles</h3>
+      <div class="sl"><label for="seuil">Seuil de réussite</label><input type="range" id="seuil" min="8" max="12" step="0.5"><output id="o-seuil"></output></div>
+      <div class="sl"><label for="bonus">Points de bonus en dictée (barème revu)</label><input type="range" id="bonus" min="0" max="3" step="0.5"><output id="o-bonus"></output></div>
+      <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Astuce : cliquez sur une note dans le tableau pour la modifier, comme dans Excel.</p>
+    </section>
+    <section class="inst">
+      <div class="inst-h"><div><h2>Statistiques de la classe</h2><small>Classe de 3<sup>e</sup> année collège · français</small></div><span class="led on" id="taux"></span></div>
+      <div class="kpis" id="kpis"></div>
+      <canvas id="chart" width="720" height="260" aria-label="Répartition des moyennes par tranche"></canvas>
+      <div class="legend"><span><i style="background:#2f8f87"></i>nombre d'élèves par tranche de moyenne (=NB.SI.ENS)</span></div>
+    </section>
+  </div>
+
+  <section class="tool on" style="margin-top:22px">
+    <h2>La feuille « Notes »</h2>
+    <p class="sub">Cliquez sur une cellule verte pour voir sa formule, ou sur une note pour la modifier.</p>
+    <div class="xl-bar"><span class="nm" id="xl-ref">G2</span><span class="fx">fx</span><span class="fm" id="xl-fm"></span><span class="ex" id="xl-ex"></span></div>
+    <div class="xl-wrap tall"><table class="xl" id="xl"></table></div>
+    <div class="row btns" style="margin-top:12px"><button class="btn" id="csv" type="button">Exporter vers Excel (.csv)</button><span style="font-size:14px;color:var(--muted)">Le fichier contient les formules : ouvrez-le dans Excel pour poursuivre le travail.</span></div>
+  </section>
+
+  <section class="tool on" style="margin-top:22px">
+    <h2>Bulletin individuel</h2>
+    <p class="sub">Choisissez un élève : son bulletin est construit à partir de la feuille, comme avec RECHERCHEV dans Excel.</p>
+    <div class="row"><label>Élève<select id="b-sel"></select></label></div>
+    <div class="bulletin" id="bulletin"></div>
+  </section>
+
+  <section class="tool on" style="margin-top:22px">
+    <h2>Exercices</h2>
+    <p class="sub">Répondez à partir de la feuille « Notes » (valeurs arrondies à 0,01 près), ou choisissez la bonne formule.</p>
+    <div class="exo"><span class="qtag" id="q-tag"></span><div class="q" id="q-txt"></div>
+      <div id="q-zone"></div>
+      <div class="row btns"><button class="btn" id="q-chk" type="button">Vérifier</button><button class="btn ghost" id="q-new" type="button">↻ Autre exercice</button></div>
+      <div id="q-fb"></div></div>
+    <div class="scorebar" style="margin-top:12px"><div><small>Réussis</small><b id="sc">0 / 0</b></div></div>
+  </section>
+  <p class="foot-note"><span>ℹ️</span><span>Élèves et notes fictifs, générés pour l'exercice. Les formules affichées sont celles d'Excel en français (séparateur « ; »).</span></p>
+</main>
+<footer><div class="wrap"><span>Classe numérique – logiciel didactique · Pr Mounir HANINE · Faculté des Sciences Errachidia · UMI</span><span class="yr" id="copyr"></span></div></footer>
+<script>
+const $=id=>document.getElementById(id);
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fr=(v,d=2)=>Number(v).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const PRE=['Yassine','Fatima','Omar','Salma','Hamza','Khadija','Youssef','Imane','Mehdi','Hajar','Anas','Sara','Ayoub','Meryem','Ilyas','Nada','Adam','Zineb','Reda','Asmae','Bilal','Douae','Amine','Rim','Taha','Houda','Ismail','Ikram','Nabil','Aya','Othmane','Chaimae'];
+const NOM=['Alaoui','Bennani','El Idrissi','Ouali','Amrani','Tazi','Bouzid','Chraibi','Haddou','Lahlou','Ait Taleb','Zahraoui','Ennaji','Mansouri','Belkadi','Ouchen','Rami','Sabri','Hilali','Kettani','Moussaoui','Berrada'];
+let E=[],sel={r:1,c:6};
+const r2=v=>Math.round(v*100)/100;
+function gen(){E=[];const used=new Set();for(let i=0;i<30;i++){let n;do n=[NOM[Math.floor(Math.random()*NOM.length)],PRE[Math.floor(Math.random()*PRE.length)]];while(used.has(n.join()));used.add(n.join());
+  const lvl=6+Math.random()*11;const note=()=>Math.max(0,Math.min(20,Math.round((lvl+(Math.random()-.5)*6)*4)/4));E.push({nom:n[0],pre:n[1],d:note(),r:note(),l:note()});}
+  E.sort((a,b)=>a.nom.localeCompare(b.nom,'fr')||a.pre.localeCompare(b.pre,'fr'));}
+const P=()=>({c1:+$('c1').value,c2:+$('c2').value,c3:+$('c3').value,seuil:+$('seuil').value,bonus:+$('bonus').value});
+function mention(m){return m>=16?'Très bien':m>=14?'Bien':m>=12?'Assez bien':m>=10?'Passable':'Insuffisant';}
+function calc(){const p=P(),S=p.c1+p.c2+p.c3||1;
+  E.forEach(e=>{e.dd=Math.min(20,e.d+p.bonus);e.m=r2((e.dd*p.c1+e.r*p.c2+e.l*p.c3)/S);e.men=mention(e.m);e.dec=e.m>=p.seuil?'Admis':'Soutien';});
+  E.forEach(e=>{e.rang=1+E.filter(x=>x.m>e.m).length;});
+  const ms=E.map(e=>e.m),n=ms.length,moy=ms.reduce((a,b)=>a+b,0)/n,sd=Math.sqrt(ms.reduce((a,b)=>a+(b-moy)**2,0)/(n-1));
+  return{p,S,moy,max:Math.max(...ms),min:Math.min(...ms),adm:E.filter(e=>e.dec==='Admis').length,sd,n};}
+let C;
+const COLS=[['A','N°',(e,i)=>i+1],['B','Nom',e=>e.nom],['C','Prénom',e=>e.pre],['D','Dictée',e=>fr(e.dd),'edit','d'],['E','Rédaction',e=>fr(e.r),'edit','r'],['F','Lecture',e=>fr(e.l),'edit','l'],
+ ['G','Moyenne',e=>fr(e.m),'calc'],['H','Mention',e=>e.men,'calc'],['I','Rang',e=>e.rang,'calc'],['J','Décision',e=>e.dec,'calc']];
+function formula(col,n){const p=C.p;switch(col){
+  case'D':return[p.bonus?`=MIN(20;note_dictée+${String(p.bonus).replace('.',',')})`:'(note saisie)',p.bonus?'Note de dictée + bonus du barème, plafonnée à 20':'Note saisie par l\'enseignant'];
+  case'G':return[`=ARRONDI((D${n}*${p.c1}+E${n}*${p.c2}+F${n}*${p.c3})/${C.S};2)`,'Moyenne pondérée par les coefficients, arrondie à 2 décimales'];
+  case'H':return[`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,'Fonction SI imbriquée : la mention dépend de la moyenne'];
+  case'I':return[`=RANG(G${n};$G$2:$G$31)`,'Rang de l\'élève dans la classe ($ : référence absolue, qui ne bouge pas quand on étire la formule)'];
+  case'J':return[`=SI(G${n}>=${String(p.seuil).replace('.',',')};"Admis";"Soutien")`,'Décision selon le seuil de réussite'];}
+  return['',''];}
+function showF(){const col=COLS[sel.c][0],n=sel.r+1;const[f,x]=formula(col,n);$('xl-ref').textContent=col+n;$('xl-fm').textContent=f;$('xl-ex').textContent=x;}
+function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+'</tr><tr><th>1</th>'+COLS.map(c=>`<td class="hd">${c[1]}</td>`).join('')+'</tr>';
+  E.forEach((e,i)=>{h+=`<tr class="${e.dec==='Soutien'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>`<td class="${c[3]||''}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}">${esc(c[2](e,i))}</td>`).join('')+'</tr>';});
+  h+=`<tr class="tot"><th>32</th><td></td><td>Moyenne classe</td><td>${fr(avg('dd'))}</td><td>${fr(avg('r'))}</td><td>${fr(avg('l'))}</td><td>${fr(C.moy)}</td><td></td><td></td><td>${C.adm} admis</td></tr>`;
+  $('xl').innerHTML=h;
+  $('xl').querySelectorAll('td.calc').forEach(td=>td.onclick=()=>{sel={r:+td.dataset.r,c:+td.dataset.c};table();});
+  $('xl').querySelectorAll('td.edit').forEach(td=>td.onclick=()=>{if(td.querySelector('input'))return;sel={r:+td.dataset.r,c:+td.dataset.c};const k=COLS[sel.c][4],e=E[sel.r-1];
+    td.innerHTML=`<input class="cell" value="${String(e[k]).replace('.',',')}">`;const inp=td.querySelector('input');inp.focus();inp.select();
+    const ok=()=>{const v=parseFloat(inp.value.replace(',','.'));if(!isNaN(v)&&v>=0&&v<=20)e[k]=v;all();};inp.onblur=ok;inp.onkeydown=ev=>{if(ev.key==='Enter')inp.blur();if(ev.key==='Escape'){inp.value=e[k];inp.blur();}};});
+  showF();}
+const avg=k=>E.reduce((a,e)=>a+e[k],0)/E.length;
+function kpis(){$('taux').textContent='Réussite '+fr(100*C.adm/C.n,1)+' %';
+  $('kpis').innerHTML=[['Moyenne de la classe',fr(C.moy),'=MOYENNE(G2:G31)'],['Meilleure moyenne',fr(C.max),'=MAX(G2:G31)'],['Plus faible moyenne',fr(C.min),'=MIN(G2:G31)'],['Écart-type',fr(C.sd),'=ECARTYPE(G2:G31)'],
+   ['Élèves admis',C.adm,`=NB.SI(J2:J31;"Admis")`],['Élèves en soutien',C.n-C.adm,`=NB.SI(J2:J31;"Soutien")`],['Mentions Bien ou plus',E.filter(e=>e.m>=14).length,'=NB.SI(G2:G31;">=14")'],['Taux de réussite',fr(100*C.adm/C.n,1)+' %','=NB.SI(J2:J31;"Admis")/NBVAL(J2:J31)']]
+   .map(([a,b,c])=>`<div><small>${a}</small><b>${b}</b><em>${esc(c)}</em></div>`).join('');}
+function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.height,pad={l:36,r:10,t:14,b:34};const css=getComputedStyle(document.body),ink=css.getPropertyValue('--muted')||'#666',line=css.getPropertyValue('--line')||'#ddd';
+  const T=[[0,5],[5,8],[8,10],[10,12],[12,14],[14,16],[16,20.01]],lab=['0–5','5–8','8–10','10–12','12–14','14–16','16–20'];const cnt=T.map(([a,b])=>E.filter(e=>e.m>=a&&e.m<b).length);const mx=Math.max(4,...cnt);
+  c.clearRect(0,0,W,H);c.font='12px IBM Plex Mono, monospace';const bw=(W-pad.l-pad.r)/T.length;
+  for(let i=0;i<=4;i++){const y=pad.t+(H-pad.t-pad.b)*i/4;c.strokeStyle=line;c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();c.fillStyle=ink;c.fillText(Math.round(mx*(1-i/4)),8,y+4);}
+  cnt.forEach((v,i)=>{const h=(H-pad.t-pad.b)*v/mx,x=pad.l+i*bw;c.fillStyle=i<3?'#c98a4b':'#2f8f87';c.fillRect(x+bw*.15,H-pad.b-h,bw*.7,h);c.fillStyle=ink;c.fillText(lab[i],x+bw*.28,H-12);if(v){c.fillText(v,x+bw*.46,H-pad.b-h-5);}});}
+function bulletin(){const i=+$('b-sel').value||0,e=E[i];if(!e)return;const p=C.p;
+  const app=e.m>=16?'Excellent travail, félicitations.':e.m>=14?'Très bon trimestre, continuez ainsi.':e.m>=12?'Bon travail, des progrès sont encore possibles.':e.m>=10?'Résultats justes : il faut fournir plus d\'efforts.':'Résultats insuffisants : un soutien est proposé.';
+  $('bulletin').innerHTML=`<div class="b-head"><div><b>${esc(e.pre)} ${esc(e.nom)}</b><small>Classe de 3<sup>e</sup> année collège · Français · Trimestre 1</small></div><div class="b-rang">Rang <b>${e.rang}</b> / ${C.n}</div></div>
+  <table class="t"><tr><th>Évaluation</th><th>Coef.</th><th>Note</th><th>Moyenne classe</th></tr>
+  <tr><td>Dictée</td><td>${p.c1}</td><td>${fr(e.dd)}</td><td>${fr(avg('dd'))}</td></tr><tr><td>Rédaction</td><td>${p.c2}</td><td>${fr(e.r)}</td><td>${fr(avg('r'))}</td></tr><tr><td>Lecture</td><td>${p.c3}</td><td>${fr(e.l)}</td><td>${fr(avg('l'))}</td></tr>
+  <tr><td><b>Moyenne</b></td><td>${C.S}</td><td><b>${fr(e.m)}</b></td><td>${fr(C.moy)}</td></tr></table>
+  <p><b>Mention :</b> ${e.men} · <b>Décision :</b> ${e.dec}</p><p><b>Appréciation :</b> ${app}</p>
+  <p class="mono" style="font-size:12.5px;color:var(--muted)">Dans Excel : =RECHERCHEV(${i+1};A2:J31;7;FAUX) renvoie la moyenne de l'élève n° ${i+1} (colonne G). On cherche par le numéro, qui est unique, et non par le nom.</p>`;}
+function selList(){const v=$('b-sel').value;$('b-sel').innerHTML=E.map((e,i)=>`<option value="${i}">${esc(e.nom)} ${esc(e.pre)}</option>`).join('');if(v)$('b-sel').value=v;}
+function all(){const p=P();$('o-c1').textContent='× '+p.c1;$('o-c2').textContent='× '+p.c2;$('o-c3').textContent='× '+p.c3;$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-bonus').textContent='+ '+fr(p.bonus,1);
+  C=calc();kpis();chart();table();selList();bulletin();}
+/* ---------- Exercices ---------- */
+let Q=null,ok=0,tot=0,answered=false;
+function newQ(){const i=Math.floor(Math.random()*E.length),e=E[i],n=i+2,k=Math.floor(Math.random()*6);answered=false;$('q-fb').innerHTML='';
+  if(k===0)Q={tag:'Moyenne pondérée',txt:`Quelle est la moyenne de ${e.pre} ${e.nom} (ligne ${n}) ?`,num:e.m,f:formula('G',n)[0]};
+  else if(k===1)Q={tag:'Rang',txt:`Quel est le rang de ${e.pre} ${e.nom} dans la classe ?`,num:e.rang,f:`=RANG(G${n};$G$2:$G$31)`};
+  else if(k===2)Q={tag:'NB.SI',txt:`Combien d'élèves ont une moyenne d'au moins 12 ?`,num:E.filter(x=>x.m>=12).length,f:'=NB.SI(G2:G31;">=12")'};
+  else if(k===3)Q={tag:'MOYENNE',txt:`Quelle est la moyenne de la classe en rédaction ?`,num:r2(avg('r')),f:'=MOYENNE(E2:E31)'};
+  else{const ch=[[`=SI(G${n}>=10;"Admis";"Soutien")`,'Afficher « Admis » ou « Soutien » selon la moyenne',[`=SI(G${n}>10;Admis;Soutien)`,`=SOMME(G${n};"Admis")`]],
+    ['=RANG(G2;$G$2:$G$31)','Calculer le rang d\'un élève, formule à étirer vers le bas',['=RANG(G2;G2:G31)','=MAX(G2:G31)']],
+    ['=NB.SI(H2:H31;"Très bien")','Compter les mentions « Très bien »',['=SOMME(H2:H31;"Très bien")','=NB(H2:H31)']],
+    ['=ARRONDI(MOYENNE(D2:D31);2)','Moyenne de la classe en dictée, arrondie à 2 décimales',['=MOYENNE(D2:D31;2)','=ARRONDI(SOMME(D2:D31);2)']]][Math.floor(Math.random()*4)];
+    const opts=[ch[0],...ch[2]].sort(()=>Math.random()-.5);Q={tag:'Choisir la formule',txt:ch[1]+' :',opts,good:ch[0]};}
+  $('q-tag').textContent=Q.tag;$('q-txt').textContent=Q.txt;
+  $('q-zone').innerHTML=Q.opts?`<div class="recos">${Q.opts.map((o,j)=>`<label><input type="radio" name="qo" value="${j}"> <span class="mono">${esc(o)}</span></label>`).join('')}</div>`:`<div class="row"><label>Votre réponse<input id="q-ans" class="wide" autocomplete="off" inputmode="decimal"></label></div>`;
+  const a=$('q-ans');if(a)a.addEventListener('keydown',ev=>{if(ev.key==='Enter')$('q-chk').click();});}
+$('q-new').onclick=newQ;
+$('q-chk').onclick=()=>{if(!Q)return;let good;
+  if(Q.opts){const c=document.querySelector('input[name=qo]:checked');if(!c)return;good=Q.opts[+c.value]===Q.good;
+    document.querySelectorAll('#q-zone label').forEach((l,j)=>l.classList.add(Q.opts[j]===Q.good?'good':(+c.value===j?'wrong':'')));
+    $('q-fb').innerHTML=good?'<p class="ok callout">✔ Bonne formule.</p>':`<p class="err">✘ La bonne formule est <span class="mono">${esc(Q.good)}</span>.</p>`;}
+  else{const v=parseFloat(($('q-ans').value||'').replace(/\s/g,'').replace(',','.'));if(isNaN(v))return;good=Math.abs(v-Q.num)<=0.011;
+    $('q-fb').innerHTML=good?`<p class="ok callout">✔ Exact : ${fr(Q.num,Number.isInteger(Q.num)?0:2)}. Formule : <span class="mono">${esc(Q.f)}</span></p>`:`<p class="err">✘ Réponse attendue : ${fr(Q.num,Number.isInteger(Q.num)?0:2)}. Formule : <span class="mono">${esc(Q.f)}</span></p>`;}
+  if(!answered){tot++;if(good)ok++;answered=true;}$('sc').textContent=ok+' / '+tot;};
+/* ---------- Export ---------- */
+$('csv').onclick=()=>{const p=P(),S=p.c1+p.c2+p.c3||1;const head=['N°','Nom','Prénom','Dictée','Rédaction','Lecture','Moyenne','Mention','Rang','Décision'];
+  const num=v=>String(v).replace('.',',');
+  const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.nom,e.pre,num(e.dd),num(e.r),num(e.l),`=ARRONDI((D${n}*${p.c1}+E${n}*${p.c2}+F${n}*${p.c3})/${S};2)`,`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,`=RANG(G${n};$G$2:$G$31)`,`=SI(G${n}>=${num(p.seuil)};"Admis";"Soutien")`].join(';');});
+  const blob=new Blob(['﻿'+[head.join(';'),...rows].join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='classe-numerique-notes.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+/* ---------- Démarrage ---------- */
+function defaults(){$('c1').value=1;$('c2').value=2;$('c3').value=1;$('seuil').value=10;$('bonus').value=0;}
+$('newc').onclick=()=>{gen();all();newQ();};
+['c1','c2','c3','seuil','bonus'].forEach(id=>$(id).addEventListener('input',all));
+$('b-sel').onchange=bulletin;
+defaults();gen();all();newQ();
+</script>
+
+</body>
+</html>
