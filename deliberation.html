@@ -235,7 +235,7 @@ table.pv2-t td.val{text-align:center;font-weight:600}
 .pv2-sum{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:9.5pt;margin:.35cm 0 0;padding:.2cm .3cm;background:#f4f6fa;border-left:2pt solid #1f3864}
 .pv2-sum b{font-weight:600}
 .legend-pv{font-size:8.5pt;color:#555;margin:.15cm 0 0}
-.pv-sign{display:grid;grid-template-columns:repeat(3,1fr);gap:.7cm;margin-top:1cm;font-size:9.5pt;break-inside:avoid}
+.pv-sign{display:grid;grid-template-columns:6.5cm 6.5cm;justify-content:space-between;gap:.7cm;margin-top:1cm;font-size:9.5pt;break-inside:avoid}
 .pv-sign div{border-top:.75pt solid #777;padding-top:4px;min-height:2.2cm;color:#333}
 .pgbrk{display:none}
 @page{size:A4 portrait;margin:1cm 2.5cm 2.5cm;@bottom-center{content:"Page " counter(page) " / " counter(pages);font:8pt "IBM Plex Sans",Arial,sans-serif;color:#666}}
@@ -440,7 +440,7 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
    <table class="pv2-t"><thead><tr>${hd}</tr></thead><tbody>${rows}</tbody></table>
    <div class="pv2-sum">${sum}</div>
    <p class="legend-pv">ABS : absence non justifiée à l'examen (module non validé) · ABSJ : absence justifiée (droit au rattrapage)</p>
-   <div class="pv-sign"><div>L'enseignant(e) responsable du module</div><div>Le coordonnateur de la filière</div><div>Le président du jury</div></div></section>`;
+   <div class="pv-sign"><div>L'enseignant(e) responsable du module</div><div>Le président du jury</div></div></section>`;
   $('pv').innerHTML=`<div class="lh" id="runlh"><img src="${LOGO}" alt="Logo"><div class="r"><b>Université Moulay Ismail</b><br>${g('i-etab')}<br>Année universitaire ${g('i-au')}</div></div><table class="pgw"><thead><tr><td></td></tr></thead><tbody><tr><td>${cover}${notes}</td></tr></tbody></table>`;}
 function all(){const p=P();$('o-w').textContent=fr(p.w*100,0)+' % / '+fr(100-p.w*100,0)+' %';$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-elim').textContent=p.elim?fr(p.elim,1):'aucune';
   $('nb-el').textContent=E.length;$('cls-sub').innerHTML=esc($('i-mod').value)+' · '+esc($('i-fil').value)+' · '+CLS;
