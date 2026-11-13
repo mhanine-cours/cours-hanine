@@ -359,36 +359,36 @@ function gen(){E=[];const used=new Set();for(let i=0;i<40;i++){let n;do n=[NOM[M
 const P=()=>({w:+$('w').value/100,seuil:+$('seuil').value,elim:+$('elim').value,mode:$('mode').value,cap:$('cap').checked});
 const dn=v=>String(v).replace('.',',');
 function calc(){const p=P();
-  E.forEach(e=>{e.sn=r2(e.cc*p.w+(e.ex??0)*(1-p.w));
+  E.forEach(e=>{e.sn=e.ex===null?null:r2(e.cc*p.w+e.ex*(1-p.w));
     e.rs=e.ex===null?(e.st==='ABSJ'?'R':'NV'):(e.sn>=p.seuil&&(!p.elim||e.ex>=p.elim))?'V':'R';
     if(e.rs==='V'){e.fin=e.sn;e.dec='V';}
     else if(e.rs==='NV'){e.fin=e.sn;e.dec='NV';}
     else if(e.ra===null||e.ra===undefined){e.fin=e.sn;e.dec='R';}
     else{let nr=p.mode==='ex'?r2(e.cc*p.w+e.ra*(1-p.w)):e.ra;if(p.cap)nr=Math.min(10,nr);e.fin=r2(Math.max(e.sn,nr));e.dec=e.fin>=p.seuil?'VAR':'NV';}});
-  E.forEach(e=>{e.rang=1+E.filter(x=>x.fin>e.fin).length;});
-  const n=E.length,sns=E.map(e=>e.sn),moy=sns.reduce((a,b)=>a+b,0)/n;
-  return{p,n,moy,fmoy:E.reduce((a,e)=>a+e.fin,0)/n,vsn:E.filter(e=>e.rs==='V').length,ratt:E.filter(e=>e.rs==='R').length,abs:E.filter(e=>e.ex===null&&e.st!=='ABSJ').length,absj:E.filter(e=>e.ex===null&&e.st==='ABSJ').length,
+  E.forEach(e=>{e.rang=e.sn===null?null:1+E.filter(x=>x.sn!==null&&x.sn>e.sn).length;});
+  const n=E.length,sns=E.map(e=>e.sn).filter(v=>v!==null),moy=sns.length?sns.reduce((a,b)=>a+b,0)/sns.length:0;
+  return{p,n,moy,fmoy:0,vsn:E.filter(e=>e.rs==='V').length,ratt:E.filter(e=>e.rs==='R').length,abs:E.filter(e=>e.ex===null&&e.st!=='ABSJ').length,absj:E.filter(e=>e.ex===null&&e.st==='ABSJ').length,
     var:E.filter(e=>e.dec==='VAR').length,nv:E.filter(e=>e.dec==='NV').length,att:E.filter(e=>e.dec==='R').length};}
 const exT=e=>e.ex===null?(e.st||'ABS'):fr(e.ex);
 const DL={V:'Validé',VAR:'Validé après rattrapage',NV:'Non validé',R:'Rattrapage',ABS:'Absent'};
 const tag=c=>`<span class="dec d-${c}">${c==='R'&&false?'':c}</span>`;
-const VT={V:'Validé',R:'Rattrapage',NV:'Non validé'};
+const VT={V:'Validé',R:'Rattrapage',NV:'Non validé'};const snT=e=>e.sn===null?'-':fr(e.sn);
 const COLS=[['A','N°',(e,i)=>i+1],['B','CNE',e=>e.code],['C','Nom',e=>e.nom],['D','Prénom',e=>e.pre],
- ['E','Note CC',e=>fr(e.cc),'edit','cc'],['F','Note Écrit',e=>exT(e),'edit','ex'],['G','Note finale',e=>fr(e.sn),'calc'],['H','Validation',e=>VT[e.rs],'calc'],['I','Rang',e=>e.rang,'calc']];
+ ['E','Note CC',e=>fr(e.cc),'edit','cc'],['F','Note Écrit',e=>exT(e),'edit','ex'],['G','Note finale',e=>snT(e),'calc'],['H','Validation',e=>VT[e.rs],'calc'],['I','Rang',e=>e.rang??'-','calc']];
 function formula(col,n){const p=C.p,w=dn(p.w),w2=dn(r2(1-p.w)),L=LR(),s=dn(p.seuil);
   switch(col){
   case'E':return['(note saisie)','Note de contrôle continu saisie par l\'enseignant'];
   case'F':return['(note saisie)','Note de l\'examen écrit ; « ABS » : absence non justifiée, « ABSJ » : absence justifiée'];
-  case'G':return[`=ARRONDI(E${n}*${w}+N(F${n})*${w2};2)`,`Note finale : CC × ${fr(p.w*100,0)} % + écrit × ${fr(100-p.w*100,0)} %. N() compte « ABS » et « ABSJ » comme 0`];
+  case'G':return[`=SI(OU(F${n}="ABS";F${n}="ABSJ");"-";ARRONDI(E${n}*${w}+F${n}*${w2};2))`,`Note finale : CC × ${fr(p.w*100,0)} % + écrit × ${fr(100-p.w*100,0)} % ; « - » si l'étudiant est absent à l'écrit (ABS ou ABSJ) : il n'est pas compté dans la moyenne`];
   case'H':return[p.elim?`=SI(F${n}="ABS";"Non validé";SI(F${n}="ABSJ";"Rattrapage";SI(ET(G${n}>=${s};F${n}>=${dn(p.elim)});"Validé";"Rattrapage")))`:`=SI(F${n}="ABS";"Non validé";SI(F${n}="ABSJ";"Rattrapage";SI(G${n}>=${s};"Validé";"Rattrapage")))`,'Validé si la note finale atteint '+fr(p.seuil,1)+(p.elim?' et si l\'écrit n\'est pas éliminatoire':'')+', sinon Rattrapage ; ABS : Non validé (sans rattrapage) ; ABSJ : Rattrapage'];
-  case'I':return[`=RANG(G${n};$G$2:$G$${L})`,'Rang de l\'étudiant selon la note finale'];}
+  case'I':return[`=SI(G${n}="-";"-";RANG(G${n};$G$2:$G$${L}))`,'Rang selon la note finale ; les absents (« - ») ne sont pas classés'];}
   return['',''];}
 function showF(){const col=COLS[sel.c][0],n=sel.r+1;const[f,x]=formula(col,n);$('xl-ref').textContent=col+n;$('xl-fm').textContent=f;$('xl-ex').textContent=x;}
 function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+'</tr><tr><th>1</th>'+COLS.map(c=>`<td class="hd">${c[1]}</td>`).join('')+'</tr>';
   E.forEach((e,i)=>{h+=`<tr class="${e.rs==='NV'?'bad':e.rs==='R'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>{let cl=c[3]||'';if(c[4]==='ra'&&e.rs!=='R')cl='na';
     let v=esc(c[2](e,i));if(c[0]==='H')v=`<span class="dec d-${e.rs}">${v}</span>`;
     return `<td class="${cl}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}">${v}</td>`;}).join('')+'</tr>';});
-  const av=k=>fr(E.reduce((a,e)=>a+(e[k]??0),0)/E.length);
+  const av=k=>{const v=E.map(e=>e[k]).filter(x=>x!==null&&x!==undefined);return v.length?fr(v.reduce((a,b)=>a+b,0)/v.length):'-';};
   h+=`<tr class="tot"><th>${LR()+1}</th><td></td><td></td><td>Moyennes</td><td></td><td>${av('cc')}</td><td>${av('ex')}</td><td>${fr(C.moy)}</td><td>${C.vsn} validés</td><td></td></tr>`;
   $('xl').innerHTML=h;
   $('xl').querySelectorAll('td.calc').forEach(td=>td.onclick=()=>{sel={r:+td.dataset.r,c:+td.dataset.c};table();});
@@ -399,12 +399,12 @@ function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+
       else{const v=parseFloat(t.replace(',','.'));if(!isNaN(v)&&v>=0&&v<=20){e[k]=v;if(k==='ex')e.st=null;}}all();};
     inp.onblur=ok;inp.onkeydown=ev=>{if(ev.key==='Enter')inp.blur();if(ev.key==='Escape'){inp.onblur=null;all();}};});
   showF();}
-function kpis(){const L=LR(),t=C.n,sns=E.map(e=>e.sn);$('taux').textContent='Validation '+fr(100*C.vsn/t,1)+' %';
+function kpis(){const L=LR(),t=C.n,sns=E.map(e=>e.sn).filter(v=>v!==null);if(!sns.length)sns.push(0);$('taux').textContent='Validation '+fr(100*C.vsn/t,1)+' %';
   $('kpis').innerHTML=[['Effectif',t,`=NBVAL(C2:C${L})`],['Moyenne du module',fr(C.moy),`=MOYENNE(G2:G${L})`],['Note la plus haute',fr(Math.max(...sns)),`=MAX(G2:G${L})`],['Note la plus basse',fr(Math.min(...sns)),`=MIN(G2:G${L})`],
    ['Validés',C.vsn,`=NB.SI(H2:H${L};"Validé")`],['Rattrapage',C.ratt,`=NB.SI(H2:H${L};"Rattrapage")`],['Absents ABS / ABSJ',C.abs+' / '+C.absj,`=NB.SI(F2:F${L};"ABS") · =NB.SI(F2:F${L};"ABSJ")`],['Taux de validation',fr(100*C.vsn/t,1)+' %',`=NB.SI(H2:H${L};"Validé")/NBVAL(H2:H${L})`]]
    .map(([a,b,c])=>`<div><small>${a}</small><b>${b}</b><em>${esc(c)}</em></div>`).join('');}
 function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.height,pad={l:36,r:10,t:14,b:34};const css=getComputedStyle(document.body),ink=css.getPropertyValue('--muted')||'#666',line=css.getPropertyValue('--line')||'#ddd';
-  const T=[[0,5],[5,8],[8,10],[10,12],[12,14],[14,16],[16,20.01]],lab=['0–5','5–8','8–10','10–12','12–14','14–16','16–20'];const cnt=T.map(([a,b])=>E.filter(e=>e.sn>=a&&e.sn<b).length);const mx=Math.max(4,...cnt);
+  const T=[[0,5],[5,8],[8,10],[10,12],[12,14],[14,16],[16,20.01]],lab=['0–5','5–8','8–10','10–12','12–14','14–16','16–20'];const cnt=T.map(([a,b])=>E.filter(e=>e.sn!==null&&e.sn>=a&&e.sn<b).length);const mx=Math.max(4,...cnt);
   c.clearRect(0,0,W,H);c.font='12px IBM Plex Mono, monospace';const bw=(W-pad.l-pad.r)/T.length;
   for(let i=0;i<=4;i++){const y=pad.t+(H-pad.t-pad.b)*i/4;c.strokeStyle=line;c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();c.fillStyle=ink;c.fillText(Math.round(mx*(1-i/4)),8,y+4);}
   cnt.forEach((v,i)=>{const h=(H-pad.t-pad.b)*v/mx,x=pad.l+i*bw;c.fillStyle=T[i][1]<=C.p.seuil?'#c98a4b':'#2f8f87';c.fillRect(x+bw*.15,H-pad.b-h,bw*.7,h);c.fillStyle=ink;c.fillText(lab[i],x+bw*.28,H-12);if(v)c.fillText(v,x+bw*.46,H-pad.b-h-5);});}
@@ -426,7 +426,7 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
   let rows,sum,hd;
   if(S==='N'){
     hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Écrit</th><th>Note finale</th><th>Validation</th>';
-    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${exT(e)}</td><td class="fin">${fr(e.sn)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):pill('r','Rattrapage')}</td></tr>`).join('');
+    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l nm">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${exT(e)}</td><td class="fin">${snT(e)}</td><td class="val">${e.rs==='V'?pill('v','Validé'):e.rs==='NV'?pill('nv','Non validé'):pill('r','Rattrapage')}</td></tr>`).join('');
     sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.absj?` (dont ${C.absj} ABSJ)`:''}</span>${C.abs?`<span><b>Non validés (ABS) :</b> ${C.abs}</span>`:''}<span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
   else{const R=E.filter(e=>e.rs==='R');
     hd='<th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note rattrapage</th><th>Note finale</th><th>Validation</th>';
