@@ -18,6 +18,7 @@ const RUBRIQUES = ["Cours", "Diapositives", "Travaux pratiques corrigés", "Étu
    lien (facultatif) : page ouverte quand on clique sur l'annonce. */
 const ANNONCES = [
   { jour:"13", mois:"nov", lien:"module.html?m=c", titre:"Programmation C 1 : diaporamas", texte:"Les diaporamas du cours pour la Licence Digitalisation (S1) et la Licence d'Excellence IAG (S5) sont en ligne." },
+  { jour:"13", mois:"nov", lien:"deliberation.html", titre:"Nouveau : Délibération numérique", texte:"Note de module (contrôle continu et examen final), session de rattrapage, décisions V / VAR / NV et procès-verbal imprimable, avec les formules Excel." },
   { jour:"13", mois:"nov", lien:"classe.html", titre:"Nouveau : Classe numérique", texte:"Le carnet de notes de l'enseignant de français : moyennes, mentions, rangs et statistiques calculés par les formules Excel (Licence Pro Enseignement du français)." },
   { jour:"12", mois:"nov", lien:"audit.html", titre:"Nouveau : Audit SI Lab", texte:"Mission d'audit des systèmes d'information simulée, avec contrôles par formules Excel, pour le Master ACBI (S9)." },
   { jour:"12", mois:"nov", lien:"tourisme.html", titre:"Nouveau : Riad digital", texte:"Simulateur de gestion touristique pour le module Culture digitale et tourisme (rubrique Logiciels)." },
