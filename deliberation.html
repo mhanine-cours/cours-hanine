@@ -285,7 +285,7 @@ table.jury{width:100%;border-collapse:collapse;margin:6px 0 22px}table.jury th,t
       <div class="row" style="margin:0 0 8px"><label style="flex:1">La note de rattrapage remplace
         <select id="mode"><option value="ex">la note d'examen (le CC est conservé)</option><option value="mod">la note du module</option></select></label></div>
       <div class="tg"><label><input type="checkbox" id="cap"> Plafonner à 10 la note obtenue au rattrapage</label></div>
-      <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Astuce : cliquez sur une note (CC, examen ou rattrapage) dans la feuille pour la modifier ; tapez « abs » pour une absence à l'examen.</p>
+      <p style="font-size:14px;color:var(--muted);margin:10px 0 0">Astuce : cliquez sur une note (CC, examen ou rattrapage) dans la feuille pour la modifier ; tapez « abs » pour une absence non justifiée à l'examen (non validé, sans rattrapage) ou « absj » pour une absence justifiée (droit au rattrapage).</p>
     </section>
     <section class="inst">
       <div class="inst-h"><div><h2>Résultats du module</h2><small id="cls-sub"></small></div><span class="led on" id="taux"></span></div>
@@ -344,27 +344,29 @@ let E=[],sel={r:1,c:6},C,CLS='Module d\'exemple · étudiants fictifs';
 const LR=()=>E.length+1;
 const rnd=(a,b)=>a+Math.random()*(b-a);const q4=v=>Math.max(0,Math.min(20,Math.round(v*4)/4));
 function gen(){E=[];const used=new Set();for(let i=0;i<40;i++){let n;do n=[NOM[Math.floor(Math.random()*NOM.length)],PRE[Math.floor(Math.random()*PRE.length)]];while(used.has(n.join()));used.add(n.join());
-  const lvl=rnd(6.5,17.5);const cc=q4(lvl+rnd(-1.5,3)),ex=Math.random()<0.05?null:q4(lvl+rnd(-3,2.5));
-  E.push({code:String(21000000+Math.floor(Math.random()*999999)),nom:n[0],pre:n[1],cc,ex,ra:null});}
+  const lvl=rnd(6.5,17.5);const cc=q4(lvl+rnd(-1.5,3)),ex=Math.random()<0.06?null:q4(lvl+rnd(-3,2.5));
+  E.push({code:String(21000000+Math.floor(Math.random()*999999)),nom:n[0],pre:n[1],cc,ex,st:ex===null?(Math.random()<0.5?'ABS':'ABSJ'):null,ra:null});}
   E.sort((a,b)=>a.nom.localeCompare(b.nom,'fr')||a.pre.localeCompare(b.pre,'fr'));
-  const p=P();E.forEach(e=>{const sn=r2(e.cc*p.w+(e.ex??0)*(1-p.w));if(e.ex===null||sn<p.seuil){e.ra=Math.random()<0.9?q4(Math.max(e.ex??7,7)+rnd(0.5,6)):null;}});}
+  const p=P();E.forEach(e=>{const sn=r2(e.cc*p.w+(e.ex??0)*(1-p.w));if((e.ex===null&&e.st==='ABSJ')||(e.ex!==null&&sn<p.seuil)){e.ra=Math.random()<0.9?q4(Math.max(e.ex??7,7)+rnd(0.5,6)):null;}});}
 const P=()=>({w:+$('w').value/100,seuil:+$('seuil').value,elim:+$('elim').value,mode:$('mode').value,cap:$('cap').checked});
 const dn=v=>String(v).replace('.',',');
 function calc(){const p=P();
   E.forEach(e=>{e.sn=r2(e.cc*p.w+(e.ex??0)*(1-p.w));
-    e.rs=e.ex===null?'ABS':(e.sn>=p.seuil&&(!p.elim||e.ex>=p.elim))?'V':'R';
+    e.rs=e.ex===null?(e.st==='ABSJ'?'R':'NV'):(e.sn>=p.seuil&&(!p.elim||e.ex>=p.elim))?'V':'R';
     if(e.rs==='V'){e.fin=e.sn;e.dec='V';}
+    else if(e.rs==='NV'){e.fin=e.sn;e.dec='NV';}
     else if(e.ra===null||e.ra===undefined){e.fin=e.sn;e.dec='R';}
     else{let nr=p.mode==='ex'?r2(e.cc*p.w+e.ra*(1-p.w)):e.ra;if(p.cap)nr=Math.min(10,nr);e.fin=r2(Math.max(e.sn,nr));e.dec=e.fin>=p.seuil?'VAR':'NV';}});
   E.forEach(e=>{e.rang=1+E.filter(x=>x.fin>e.fin).length;});
   const n=E.length,sns=E.map(e=>e.sn),moy=sns.reduce((a,b)=>a+b,0)/n;
-  return{p,n,moy,fmoy:E.reduce((a,e)=>a+e.fin,0)/n,vsn:E.filter(e=>e.rs==='V').length,ratt:E.filter(e=>e.rs!=='V').length,abs:E.filter(e=>e.ex===null).length,
+  return{p,n,moy,fmoy:E.reduce((a,e)=>a+e.fin,0)/n,vsn:E.filter(e=>e.rs==='V').length,ratt:E.filter(e=>e.rs==='R').length,abs:E.filter(e=>e.ex===null&&e.st!=='ABSJ').length,absj:E.filter(e=>e.ex===null&&e.st==='ABSJ').length,
     var:E.filter(e=>e.dec==='VAR').length,nv:E.filter(e=>e.dec==='NV').length,att:E.filter(e=>e.dec==='R').length};}
+const exT=e=>e.ex===null?(e.st||'ABS'):fr(e.ex);
 const DL={V:'Validé',VAR:'Validé après rattrapage',NV:'Non validé',R:'Rattrapage',ABS:'Absent'};
 const tag=c=>`<span class="dec d-${c}">${c==='R'&&false?'':c}</span>`;
 const COLS=[['A','N°',(e,i)=>i+1],['B','CNE',e=>e.code],['C','Nom',e=>e.nom],['D','Prénom',e=>e.pre],
- ['E','Note CC',e=>fr(e.cc),'edit','cc'],['F','Note Écrit',e=>e.ex===null?'ABS':fr(e.ex),'edit','ex'],['G','Note finale SN',e=>fr(e.sn),'calc'],['H','Résultat SN',e=>e.rs,'calc'],
- ['I','Rattrapage',e=>e.rs==='V'?'':(e.ra===null||e.ra===undefined?'':fr(e.ra)),'edit','ra'],['J','Note finale',e=>fr(e.fin),'calc'],['K','Décision',e=>e.dec==='R'?'Ratt.':e.dec,'calc'],['L','Rang',e=>e.rang,'calc']];
+ ['E','Note CC',e=>fr(e.cc),'edit','cc'],['F','Note Écrit',e=>exT(e),'edit','ex'],['G','Note finale SN',e=>fr(e.sn),'calc'],['H','Résultat SN',e=>e.rs,'calc'],
+ ['I','Rattrapage',e=>e.rs!=='R'?'':(e.ra===null||e.ra===undefined?'':fr(e.ra)),'edit','ra'],['J','Note finale',e=>fr(e.fin),'calc'],['K','Décision',e=>e.dec==='R'?'Ratt.':e.dec,'calc'],['L','Rang',e=>e.rang,'calc']];
 function formula(col,n){const p=C.p,w=dn(p.w),w2=dn(r2(1-p.w)),L=LR(),s=dn(p.seuil);
   const nr=p.mode==='ex'?`ARRONDI(E${n}*${w}+I${n}*${w2};2)`:`I${n}`,nrc=p.cap?`MIN(10;${nr})`:nr;
   switch(col){
@@ -372,14 +374,14 @@ function formula(col,n){const p=C.p,w=dn(p.w),w2=dn(r2(1-p.w)),L=LR(),s=dn(p.seu
   case'F':return['(note saisie)','Note de l\'examen final ; « ABS » pour une absence'];
   case'I':return['(note saisie)','Note de l\'examen de rattrapage, saisie seulement pour les étudiants non validés'];
   case'G':return[`=ARRONDI(E${n}*${w}+N(F${n})*${w2};2)`,`Note de la session normale : CC × ${fr(p.w*100,0)} % + examen × ${fr(100-p.w*100,0)} %. N() compte « ABS » comme 0`];
-  case'H':return[p.elim?`=SI(F${n}="ABS";"ABS";SI(ET(G${n}>=${s};F${n}>=${dn(p.elim)});"V";"R"))`:`=SI(F${n}="ABS";"ABS";SI(G${n}>=${s};"V";"R"))`,p.elim?'Validé (V) si la note atteint le seuil et si l\'examen n\'est pas éliminatoire ; sinon rattrapage (R)':'Validé (V) si la note atteint le seuil ; sinon rattrapage (R) ; absent (ABS) va aussi au rattrapage'];
-  case'J':return[`=SI(H${n}="V";G${n};SI(I${n}="";G${n};MAX(G${n};${nrc})))`,`Après rattrapage, on garde la meilleure des deux notes${p.mode==='ex'?' (la note de rattrapage remplace celle de l\'examen, le CC est conservé)':' (la note de rattrapage remplace celle du module)'}${p.cap?', plafonnée à 10':''}`];
-  case'K':return[`=SI(H${n}="V";"V";SI(I${n}="";"Ratt.";SI(J${n}>=${s};"VAR";"NV")))`,'V : validé en session normale · VAR : validé après rattrapage · NV : non validé'];
+  case'H':return[p.elim?`=SI(F${n}="ABS";"NV";SI(F${n}="ABSJ";"R";SI(ET(G${n}>=${s};F${n}>=${dn(p.elim)});"V";"R")))`:`=SI(F${n}="ABS";"NV";SI(F${n}="ABSJ";"R";SI(G${n}>=${s};"V";"R")))`,p.elim?'V si la note atteint le seuil et si l\'examen n\'est pas éliminatoire, sinon rattrapage (R) ; ABS (absence non justifiée) : non validé (NV), sans rattrapage ; ABSJ (absence justifiée) : rattrapage (R)':'V si la note atteint le seuil, sinon rattrapage (R) ; ABS (absence non justifiée) : non validé (NV), sans rattrapage ; ABSJ (absence justifiée) : rattrapage (R)'];
+  case'J':return[`=SI(H${n}<>"R";G${n};SI(I${n}="";G${n};MAX(G${n};${nrc})))`,`Après rattrapage, on garde la meilleure des deux notes${p.mode==='ex'?' (la note de rattrapage remplace celle de l\'examen, le CC est conservé)':' (la note de rattrapage remplace celle du module)'}${p.cap?', plafonnée à 10':''}`];
+  case'K':return[`=SI(H${n}="V";"V";SI(H${n}="NV";"NV";SI(I${n}="";"Ratt.";SI(J${n}>=${s};"VAR";"NV"))))`,'V : validé en session normale · VAR : validé après rattrapage · NV : non validé'];
   case'L':return[`=RANG(J${n};$J$2:$J$${L})`,'Rang de l\'étudiant selon la note finale'];}
   return['',''];}
 function showF(){const col=COLS[sel.c][0],n=sel.r+1;const[f,x]=formula(col,n);$('xl-ref').textContent=col+n;$('xl-fm').textContent=f;$('xl-ex').textContent=x;}
 function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+'</tr><tr><th>1</th>'+COLS.map(c=>`<td class="hd">${c[1]}</td>`).join('')+'</tr>';
-  E.forEach((e,i)=>{h+=`<tr class="${e.dec==='NV'?'bad':e.rs!=='V'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>{let cl=c[3]||'';if(c[4]==='ra'&&e.rs==='V')cl='na';
+  E.forEach((e,i)=>{h+=`<tr class="${e.dec==='NV'?'bad':e.rs!=='V'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>{let cl=c[3]||'';if(c[4]==='ra'&&e.rs!=='R')cl='na';
     let v=esc(c[2](e,i));if(c[0]==='K'||c[0]==='H')v=`<span class="dec d-${c[0]==='K'?e.dec:e.rs}">${v}</span>`;
     return `<td class="${cl}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}">${v}</td>`;}).join('')+'</tr>';});
   const av=k=>fr(E.reduce((a,e)=>a+(e[k]??0),0)/E.length);
@@ -387,22 +389,22 @@ function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+
   $('xl').innerHTML=h;
   $('xl').querySelectorAll('td.calc').forEach(td=>td.onclick=()=>{sel={r:+td.dataset.r,c:+td.dataset.c};table();});
   $('xl').querySelectorAll('td.edit').forEach(td=>td.onclick=()=>{if(td.querySelector('input'))return;sel={r:+td.dataset.r,c:+td.dataset.c};const k=COLS[sel.c][4],e=E[sel.r-1];
-    const cur=e[k]===null||e[k]===undefined?(k==='ex'?'abs':''):String(e[k]).replace('.',',');
+    const cur=e[k]===null||e[k]===undefined?(k==='ex'?(e.st||'ABS').toLowerCase():''):String(e[k]).replace('.',',');
     td.innerHTML=`<input class="cell" value="${cur}">`;const inp=td.querySelector('input');inp.focus();inp.select();
-    const ok=()=>{const t=inp.value.trim().toLowerCase();if(k!=='cc'&&(t===''||t==='abs'||t==='a')){e[k]=k==='ex'&&t!==''?null:(k==='ra'?null:e[k]);if(k==='ex'&&t==='')e[k]=null;}
-      else{const v=parseFloat(t.replace(',','.'));if(!isNaN(v)&&v>=0&&v<=20)e[k]=v;}all();};
+    const ok=()=>{const t=inp.value.trim().toLowerCase().replace(/[\s.()]/g,'');if(k==='ex'&&/^(abs|absent|a|absj|aj|absjustifiee)$/.test(t)){e.ex=null;e.st=/j/.test(t)?'ABSJ':'ABS';}else if(k==='ra'&&(t===''||/^abs/.test(t))){e.ra=null;}else if(k==='ex'&&t===''){e.ex=null;e.st='ABS';}
+      else{const v=parseFloat(t.replace(',','.'));if(!isNaN(v)&&v>=0&&v<=20){e[k]=v;if(k==='ex')e.st=null;}}all();};
     inp.onblur=ok;inp.onkeydown=ev=>{if(ev.key==='Enter')inp.blur();if(ev.key==='Escape'){inp.onblur=null;all();}};});
   showF();}
 function kpis(){const L=LR(),t=C.n;$('taux').textContent='Validation '+fr(100*(C.vsn+C.var)/t,1)+' %';
-  $('kpis').innerHTML=[['Effectif',t,`=NBVAL(C2:C${L})`],['Moyenne session normale',fr(C.moy),`=MOYENNE(G2:G${L})`],['Validés en session normale',C.vsn,`=NB.SI(H2:H${L};"V")`],['Admis au rattrapage',C.ratt,`=NB.SI(H2:H${L};"R")+NB.SI(H2:H${L};"ABS")`],
-   ['Absents à l\'examen',C.abs,`=NB.SI(F2:F${L};"ABS")`],['Validés après rattrapage',C.var,`=NB.SI(K2:K${L};"VAR")`],['Non validés',C.nv+(C.att?` <small style="display:inline;text-transform:none">(+${C.att} en attente)</small>`:''),`=NB.SI(K2:K${L};"NV")`],['Taux de validation',fr(100*(C.vsn+C.var)/t,1)+' %',`=(NB.SI(K2:K${L};"V")+NB.SI(K2:K${L};"VAR"))/NBVAL(K2:K${L})`]]
+  $('kpis').innerHTML=[['Effectif',t,`=NBVAL(C2:C${L})`],['Moyenne session normale',fr(C.moy),`=MOYENNE(G2:G${L})`],['Validés en session normale',C.vsn,`=NB.SI(H2:H${L};"V")`],['Admis au rattrapage',C.ratt,`=NB.SI(H2:H${L};"R")`],
+   ['Absents ABS / ABSJ',C.abs+' / '+C.absj,`=NB.SI(F2:F${L};"ABS") · =NB.SI(F2:F${L};"ABSJ")`],['Validés après rattrapage',C.var,`=NB.SI(K2:K${L};"VAR")`],['Non validés',C.nv+(C.att?` <small style="display:inline;text-transform:none">(+${C.att} en attente)</small>`:''),`=NB.SI(K2:K${L};"NV")`],['Taux de validation',fr(100*(C.vsn+C.var)/t,1)+' %',`=(NB.SI(K2:K${L};"V")+NB.SI(K2:K${L};"VAR"))/NBVAL(K2:K${L})`]]
    .map(([a,b,c])=>`<div><small>${a}</small><b>${b}</b><em>${esc(c)}</em></div>`).join('');}
 function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.height,pad={l:36,r:10,t:14,b:34};const css=getComputedStyle(document.body),ink=css.getPropertyValue('--muted')||'#666',line=css.getPropertyValue('--line')||'#ddd';
   const T=[[0,5],[5,8],[8,10],[10,12],[12,14],[14,16],[16,20.01]],lab=['0–5','5–8','8–10','10–12','12–14','14–16','16–20'];const cnt=T.map(([a,b])=>E.filter(e=>e.sn>=a&&e.sn<b).length);const mx=Math.max(4,...cnt);
   c.clearRect(0,0,W,H);c.font='12px IBM Plex Mono, monospace';const bw=(W-pad.l-pad.r)/T.length;
   for(let i=0;i<=4;i++){const y=pad.t+(H-pad.t-pad.b)*i/4;c.strokeStyle=line;c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();c.fillStyle=ink;c.fillText(Math.round(mx*(1-i/4)),8,y+4);}
   cnt.forEach((v,i)=>{const h=(H-pad.t-pad.b)*v/mx,x=pad.l+i*bw;c.fillStyle=T[i][1]<=C.p.seuil?'#c98a4b':'#2f8f87';c.fillRect(x+bw*.15,H-pad.b-h,bw*.7,h);c.fillStyle=ink;c.fillText(lab[i],x+bw*.28,H-12);if(v)c.fillText(v,x+bw*.46,H-pad.b-h-5);});}
-function rules(){const p=C.p;$('rules').innerHTML=`<b>Règles appliquées :</b> note de session normale = CC × ${fr(p.w*100,0)} % + examen × ${fr(100-p.w*100,0)} % ; module validé (V) si la note est au moins égale à ${fr(p.seuil,1)}${p.elim?` et l'examen au moins égal à ${fr(p.elim,1)} (note éliminatoire)`:''} ; sinon, ou en cas d'absence, l'étudiant passe le rattrapage. Après rattrapage, la note retenue est la meilleure des deux notes${p.mode==='ex'?', la note de rattrapage remplaçant celle de l\'examen (le CC est conservé)':', la note de rattrapage remplaçant celle du module'}${p.cap?', plafonnée à 10':''} : validé après rattrapage (VAR) ou non validé (NV).`;}
+function rules(){const p=C.p;$('rules').innerHTML=`<b>Règles appliquées :</b> note de session normale = CC × ${fr(p.w*100,0)} % + examen × ${fr(100-p.w*100,0)} % ; module validé (V) si la note est au moins égale à ${fr(p.seuil,1)}${p.elim?` et l'examen au moins égal à ${fr(p.elim,1)} (note éliminatoire)`:''} ; sinon, l'étudiant passe le rattrapage. Une absence non justifiée à l'examen (ABS) entraîne la non-validation du module, sans rattrapage ; une absence justifiée (ABSJ) donne droit au rattrapage. Après rattrapage, la note retenue est la meilleure des deux notes${p.mode==='ex'?', la note de rattrapage remplaçant celle de l\'examen (le CC est conservé)':', la note de rattrapage remplaçant celle du module'}${p.cap?', plafonnée à 10':''} : validé après rattrapage (VAR) ou non validé (NV).`;}
 let LOGO='images/logo-fs-errachidia.png';try{const L0=localStorage.getItem('delib-logo');if(L0)LOGO=L0;}catch(e){}
 function pv(){const p=C.p,g=id=>esc($(id).value),S=$('sess').value;
   const head=`<div class="pv2-logo"><img src="${LOGO}" alt="Logo"><div class="t">Procès-verbal de délibération</div><div style="width:80px"></div></div>
@@ -410,16 +412,16 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S=$('sess').value;
   <table class="pv2-w"><tr><td>Note CC</td><td>${fr(p.w*100,0)}%</td></tr><tr><td>Note Ecrit</td><td>${fr(100-p.w*100,0)}%</td></tr>${p.elim?`<tr><td>Note éliminatoire</td><td>${fr(p.elim,1)}</td></tr>`:''}</table></div>`;
   let rows,sum;
   if(S==='N'){
-    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${e.ex===null?'ABS':fr(e.ex)}</td><td class="fin">${fr(e.sn)}</td><td class="val${e.rs==='V'?'':' r'}">${e.rs==='V'?'Validé':'Rattrapage'}</td></tr>`).join('');
+    rows=E.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${exT(e)}</td><td class="fin">${fr(e.sn)}</td><td class="val${e.rs==='V'?'':e.rs==='NV'?' nv':' r'}">${e.rs==='V'?'Validé':e.rs==='NV'?'Non validé':'Rattrapage'}</td></tr>`).join('');
     rows=`<table class="pv2-t"><thead><tr><th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Ecrit</th><th>Note Finale</th><th>Validation</th></tr></thead><tbody>${rows}</tbody></table>`;
-    sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.abs?` (dont ${C.abs} absent${C.abs>1?'s':''})`:''}</span><span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
-  else{const R=E.filter(e=>e.rs!=='V');
+    sum=`<span><b>Effectif :</b> ${C.n}</span><span><b>Validés :</b> ${C.vsn}</span><span><b>Rattrapage :</b> ${C.ratt}${C.absj?` (dont ${C.absj} absence${C.absj>1?'s':''} justifiée${C.absj>1?'s':''})`:''}</span>${C.abs?`<span><b>Non validés (ABS) :</b> ${C.abs}</span>`:''}<span><b>Taux de validation :</b> ${fr(100*C.vsn/C.n,1)} %</span>`;}
+  else{const R=E.filter(e=>e.rs==='R');
     rows=R.map((e,i)=>`<tr><td class="c">${i+1}</td><td class="l">${esc(e.nom)}</td><td class="l">${esc(e.pre)}</td><td class="c">${esc(e.code)}</td><td>${fr(e.cc)}</td><td>${e.ra==null?'ABS':fr(e.ra)}</td><td class="fin">${fr(e.fin)}</td><td class="val${e.dec==='VAR'?'':' nv'}">${e.dec==='VAR'?'Validé':e.dec==='NV'?'Non validé':'En attente'}</td></tr>`).join('');
     rows=R.length?`<table class="pv2-t"><thead><tr><th>N°</th><th class="l">NOM</th><th class="l">Prénom</th><th>CNE</th><th>Note CC</th><th>Note Rattrapage</th><th>Note Finale</th><th>Validation</th></tr></thead><tbody>${rows}</tbody></table>`:'<p>Aucun étudiant au rattrapage.</p>';
     sum=`<span><b>Étudiants au rattrapage :</b> ${R.length}</span><span><b>Validés après rattrapage :</b> ${C.var}</span><span><b>Non validés :</b> ${C.nv}</span>${C.att?`<span><b>Notes de rattrapage non saisies :</b> ${C.att}</span>`:''}`;}
   const N=v=>`<b>${v}</b>`,sp=v=>v?esc(v):'';
-  const syn=S==='N'?`<p class="it">Nombre d'étudiants inscrits au module : ${N(C.n)}</p><p class="it">Nombre d'étudiants ayant validé le module : ${N(C.vsn)}</p><p class="it">Nombre d'étudiants ayant droit à une session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants absents : ${N(C.abs)}</p>`
-    :`<p class="it">Nombre d'étudiants convoqués à la session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants ayant validé le module après rattrapage : ${N(C.var)}</p><p class="it">Nombre d'étudiants n'ayant pas validé le module : ${N(C.nv)}</p><p class="it">Nombre d'étudiants absents : ${N(E.filter(e=>e.rs!=='V'&&e.ra==null).length)}</p>`;
+  const syn=S==='N'?`<p class="it">Nombre d'étudiants inscrits au module : ${N(C.n)}</p><p class="it">Nombre d'étudiants ayant validé le module : ${N(C.vsn)}</p><p class="it">Nombre d'étudiants ayant droit à une session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants absents : ${N(C.abs+C.absj)}${C.abs+C.absj?` (${C.abs} non justifiée${C.abs>1?'s':''}, ${C.absj} justifiée${C.absj>1?'s':''})`:''}</p>`
+    :`<p class="it">Nombre d'étudiants convoqués à la session de rattrapage : ${N(C.ratt)}</p><p class="it">Nombre d'étudiants ayant validé le module après rattrapage : ${N(C.var)}</p><p class="it">Nombre d'étudiants n'ayant pas validé le module : ${N(C.nv)}</p><p class="it">Nombre d'étudiants absents : ${N(E.filter(e=>e.rs==='R'&&e.ra==null).length)}</p>`;
   const cover=`<div class="pvc"><img src="${LOGO}" alt="Logo"><h3>Procès-verbal<br>[Délibération du jury de module]</h3>
   <div class="inf"><b>Année universitaire</b> : ${g('i-au')}<br><b>Filière</b> : ${g('i-fil')}<br><b>Semestre</b> : ${g('i-sem')}<br><b>Session</b> : ${S==='N'?'Normale':'Rattrapage'}<br><b>Intitulé du module</b> : ${g('i-mod')}</div>
   <table class="jury"><tr><th style="width:42%">Prénom et NOM</th><th style="width:25%">Qualité</th><th>Emargement</th></tr><tr><td>${sp($('j-pres').value)}</td><td>Président</td><td></td></tr><tr><td>${sp($('j-m1').value)}</td><td>Membre</td><td></td></tr><tr><td>${sp($('j-m2').value)}</td><td>Membre</td><td></td></tr></table>
@@ -433,9 +435,9 @@ function all(){const p=P();$('o-w').textContent=fr(p.w*100,0)+' % / '+fr(100-p.w
 function dl(name,rows){const blob=new Blob(['﻿'+rows.map(r=>r.join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 $('csv').onclick=()=>{const head=['N°','Code','Nom','Prénom','CC','Examen','Note SN','Résultat SN','Rattrapage','Note finale','Décision','Rang'];
   const q=s=>/[;"]/.test(s)?'"'+String(s).replace(/"/g,'""')+'"':s;
-  const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.code,q(e.nom),q(e.pre),dn(e.cc),e.ex===null?'ABS':dn(e.ex),formula('G',n)[0],q(formula('H',n)[0]),e.ra==null?'':dn(e.ra),q(formula('J',n)[0]),q(formula('K',n)[0]),formula('L',n)[0]];});
+  const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.code,q(e.nom),q(e.pre),dn(e.cc),e.ex===null?(e.st||'ABS'):dn(e.ex),formula('G',n)[0],q(formula('H',n)[0]),e.ra==null?'':dn(e.ra),q(formula('J',n)[0]),q(formula('K',n)[0]),formula('L',n)[0]];});
   dl('deliberation-module.csv',[head,...rows]);};
-$('tpl').onclick=()=>dl('modele-notes-module.csv',[['N°','Code','Nom','Prénom','CC','Examen','Rattrapage'],[1,'21004512','Alaoui','Sara','14,5','12',''],[2,'21004587','Bennani','Youssef','8','7,5','11'],[3,'21004633','Ouali','Imane','11','ABS','9,5']]);
+$('tpl').onclick=()=>dl('modele-notes-module.csv',[['N°','Code','Nom','Prénom','CC','Examen','Rattrapage'],[1,'21004512','Alaoui','Sara','14,5','12',''],[2,'21004587','Bennani','Youssef','8','7,5','11'],[3,'21004633','Ouali','Imane','11','ABSJ','9,5'],[4,'21004691','Tazi','Omar','10','ABS','']]);
 $('print').onclick=()=>window.print();
 $('sess').onchange=pv;
 function setLogo(src,save){LOGO=src;$('logo-prev').src=src;try{save?localStorage.setItem('delib-logo',src):localStorage.removeItem('delib-logo');}catch(e){}pv();}
@@ -445,7 +447,7 @@ $('logo-file').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(!f
 $('logo-reset').onclick=()=>setLogo('images/logo-fs-errachidia.png',false);
 /* ---------- Import ---------- */
 const norm=t=>String(t??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
-const parseNote=v=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'').replace(',','.');if(t==='')return null;if(/^(abs|absent|a|aj)$/i.test(t))return'ABS';const x=Number(t);return isNaN(x)?NaN:x;};
+const parseNote=v=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'').replace(',','.');if(t==='')return null;const u=t.toLowerCase().replace(/[.()_-]/g,'');if(/^(absj|aj|absjustifiee|absencejustifiee|absentjustifie)$/.test(u))return'ABSJ';if(/^(abs|absent|a|absence)$/.test(u))return'ABS';const x=Number(t);return isNaN(x)?NaN:x;};
 function parseCSV(txt){txt=txt.replace(/^﻿/,'');const first=txt.split(/\r?\n/).find(l=>l.trim())||'';const sep=[';','\t',','].map(c=>[c,first.split(c).length]).sort((a,b)=>b[1]-a[1])[0][0];
   const rows=[];let row=[],cur='',q=false;for(let i=0;i<txt.length;i++){const ch=txt[i];
     if(q){if(ch==='"'){if(txt[i+1]==='"'){cur+='"';i++;}else q=false;}else cur+=ch;}
@@ -477,21 +479,22 @@ function importRows(rows,fname){
     if(col.ex<0&&RX.ex.test(t)){col.ex=j;return;}
     if(col.nom<0&&RX.nom.test(t)){col.nom=j;return;}});
   if(col.nom<0)col.nom=col.pre===0?1:0;
-  if(col.cc<0||col.ex<0){const used=new Set(Object.values(col));const num=[];head.forEach((t,j)=>{if(used.has(j)||RX.skip.test(t))return;const v=data.map(r=>parseNote(r[j])).filter(x=>x!==null);if(v.length&&v.filter(x=>x==='ABS'||(!isNaN(x)&&x>=0&&x<=20)).length>=v.length*0.6)num.push(j);});
+  if(col.cc<0||col.ex<0){const used=new Set(Object.values(col));const num=[];head.forEach((t,j)=>{if(used.has(j)||RX.skip.test(t))return;const v=data.map(r=>parseNote(r[j])).filter(x=>x!==null);if(v.length&&v.filter(x=>x==='ABS'||x==='ABSJ'||(!isNaN(x)&&x>=0&&x<=20)).length>=v.length*0.6)num.push(j);});
     if(col.cc<0)col.cc=num.shift()??-1;if(col.ex<0)col.ex=num.shift()??-1;}
   if(col.cc<0||col.ex<0)throw new Error('Il faut deux colonnes de notes : le contrôle continu (CC) et l\'examen final.');
-  const L=[];let miss=0,abs=0,clip=0;const fix=x=>{if(x>20||x<0){clip++;return Math.max(0,Math.min(20,x));}return r2(x);};
+  const L=[];let miss=0,abs=0,absj=0,clip=0;const fix=x=>{if(x>20||x<0){clip++;return Math.max(0,Math.min(20,x));}return r2(x);};
   data.forEach((r,i)=>{const nom=String(r[col.nom]??'').trim(),pre=col.pre>=0?String(r[col.pre]??'').trim():'';if(!nom&&!pre)return;if(/^(moyenne|total|effectif)/.test(norm(nom)))return;
-    let cc=parseNote(r[col.cc]);if(cc===null||cc==='ABS'||isNaN(cc)){miss++;cc=0;}else cc=fix(cc);
-    let ex=parseNote(r[col.ex]);if(ex===null||ex==='ABS'||isNaN(ex)){abs++;ex=null;}else ex=fix(ex);
-    let ra=col.ra>=0?parseNote(r[col.ra]):null;if(ra==='ABS'||ra===null||isNaN(ra))ra=null;else ra=fix(ra);
-    L.push({code:col.code>=0?String(r[col.code]).trim():'',nom,pre,cc,ex,ra});});
+    let cc=parseNote(r[col.cc]);if(cc===null||cc==='ABS'||cc==='ABSJ'||isNaN(cc)){miss++;cc=0;}else cc=fix(cc);
+    let ex=parseNote(r[col.ex]),st=null;if(ex==='ABSJ'){absj++;ex=null;st='ABSJ';}else if(ex===null||ex==='ABS'||isNaN(ex)){abs++;ex=null;st='ABS';}else ex=fix(ex);
+    let ra=col.ra>=0?parseNote(r[col.ra]):null;if(ra==='ABS'||ra==='ABSJ'||ra===null||isNaN(ra))ra=null;else ra=fix(ra);
+    L.push({code:col.code>=0?String(r[col.code]).trim():'',nom,pre,cc,ex,st,ra});});
   if(!L.length)throw new Error('Aucun étudiant n\'a été trouvé dans le fichier.');
   if(L.length>1000)throw new Error('Plus de 1000 lignes : importez un seul module à la fois.');
   E=L;const nm=fname.replace(/\.[^.]+$/,'');CLS='fichier « '+esc(nm)+' »';sel={r:1,c:6};all();
   const T=k=>esc(String(rows[h][col[k]]).trim());
   let t=`✔ <b>${L.length} étudiants</b> importés depuis « ${esc(fname)} ». Colonnes reconnues : CC = « <b>${T('cc')}</b> », examen = « <b>${T('ex')}</b> »${col.ra>=0?`, rattrapage = « <b>${T('ra')}</b> »`:''}${col.code>=0?`, code = « ${T('code')} »`:''}. ${meta.length?' Informations reprises du fichier : '+meta.map(esc).join(', ')+'.':' Vérifiez la pondération ci-dessous.'}`;
-  if(abs)t+=`<br>⚠ ${abs} examen${abs>1?'s':''} vide${abs>1?'s':''} ou « ABS » : étudiant${abs>1?'s':''} compté${abs>1?'s':''} absent${abs>1?'s':''}, admis au rattrapage.`;
+  if(abs)t+=`<br>⚠ ${abs} examen${abs>1?'s':''} vide${abs>1?'s':''} ou « ABS » : absence non justifiée, module non validé (sans rattrapage).`;
+  if(absj)t+=`<br>${absj} absence${absj>1?'s':''} justifiée${absj>1?'s':''} (« ABSJ ») : droit au rattrapage.`;
   if(miss)t+=`<br>⚠ ${miss} note${miss>1?'s':''} de CC manquante${miss>1?'s':''} remplacée${miss>1?'s':''} par 0.`;
   if(clip)t+=`<br>⚠ ${clip} note${clip>1?'s':''} hors de 0–20 ramenée${clip>1?'s':''} dans l'intervalle.`;
   if(col.ra<0)t+=`<br>Pas de colonne de rattrapage : saisissez ces notes dans la colonne I après la session de rattrapage.`;
