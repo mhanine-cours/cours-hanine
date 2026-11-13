@@ -24,8 +24,8 @@ header.top{border-bottom:1px solid var(--line);background:var(--paper);padding-t
 .mark{width:40px;height:40px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 15px var(--display)}
 .brand small{display:block;font:12px var(--mono);color:var(--muted)}
 .brand strong{font-weight:600}
-nav.menu{display:flex;gap:4px;flex-wrap:wrap}
-nav.menu a{text-decoration:none;color:var(--muted);font-weight:500;padding:6px 12px;border-radius:6px;font-size:15px}
+nav.menu{display:flex;gap:2px;flex-wrap:wrap}
+nav.menu a{text-decoration:none;color:var(--muted);font-weight:500;padding:6px 9px;border-radius:6px;font-size:15px}
 nav.menu a:hover{background:var(--bg);color:var(--ink)}
 .hero{padding-block:56px 40px}
 .eyebrow{font:500 13px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sand)}
