@@ -185,6 +185,8 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
 .imp-msg{margin:12px 0 4px;padding:10px 12px;border-radius:10px;font-size:14px;line-height:1.5;background:#e8f4f2;border:1px solid #b9ddd8}
 .imp-msg.err{background:#fbecea;border-color:#efc4be}
 .imp-msg b{font-weight:600}
+.xl td.off{background:#f4f4f2}
+.sl[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -222,8 +224,8 @@ input.cell{width:60px;font:13px var(--mono);padding:2px 4px;border:1px solid #2f
       <div id="imp-msg" class="imp-msg" hidden></div>
       <h3 class="grp">⚖️ Coefficients</h3>
       <div class="sl"><label for="c1" id="lb1">Dictée</label><input type="range" id="c1" min="0" max="4" step="1"><output id="o-c1"></output></div>
-      <div class="sl"><label for="c2" id="lb2">Rédaction</label><input type="range" id="c2" min="0" max="4" step="1"><output id="o-c2"></output></div>
-      <div class="sl"><label for="c3" id="lb3">Lecture et compréhension</label><input type="range" id="c3" min="0" max="4" step="1"><output id="o-c3"></output></div>
+      <div class="sl" id="sl2"><label for="c2" id="lb2">Rédaction</label><input type="range" id="c2" min="0" max="4" step="1"><output id="o-c2"></output></div>
+      <div class="sl" id="sl3"><label for="c3" id="lb3">Lecture et compréhension</label><input type="range" id="c3" min="0" max="4" step="1"><output id="o-c3"></output></div>
       <h3 class="grp">🎯 Règles</h3>
       <div class="sl"><label for="seuil">Seuil de réussite</label><input type="range" id="seuil" min="8" max="12" step="0.5"><output id="o-seuil"></output></div>
       <div class="sl"><label for="bonus" id="lbb">Points de bonus en dictée (barème revu)</label><input type="range" id="bonus" min="0" max="3" step="0.5"><output id="o-bonus"></output></div>
@@ -271,14 +273,16 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const fr=(v,d=2)=>Number(v).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const PRE=['Yassine','Fatima','Omar','Salma','Hamza','Khadija','Youssef','Imane','Mehdi','Hajar','Anas','Sara','Ayoub','Meryem','Ilyas','Nada','Adam','Zineb','Reda','Asmae','Bilal','Douae','Amine','Rim','Taha','Houda','Ismail','Ikram','Nabil','Aya','Othmane','Chaimae'];
 const NOM=['Alaoui','Bennani','El Idrissi','Ouali','Amrani','Tazi','Bouzid','Chraibi','Haddou','Lahlou','Ait Taleb','Zahraoui','Ennaji','Mansouri','Belkadi','Ouchen','Rami','Sabri','Hilali','Kettani','Moussaoui','Berrada'];
-let E=[],sel={r:1,c:6};
+let E=[],sel={r:1,c:6},NE=3;
 const EV0=['Dictée','Rédaction','Lecture'],EVL0=['Dictée','Rédaction','Lecture et compréhension'];let EV=EV0.slice(),EVL=EVL0.slice(),CLS='Classe de 3<sup>e</sup> année collège · français',CLS_B='Classe de 3<sup>e</sup> année collège · Français · Trimestre 1';
 const LR=()=>E.length+1;
 const r2=v=>Math.round(v*100)/100;
 function gen(){E=[];const used=new Set();for(let i=0;i<30;i++){let n;do n=[NOM[Math.floor(Math.random()*NOM.length)],PRE[Math.floor(Math.random()*PRE.length)]];while(used.has(n.join()));used.add(n.join());
   const lvl=6+Math.random()*11;const note=()=>Math.max(0,Math.min(20,Math.round((lvl+(Math.random()-.5)*6)*4)/4));E.push({nom:n[0],pre:n[1],d:note(),r:note(),l:note()});}
   E.sort((a,b)=>a.nom.localeCompare(b.nom,'fr')||a.pre.localeCompare(b.pre,'fr'));}
-const P=()=>({c1:+$('c1').value,c2:+$('c2').value,c3:+$('c3').value,seuil:+$('seuil').value,bonus:+$('bonus').value});
+const P=()=>({c1:+$('c1').value,c2:NE>1?+$('c2').value:0,c3:NE>2?+$('c3').value:0,seuil:+$('seuil').value,bonus:+$('bonus').value});
+function fMoy(n,p,S){const t=[['D',p.c1],['E',p.c2],['F',p.c3]].slice(0,NE).filter(x=>x[1]>0);if(!t.length)return'=0';
+  if(t.length===1)return `=ARRONDI(${t[0][0]}${n};2)`;return `=ARRONDI((${t.map(([c,k])=>c+n+'*'+k).join('+')})/${S};2)`;}
 function mention(m){return m>=16?'Très bien':m>=14?'Bien':m>=12?'Assez bien':m>=10?'Passable':'Insuffisant';}
 function calc(){const p=P(),S=p.c1+p.c2+p.c3||1;
   E.forEach(e=>{e.dd=Math.min(20,e.d+p.bonus);e.m=r2((e.dd*p.c1+e.r*p.c2+e.l*p.c3)/S);e.men=mention(e.m);e.dec=e.m>=p.seuil?'Admis':'Soutien';});
@@ -286,11 +290,11 @@ function calc(){const p=P(),S=p.c1+p.c2+p.c3||1;
   const ms=E.map(e=>e.m),n=ms.length,moy=ms.reduce((a,b)=>a+b,0)/n,sd=Math.sqrt(ms.reduce((a,b)=>a+(b-moy)**2,0)/(n-1));
   return{p,S,moy,max:Math.max(...ms),min:Math.min(...ms),adm:E.filter(e=>e.dec==='Admis').length,sd,n};}
 let C;
-let COLS;const mkCols=()=>COLS=[['A','N°',(e,i)=>i+1],['B','Nom',e=>e.nom],['C','Prénom',e=>e.pre],['D',EV[0],e=>fr(e.dd),'edit','d'],['E',EV[1],e=>fr(e.r),'edit','r'],['F',EV[2],e=>fr(e.l),'edit','l'],
+let COLS;const mkCols=()=>COLS=[['A','N°',(e,i)=>i+1],['B','Nom',e=>e.nom],['C','Prénom',e=>e.pre],['D',EV[0],e=>fr(e.dd),'edit','d'],['E',NE>1?EV[1]:'',e=>NE>1?fr(e.r):'',NE>1?'edit':'off','r'],['F',NE>2?EV[2]:'',e=>NE>2?fr(e.l):'',NE>2?'edit':'off','l'],
  ['G','Moyenne',e=>fr(e.m),'calc'],['H','Mention',e=>e.men,'calc'],['I','Rang',e=>e.rang,'calc'],['J','Décision',e=>e.dec,'calc']];mkCols();
 function formula(col,n){const p=C.p;switch(col){
   case'D':return[p.bonus?`=MIN(20;note_saisie+${String(p.bonus).replace('.',',')})`:'(note saisie)',p.bonus?'Note de « '+EV[0]+' » + bonus du barème, plafonnée à 20':'Note saisie par l\'enseignant'];
-  case'G':return[`=ARRONDI((D${n}*${p.c1}+E${n}*${p.c2}+F${n}*${p.c3})/${C.S};2)`,'Moyenne pondérée par les coefficients, arrondie à 2 décimales'];
+  case'G':return[fMoy(n,p,C.S),NE===1?'Une seule évaluation : la moyenne est la note, arrondie à 2 décimales':'Moyenne pondérée par les coefficients, arrondie à 2 décimales'];
   case'H':return[`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,'Fonction SI imbriquée : la mention dépend de la moyenne'];
   case'I':return[`=RANG(G${n};$G$2:$G$${LR()})`,'Rang de l\'élève dans la classe ($ : référence absolue, qui ne bouge pas quand on étire la formule)'];
   case'J':return[`=SI(G${n}>=${String(p.seuil).replace('.',',')};"Admis";"Soutien")`,'Décision selon le seuil de réussite'];}
@@ -298,7 +302,7 @@ function formula(col,n){const p=C.p;switch(col){
 function showF(){const col=COLS[sel.c][0],n=sel.r+1;const[f,x]=formula(col,n);$('xl-ref').textContent=col+n;$('xl-fm').textContent=f;$('xl-ex').textContent=x;}
 function table(){let h='<tr><th></th>'+COLS.map(c=>`<th>${c[0]}</th>`).join('')+'</tr><tr><th>1</th>'+COLS.map(c=>`<td class="hd">${c[1]}</td>`).join('')+'</tr>';
   E.forEach((e,i)=>{h+=`<tr class="${e.dec==='Soutien'?'low':''}"><th>${i+2}</th>`+COLS.map((c,j)=>`<td class="${c[3]||''}${sel.r===i+1&&sel.c===j?' sel':''}" data-r="${i+1}" data-c="${j}">${esc(c[2](e,i))}</td>`).join('')+'</tr>';});
-  h+=`<tr class="tot"><th>${LR()+1}</th><td></td><td>Moyenne classe</td><td>${fr(avg('dd'))}</td><td>${fr(avg('r'))}</td><td>${fr(avg('l'))}</td><td>${fr(C.moy)}</td><td></td><td></td><td>${C.adm} admis</td></tr>`;
+  h+=`<tr class="tot"><th>${LR()+1}</th><td></td><td>Moyenne classe</td><td></td><td>${fr(avg('dd'))}</td><td>${NE>1?fr(avg('r')):''}</td><td>${NE>2?fr(avg('l')):''}</td><td>${fr(C.moy)}</td><td></td><td></td><td>${C.adm} admis</td></tr>`;
   $('xl').innerHTML=h;
   $('xl').querySelectorAll('td.calc').forEach(td=>td.onclick=()=>{sel={r:+td.dataset.r,c:+td.dataset.c};table();});
   $('xl').querySelectorAll('td.edit').forEach(td=>td.onclick=()=>{if(td.querySelector('input'))return;sel={r:+td.dataset.r,c:+td.dataset.c};const k=COLS[sel.c][4],e=E[sel.r-1];
@@ -319,12 +323,12 @@ function bulletin(){const i=+$('b-sel').value||0,e=E[i];if(!e)return;const p=C.p
   const app=e.m>=16?'Excellent travail, félicitations.':e.m>=14?'Très bon trimestre, continuez ainsi.':e.m>=12?'Bon travail, des progrès sont encore possibles.':e.m>=10?'Résultats justes : il faut fournir plus d\'efforts.':'Résultats insuffisants : un soutien est proposé.';
   $('bulletin').innerHTML=`<div class="b-head"><div><b>${esc(e.pre)} ${esc(e.nom)}</b><small>${CLS_B}</small></div><div class="b-rang">Rang <b>${e.rang}</b> / ${C.n}</div></div>
   <table class="t"><tr><th>Évaluation</th><th>Coef.</th><th>Note</th><th>Moyenne classe</th></tr>
-  <tr><td>${esc(EV[0])}</td><td>${p.c1}</td><td>${fr(e.dd)}</td><td>${fr(avg('dd'))}</td></tr><tr><td>${esc(EV[1])}</td><td>${p.c2}</td><td>${fr(e.r)}</td><td>${fr(avg('r'))}</td></tr><tr><td>${esc(EV[2])}</td><td>${p.c3}</td><td>${fr(e.l)}</td><td>${fr(avg('l'))}</td></tr>
+  <tr><td>${esc(EV[0])}</td><td>${p.c1}</td><td>${fr(e.dd)}</td><td>${fr(avg('dd'))}</td></tr>${NE>1?`<tr><td>${esc(EV[1])}</td><td>${p.c2}</td><td>${fr(e.r)}</td><td>${fr(avg('r'))}</td></tr>`:''}${NE>2?`<tr><td>${esc(EV[2])}</td><td>${p.c3}</td><td>${fr(e.l)}</td><td>${fr(avg('l'))}</td></tr>`:''}
   <tr><td><b>Moyenne</b></td><td>${C.S}</td><td><b>${fr(e.m)}</b></td><td>${fr(C.moy)}</td></tr></table>
   <p><b>Mention :</b> ${e.men} · <b>Décision :</b> ${e.dec}</p><p><b>Appréciation :</b> ${app}</p>
   <p class="mono" style="font-size:12.5px;color:var(--muted)">Dans Excel : =RECHERCHEV(${i+1};A2:J${LR()};7;FAUX) renvoie la moyenne de l'élève n° ${i+1} (colonne G). On cherche par le numéro, qui est unique, et non par le nom.</p>`;}
 function selList(){const v=$('b-sel').value;$('b-sel').innerHTML=E.map((e,i)=>`<option value="${i}">${esc(e.nom)} ${esc(e.pre)}</option>`).join('');if(v)$('b-sel').value=v;}
-function labels(){mkCols();$('lb1').textContent=EVL[0];$('lb2').textContent=EVL[1];$('lb3').textContent=EVL[2];$('lbb').textContent='Points de bonus en « '+EV[0]+' » (barème revu)';$('cls-sub').innerHTML=CLS;$('nb-el').textContent=E.length;}
+function labels(){mkCols();$('lb1').textContent=EVL[0];$('lb2').textContent=EVL[1];$('lb3').textContent=EVL[2];$('sl2').hidden=NE<2;$('sl3').hidden=NE<3;$('lbb').textContent='Points de bonus en « '+EV[0]+' » (barème revu)';$('cls-sub').innerHTML=CLS;$('nb-el').textContent=E.length;}
 function all(){const p=P();labels();$('o-c1').textContent='× '+p.c1;$('o-c2').textContent='× '+p.c2;$('o-c3').textContent='× '+p.c3;$('o-seuil').textContent=fr(p.seuil,1)+' / 20';$('o-bonus').textContent='+ '+fr(p.bonus,1);
   C=calc();kpis();chart();table();selList();bulletin();}
 /* ---------- Exercices ---------- */
@@ -333,7 +337,7 @@ function newQ(){const i=Math.floor(Math.random()*E.length),e=E[i],n=i+2,k=Math.f
   if(k===0)Q={tag:'Moyenne pondérée',txt:`Quelle est la moyenne de ${e.pre} ${e.nom} (ligne ${n}) ?`,num:e.m,f:formula('G',n)[0]};
   else if(k===1)Q={tag:'Rang',txt:`Quel est le rang de ${e.pre} ${e.nom} dans la classe ?`,num:e.rang,f:`=RANG(G${n};$G$2:$G$${LR()})`};
   else if(k===2)Q={tag:'NB.SI',txt:`Combien d'élèves ont une moyenne d'au moins 12 ?`,num:E.filter(x=>x.m>=12).length,f:`=NB.SI(G2:G${LR()};">=12")`};
-  else if(k===3)Q={tag:'MOYENNE',txt:`Quelle est la moyenne de la classe en « ${EV[1]} » ?`,num:r2(avg('r')),f:`=MOYENNE(E2:E${LR()})`};
+  else if(k===3){const j=NE>1?1:0,k=['dd','r'][j],c=['D','E'][j];Q={tag:'MOYENNE',txt:`Quelle est la moyenne de la classe en « ${EV[j]} » ?`,num:r2(avg(k)),f:`=MOYENNE(${c}2:${c}${LR()})`};}
   else{const L=LR();const ch=[[`=SI(G${n}>=10;"Admis";"Soutien")`,'Afficher « Admis » ou « Soutien » selon la moyenne',[`=SI(G${n}>10;Admis;Soutien)`,`=SOMME(G${n};"Admis")`]],
     [`=RANG(G2;$G$2:$G$${L})`,'Calculer le rang d\'un élève, formule à étirer vers le bas',[`=RANG(G2;G2:G${L})`,`=MAX(G2:G${L})`]],
     [`=NB.SI(H2:H${L};"Très bien")`,'Compter les mentions « Très bien »',[`=SOMME(H2:H${L};"Très bien")`,`=NB(H2:H${L})`]],
@@ -353,7 +357,7 @@ $('q-chk').onclick=()=>{if(!Q)return;let good;
 /* ---------- Export ---------- */
 $('csv').onclick=()=>{const p=P(),S=p.c1+p.c2+p.c3||1;const head=['N°','Nom','Prénom',...EV,'Moyenne','Mention','Rang','Décision'];
   const num=v=>String(v).replace('.',',');
-  const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.nom,e.pre,num(e.dd),num(e.r),num(e.l),`=ARRONDI((D${n}*${p.c1}+E${n}*${p.c2}+F${n}*${p.c3})/${S};2)`,`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,`=RANG(G${n};$G$2:$G$${LR()})`,`=SI(G${n}>=${num(p.seuil)};"Admis";"Soutien")`].join(';');});
+  const rows=E.map((e,i)=>{const n=i+2;return[i+1,e.nom,e.pre,num(e.dd),NE>1?num(e.r):'',NE>2?num(e.l):'',fMoy(n,p,S),`=SI(G${n}>=16;"Très bien";SI(G${n}>=14;"Bien";SI(G${n}>=12;"Assez bien";SI(G${n}>=10;"Passable";"Insuffisant"))))`,`=RANG(G${n};$G$2:$G$${LR()})`,`=SI(G${n}>=${num(p.seuil)};"Admis";"Soutien")`].join(';');});
   const blob=new Blob(['﻿'+[head.join(';'),...rows].join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='classe-numerique-notes.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
 /* ---------- Import des notes de l'enseignant ---------- */
 const norm=t=>String(t??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
@@ -389,11 +393,11 @@ function importRows(rows,fname){
     L.push({nom,pre,d:v[0]??0,r:v[1]??0,l:v[2]??0});});
   if(!L.length)throw new Error('Aucun élève n\'a été trouvé dans le fichier.');
   if(L.length>300)throw new Error('Le fichier contient plus de 300 lignes : importez une seule classe à la fois.');
-  E=L;EV=[0,1,2].map(k=>lab[k]||'(non utilisée)');EVL=EV.slice();
+  E=L;NE=use.length;EV=[0,1,2].map(k=>lab[k]||'');EVL=EV.slice();
   $('c1').value=use.length>0?1:0;$('c2').value=use.length>1?1:0;$('c3').value=use.length>2?1:0;$('bonus').value=0;$('seuil').value=10;
   const nm=fname.replace(/\.[^.]+$/,'');CLS='Classe importée · '+esc(nm);CLS_B='Classe importée · '+esc(nm);
   sel={r:1,c:6};all();newQ();
-  let t=`✔ <b>${L.length} élèves</b> importés depuis « ${esc(fname)} », ${use.length} évaluation${use.length>1?'s':''} : <b>${lab.map(esc).join('</b>, <b>')}</b>. Coefficients réglés à 1 : ajustez-les si besoin.`;
+  let t=`✔ <b>${L.length} élèves</b> importés depuis « ${esc(fname)} », ${use.length} évaluation${use.length>1?'s':''} : <b>${lab.map(esc).join('</b>, <b>')}</b>. ${use.length>1?'Coefficients réglés à 1 : ajustez-les si besoin.':'Avec une seule note, la moyenne de chaque élève est cette note.'}`;
   if(cand.length>3)t+=`<br>Seules les 3 premières colonnes de notes ont été prises en compte.`;
   if(miss)t+=`<br>⚠ ${miss} note${miss>1?'s':''} manquante${miss>1?'s':''} ou non numérique${miss>1?'s':''} (absence…) remplacée${miss>1?'s':''} par 0 : cliquez dessus dans le tableau pour la corriger.`;
   if(clip)t+=`<br>⚠ ${clip} note${clip>1?'s':''} hors de l'intervalle 0–20 ramenée${clip>1?'s':''} entre 0 et 20.`;
@@ -409,7 +413,7 @@ $('tpl').onclick=()=>{const rows=[['N°','Nom','Prénom','Contrôle 1','Contrôl
   const blob=new Blob(['﻿'+rows.map(r=>r.join(';')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='modele-notes-classe.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
 /* ---------- Démarrage ---------- */
 function defaults(){$('c1').value=1;$('c2').value=2;$('c3').value=1;$('seuil').value=10;$('bonus').value=0;}
-$('newc').onclick=()=>{EV=EV0.slice();EVL=EVL0.slice();CLS='Classe de 3<sup>e</sup> année collège · français';CLS_B='Classe de 3<sup>e</sup> année collège · Français · Trimestre 1';$('imp-msg').hidden=true;defaults();gen();all();newQ();};
+$('newc').onclick=()=>{NE=3;EV=EV0.slice();EVL=EVL0.slice();CLS='Classe de 3<sup>e</sup> année collège · français';CLS_B='Classe de 3<sup>e</sup> année collège · Français · Trimestre 1';$('imp-msg').hidden=true;defaults();gen();all();newQ();};
 ['c1','c2','c3','seuil','bonus'].forEach(id=>$(id).addEventListener('input',all));
 $('b-sel').onchange=bulletin;
 defaults();gen();all();newQ();
