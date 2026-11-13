@@ -17,6 +17,7 @@ const RUBRIQUES = ["Cours", "Diapositives", "Travaux pratiques corrigés", "Étu
 /* Les annonces : la plus récente en premier.
    lien (facultatif) : page ouverte quand on clique sur l'annonce. */
 const ANNONCES = [
+  { jour:"13", mois:"nov", lien:"module.html?m=c", titre:"Programmation C 1 : diaporamas", texte:"Les diaporamas du cours pour la Licence Digitalisation (S1) et la Licence d'Excellence IAG (S5) sont en ligne." },
   { jour:"12", mois:"nov", lien:"audit.html", titre:"Nouveau : Audit SI Lab", texte:"Mission d'audit des systèmes d'information simulée, avec contrôles par formules Excel, pour le Master ACBI (S9)." },
   { jour:"12", mois:"nov", lien:"tourisme.html", titre:"Nouveau : Riad digital", texte:"Simulateur de gestion touristique pour le module Culture digitale et tourisme (rubrique Logiciels)." },
   { jour:"12", mois:"nov", lien:"module.html?m=ii", titre:"Manuels des appareils", texte:"Les manuels du générateur SEFRAM 4463 et de l'oscilloscope SEFRAM 5062DC (salle B2) sont en ligne." },
@@ -60,6 +61,13 @@ const DOCUMENTS = [
    titre:"Informatique pour l'enseignement du français – diaporama", pages:70, fichier:"documents/info-francais-diaporama-2.pdf",
    desc:"Deuxième version du support : les six chapitres du module, de l'ordinateur à la recherche d'information." },
 
+ { rubrique:"Diapositives", niveau:"Licence", mid:"c", module:"Programmation en langage C", formation:"Licence Digitalisation – tronc commun Informatique appliquée (S1)",
+   titre:"Programmation C 1 – diaporama du cours (Licence Digitalisation, S1)", pages:119, fichier:"documents/programmation-c1-diaporama-licence-digitalisation-s1.pdf",
+   desc:"Les dix chapitres du cours, de l'architecture de l'ordinateur et de la numération aux fonctions. Année universitaire 2024-2025." },
+ { rubrique:"Diapositives", niveau:"Licence", mid:"c", module:"Programmation en langage C", formation:"Licence d'Excellence Informatique appliquée à la gestion (S5) – Faculté polydisciplinaire d'Errachidia",
+   titre:"Programmation C 1 – diaporama du cours (Licence d'Excellence IAG, S5)", pages:65, fichier:"documents/programmation-c1-diaporama-licence-excellence-iag-s5.pdf",
+   desc:"Sept parties : introduction au langage C, concepts de base, structures de contrôle, tableaux, chaînes de caractères, pointeurs et fonctions." },
+
  // ---------- Travaux pratiques corrigés ----------
  { rubrique:"Travaux pratiques corrigés", niveau:"Licence", mid:"c", module:"Programmation C1", formation:"Licence Digitalisation – tronc commun Informatique appliquée",
    titre:"Travaux pratiques avec correction", pages:39, fichier:"documents/langage-c-tp-corriges.pdf",
@@ -86,7 +94,7 @@ const DOCUMENTS = [
 /* Les modules : une page par module (module.html?m=identifiant).
    - id : identifiant court, repris dans le champ mid des documents */
 const MODULES = [
- { id:"c", titre:"Programmation en langage C", niveau:"Licence", formation:"Licence Digitalisation – tronc commun Informatique appliquée (S1-S2)",
+ { id:"c", titre:"Programmation en langage C", niveau:"Licence", formation:"Licence Digitalisation – tronc commun Informatique appliquée (S1-S2) · Licence d'Excellence Informatique appliquée à la gestion (S5)",
    intro:"Ce module apprend à analyser un problème, à concevoir un algorithme et à le traduire en programme C correct et lisible.",
    objectifs:["Comprendre l'architecture d'un ordinateur et la représentation des données (binaire, hexadécimal, IEEE 754, ASCII)","Écrire, compiler et exécuter un programme C","Utiliser variables, types, opérateurs et conversions","Lire et afficher des données avec scanf et printf","Construire des programmes avec les structures de contrôle"],
    prerequis:"Aucun, en dehors de l'usage courant d'un ordinateur.",
