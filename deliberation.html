@@ -315,7 +315,7 @@ table.xl tr.chk td{background:color-mix(in srgb,#e05a4f 7%,transparent)}
     <p class="sub">Elles figurent sur le procès-verbal de délibération, avec le logo de votre établissement.</p>
     <div class="row btns" style="align-items:center;margin-bottom:14px"><img id="logo-prev" src="images/logo-faculte.svg" alt="Logo" style="height:56px;border:1px solid var(--line);border-radius:8px;padding:4px;background:#fff"><button class="btn" id="logo-btn" type="button">🖼 Importer le logo de la faculté</button><button class="btn ghost" id="logo-reset" type="button">Logo par défaut</button><input type="file" id="logo-file" accept="image/*" hidden><span style="font-size:13.5px;color:var(--muted)">PNG ou JPG ; le logo reste enregistré dans ce navigateur.</span></div>
     <div class="info">
-      <label>Établissement<input id="i-etab" value="Faculté des Sciences d'Errachidia"></label>
+      <label hidden>Établissement<input id="i-etab" value=""></label>
       <label>Filière<input id="i-fil" value="Licence Digitalisation"></label>
       <label>Module<input id="i-mod" value="Programmation C 1"></label>
       <label>Semestre<input id="i-sem" value="S1"></label>
@@ -421,7 +421,7 @@ function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.heigh
 function rules(){const p=C.p;$('rules').innerHTML=`<b>Règles appliquées (session normale) :</b> note finale = CC × ${fr(p.w*100,0)} % + écrit × ${fr(100-p.w*100,0)} % ; « Validé » si la note finale est au moins égale à ${fr(p.seuil,1)}${p.elim?` et l'écrit au moins égal à ${fr(p.elim,1)} (note éliminatoire)`:''}, sinon « Rattrapage ». Une absence non justifiée à l'écrit (ABS) donne « Non validé », sans rattrapage ; une absence justifiée (ABSJ) donne droit au rattrapage.`;}
 let LOGO='images/logo-faculte.svg';try{const L0=localStorage.getItem('delib-logo');if(L0)LOGO=L0;}catch(e){}
 function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rattrapage';
-  const lh=`<div class="lh"><img src="${LOGO}" alt="Logo"><div class="r"><b>Université Moulay Ismail</b><br>${g('i-etab')}<br>Année universitaire ${g('i-au')}</div></div>`;
+  const lh=`<div class="lh"><img src="${LOGO}" alt="Logo"><div class="r">Année universitaire ${g('i-au')}</div></div>`;
   const N=v=>v,sp=v=>v?esc(v):'';
   const syn=(S==='N'?[["Nombre d'étudiants inscrits au module",C.n],["Nombre d'étudiants ayant validé le module",C.vsn],["Nombre d'étudiants ayant droit à une session de rattrapage",C.ratt],["Nombre d'étudiants absents",C.abs+C.absj,C.abs+C.absj?`${C.abs} non justifiée${C.abs>1?'s':''}, ${C.absj} justifiée${C.absj>1?'s':''}`:'']]
     :[["Nombre d'étudiants convoqués à la session de rattrapage",C.ratt],["Nombre d'étudiants ayant validé le module après rattrapage",C.var],["Nombre d'étudiants n'ayant pas validé le module",C.nv],["Nombre d'étudiants absents au rattrapage",E.filter(e=>e.rs==='R'&&e.ra==null).length]])
@@ -451,7 +451,7 @@ function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rat
    <div class="pv2-sum">${sum}</div>
    <p class="legend-pv">ABS : absence non justifiée à l'examen (module non validé) · ABSJ : absence justifiée (droit au rattrapage)</p>
    <div class="pv-sign"><div>Les intervenants au module</div><div>Le coordonnateur du module</div></div></section>`;
-  $('pv').innerHTML=`<div class="lh" id="runlh"><img src="${LOGO}" alt="Logo"><div class="r"><b>Université Moulay Ismail</b><br>${g('i-etab')}<br>Année universitaire ${g('i-au')}</div></div><table class="pgw"><thead><tr><td></td></tr></thead><tbody><tr><td>${cover}${notes}</td></tr></tbody></table>`;}
+  $('pv').innerHTML=`<div class="lh" id="runlh"><img src="${LOGO}" alt="Logo"><div class="r">Année universitaire ${g('i-au')}</div></div><table class="pgw"><thead><tr><td></td></tr></thead><tbody><tr><td>${cover}${notes}</td></tr></tbody></table>`;}
 function errs(){const L=[];E.forEach((e,i)=>{if(e.err)for(const k of Object.keys(e.err))L.push({i,k,v:e.err[k],e});});
   const box=$('errbox'),pe=$('pv-err');if(!L.length){box.hidden=true;pe.hidden=true;$('taux').classList.remove('warn');return;}
   const lab={cc:'Note CC',ex:'Note Écrit'},col={cc:4,ex:5};
