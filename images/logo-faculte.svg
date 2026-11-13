@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="140" viewBox="0 0 360 140">
+  <rect x="4" y="4" width="352" height="132" rx="14" fill="#f4f6fa" stroke="#9aa6bd" stroke-width="3" stroke-dasharray="12 8"/>
+  <g fill="none" stroke="#7d8aa3" stroke-width="4" stroke-linejoin="round">
+    <path d="M40 60 L80 40 L120 60 Z"/>
+    <path d="M48 64v34M64 64v34M96 64v34M112 64v34M40 102h80"/>
+  </g>
+  <text x="140" y="74" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700" fill="#44506a" letter-spacing="2">LOGO</text>
+  <text x="141" y="106" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#6b7790">Faculté</text>
+</svg>

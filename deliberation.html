@@ -313,7 +313,7 @@ table.xl tr.chk td{background:color-mix(in srgb,#e05a4f 7%,transparent)}
   <section class="tool on" style="margin-top:22px">
     <h2>Informations du module</h2>
     <p class="sub">Elles figurent sur le procès-verbal de délibération, avec le logo de votre établissement.</p>
-    <div class="row btns" style="align-items:center;margin-bottom:14px"><img id="logo-prev" src="images/logo-fs-errachidia.png" alt="Logo" style="height:56px;border:1px solid var(--line);border-radius:8px;padding:4px;background:#fff"><button class="btn" id="logo-btn" type="button">🖼 Importer le logo de la faculté</button><button class="btn ghost" id="logo-reset" type="button">Logo par défaut</button><input type="file" id="logo-file" accept="image/*" hidden><span style="font-size:13.5px;color:var(--muted)">PNG ou JPG ; le logo reste enregistré dans ce navigateur.</span></div>
+    <div class="row btns" style="align-items:center;margin-bottom:14px"><img id="logo-prev" src="images/logo-faculte.svg" alt="Logo" style="height:56px;border:1px solid var(--line);border-radius:8px;padding:4px;background:#fff"><button class="btn" id="logo-btn" type="button">🖼 Importer le logo de la faculté</button><button class="btn ghost" id="logo-reset" type="button">Logo par défaut</button><input type="file" id="logo-file" accept="image/*" hidden><span style="font-size:13.5px;color:var(--muted)">PNG ou JPG ; le logo reste enregistré dans ce navigateur.</span></div>
     <div class="info">
       <label>Établissement<input id="i-etab" value="Faculté des Sciences d'Errachidia"></label>
       <label>Filière<input id="i-fil" value="Licence Digitalisation"></label>
@@ -419,7 +419,7 @@ function chart(){const cv=$('chart'),c=cv.getContext('2d'),W=cv.width,H=cv.heigh
   for(let i=0;i<=4;i++){const y=pad.t+(H-pad.t-pad.b)*i/4;c.strokeStyle=line;c.beginPath();c.moveTo(pad.l,y);c.lineTo(W-pad.r,y);c.stroke();c.fillStyle=ink;c.fillText(Math.round(mx*(1-i/4)),8,y+4);}
   cnt.forEach((v,i)=>{const h=(H-pad.t-pad.b)*v/mx,x=pad.l+i*bw;c.fillStyle=T[i][1]<=C.p.seuil?'#c98a4b':'#2f8f87';c.fillRect(x+bw*.15,H-pad.b-h,bw*.7,h);c.fillStyle=ink;c.fillText(lab[i],x+bw*.28,H-12);if(v)c.fillText(v,x+bw*.46,H-pad.b-h-5);});}
 function rules(){const p=C.p;$('rules').innerHTML=`<b>Règles appliquées (session normale) :</b> note finale = CC × ${fr(p.w*100,0)} % + écrit × ${fr(100-p.w*100,0)} % ; « Validé » si la note finale est au moins égale à ${fr(p.seuil,1)}${p.elim?` et l'écrit au moins égal à ${fr(p.elim,1)} (note éliminatoire)`:''}, sinon « Rattrapage ». Une absence non justifiée à l'écrit (ABS) donne « Non validé », sans rattrapage ; une absence justifiée (ABSJ) donne droit au rattrapage.`;}
-let LOGO='images/logo-fs-errachidia.png';try{const L0=localStorage.getItem('delib-logo');if(L0)LOGO=L0;}catch(e){}
+let LOGO='images/logo-faculte.svg';try{const L0=localStorage.getItem('delib-logo');if(L0)LOGO=L0;}catch(e){}
 function pv(){const p=C.p,g=id=>esc($(id).value),S='N',SN=S==='N'?'Normale':'Rattrapage';
   const lh=`<div class="lh"><img src="${LOGO}" alt="Logo"><div class="r"><b>Université Moulay Ismail</b><br>${g('i-etab')}<br>Année universitaire ${g('i-au')}</div></div>`;
   const N=v=>v,sp=v=>v?esc(v):'';
@@ -475,7 +475,7 @@ function setLogo(src,save){LOGO=src;$('logo-prev').src=src;try{save?localStorage
 $('logo-btn').onclick=()=>$('logo-file').click();
 $('logo-file').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(!f)return;if(!/^image\//.test(f.type)){alert('Choisissez une image (PNG ou JPG).');return;}
   const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,600/im.width,300/im.height);const cv=document.createElement('canvas');cv.width=Math.round(im.width*k);cv.height=Math.round(im.height*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);setLogo(cv.toDataURL('image/png'),true);};im.src=rd.result;};rd.readAsDataURL(f);};
-$('logo-reset').onclick=()=>setLogo('images/logo-fs-errachidia.png',false);
+$('logo-reset').onclick=()=>setLogo('images/logo-faculte.svg',false);
 /* ---------- Import ---------- */
 const norm=t=>String(t??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
 const parseNote=v=>{if(typeof v==='number')return v;const t=String(v??'').trim().replace(/\s/g,'').replace(',','.');if(t==='')return null;const u=t.toLowerCase().replace(/[.()_-]/g,'');if(/^(absj|aj|absjustifiee|absencejustifiee|absentjustifie)$/.test(u))return'ABSJ';if(/^(abs|absent|a|absence)$/.test(u))return'ABS';const x=Number(t);return isNaN(x)?NaN:x;};
