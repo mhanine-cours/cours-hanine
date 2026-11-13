@@ -24,7 +24,7 @@
 .screen .big{font:600 34px var(--mono);color:#fff;margin:2px 0 10px;letter-spacing:.02em}
 .screen .cur{display:inline-block;width:10px;height:1.1em;background:#3fb6ad;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
-.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px}
+.picker{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:0 0 20px}
 .picker button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px 14px 13px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s}
 .picker button:hover{transform:translateY(-2px);border-color:var(--accent)}
 .picker .ic{font:600 14px var(--mono);width:44px;height:34px;display:grid;place-items:center;border-radius:8px;background:var(--sand-soft);color:var(--sand)}
@@ -90,9 +90,10 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 .fb-ok{animation:pop .35s}@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:none}}
 .foot-note{margin:26px 0 0;font-size:14px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
 .foot-note b{color:var(--ink)}
-@media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.picker button:last-child{grid-column:span 2}.split{grid-template-columns:1fr}.tool{padding:18px}}
+@media (max-width:900px){.nx-hero{grid-template-columns:1fr}.picker{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.tool{padding:18px}}
 @media (max-width:480px){.picker .dd{display:none}.row input,.row select,.row input.wide{min-width:0;width:100%}.row label{flex:1 1 100%}.exo .q{font-size:20px}}
 .byline{font-size:14px;color:var(--muted);margin:14px 0 0}.byline b{color:var(--ink)}
+#cd-out .res4{grid-template-columns:1fr 1fr}#cd-out .res4 b{word-break:normal;font-size:17px}
 </style>
 </head>
 <body>
@@ -111,7 +112,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
       <div class="eyebrow">Logiciel didactique · Programmation C 1</div>
       <h1>NumériLab : le laboratoire de la numération</h1>
       <p class="lead">Convertissez, observez chaque étape du calcul, puis entraînez-vous avec des exercices générés automatiquement et corrigés. NumériLab accompagne le chapitre 0 du cours (architecture et numération) et le TP 1.</p>
-      <div class="chips"><span><b>5</b> outils interactifs</span><span><b>pas à pas</b> détaillé</span><span><b>∞</b> exercices corrigés</span><span>gratuit · sans inscription</span></div>
+      <div class="chips"><span><b>6</b> outils interactifs</span><span><b>pas à pas</b> détaillé</span><span><b>∞</b> exercices corrigés</span><span>gratuit · sans inscription</span></div>
       <p class="byline">Conçu et développé par <b>Pr Mounir HANINE</b> · Faculté des Sciences Errachidia · Université Moulay Ismail</p>
     </div>
     <div class="screen" aria-hidden="true">
@@ -129,6 +130,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
     <button role="tab" data-t="conv" aria-selected="true"><span class="ic">2⇄16</span><span class="tt">Changement de base</span><span class="dd">Divisions successives, puissances, groupes de bits</span></button>
     <button role="tab" data-t="c2" aria-selected="false"><span class="ic">−x</span><span class="tt">Complément à 2</span><span class="dd">Entiers signés sur 8 ou 16 bits</span></button>
     <button role="tab" data-t="ieee" aria-selected="false"><span class="ic">1.f</span><span class="tt">Réels IEEE 754</span><span class="dd">Signe, exposant, mantisse d'un float</span></button>
+    <button role="tab" data-t="codes" aria-selected="false"><span class="ic">BCD</span><span class="tt">Codes binaires</span><span class="dd">BCD, Excess-3, Aiken 2421, Gray</span></button>
     <button role="tab" data-t="ascii" aria-selected="false"><span class="ic">A=65</span><span class="tt">Caractères ASCII</span><span class="dd">Codes des caractères d'un texte</span></button>
     <button role="tab" data-t="exo" aria-selected="false"><span class="ic">✓</span><span class="tt">Exercices corrigés</span><span class="dd">Entraînement avec score et correction</span></button>
   </div>
@@ -172,6 +174,24 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
     <div id="ie-out"></div>
   </section>
 
+  <!-- 4 bis. Codes binaires -->
+  <section class="tool" id="codes">
+    <h2>Codes binaires : BCD, Excess-3, Aiken et Gray</h2><p class="sub">Ces codes ne servent pas à calculer mais à <b>représenter</b> l'information : afficheurs 7 segments, compteurs, codeurs de position…</p>
+    <div class="split">
+      <div><h3>Coder un nombre décimal</h3>
+        <div class="console"><div class="row"><label>Nombre décimal<input id="cd-val" value="47" autocomplete="off" inputmode="numeric"></label></div>
+          <div class="ex">Exemples : <button data-cd="9">9</button><button data-cd="47">47</button><button data-cd="2025">2025</button><button data-cd="1590">1590</button></div></div>
+        <div id="cd-out"></div></div>
+      <div><h3>Décoder un mot binaire</h3>
+        <div class="console"><div class="row"><label>Mot binaire<input id="dc-bin" class="wide" value="0100 0111" autocomplete="off"></label>
+          <label>Code<select id="dc-code"><option value="bcd">BCD 8421</option><option value="xs3">Excess-3</option><option value="aik">Aiken 2421</option><option value="gray">Gray</option></select></label></div>
+          <div class="ex">Exemples : <button data-dc="0100 0111" data-k="bcd">0100 0111 (BCD)</button><button data-dc="0111 1010" data-k="xs3">0111 1010 (XS-3)</button><button data-dc="1101" data-k="gray">1101 (Gray)</button><button data-dc="1010" data-k="bcd">1010 (BCD ?)</button></div></div>
+        <div id="dc-out"></div></div>
+    </div>
+    <div id="cd-gray"></div>
+    <div class="steps" style="margin-top:16px"><h3>Table des codes pour les chiffres 0 à 9</h3><div id="cd-table"></div></div>
+  </section>
+
   <!-- 4. ASCII -->
   <section class="tool" id="ascii">
     <h2>Caractères ASCII</h2><p class="sub">En C, un caractère est un petit entier : <span class="mono">'A' == 65</span>.</p>
@@ -194,6 +214,7 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
           <option value="d2b">Décimal → binaire</option><option value="b2d">Binaire → décimal</option>
           <option value="d2h">Décimal → hexadécimal</option><option value="h2d">Hexadécimal → décimal</option>
           <option value="b2h">Binaire → hexadécimal</option><option value="c2">Complément à 2 sur 8 bits</option>
+          <option value="d2bcd">Décimal → BCD</option><option value="bcd2d">BCD → décimal</option><option value="d2xs3">Décimal → Excess-3</option><option value="b2g">Binaire → Gray</option><option value="g2b">Gray → binaire</option>
           <option value="mix">Au hasard</option></select></label>
         <button class="btn ghost" id="ex-new" type="button">↻ Nouvel exercice</button>
       </div>
@@ -306,6 +327,53 @@ function ieee(){
   $('ie-out').innerHTML=h+'</div>';}
 $('ie-val').addEventListener('input',ieee);ieee();
 
+/* ---------- 4 bis. Codes binaires ---------- */
+const nib=d=>pad(d.toString(2),4);
+const AIK=['0000','0001','0010','0011','0100','1011','1100','1101','1110','1111'];
+const CODE={bcd:{n:'BCD 8421',f:d=>nib(d)},xs3:{n:'Excess-3',f:d=>nib(d+3)},aik:{n:'Aiken 2421',f:d=>AIK[d]}};
+const toGray=n=>n^(n>>1);
+function grayHtml(n){const b=n.toString(2),g=toGray(n).toString(2).padStart(b.length,'0');
+  const xs=b.split('').map((x,i)=>i===0?`<td>${x}</td>`:`<td>${b[i-1]} ⊕ ${x} = ${(+b[i-1])^(+x)}</td>`).join('');
+  return `<h3>Code Gray (binaire réfléchi) de ${n}</h3><p>Binaire : <span class="mono">${b}</span>. Le 1<sup>er</sup> bit est recopié, puis chaque bit de Gray est le <b>OU exclusif</b> (⊕) de deux bits binaires voisins :</p>
+  <table class="t"><tr>${b.split('').map((_,i)=>`<th>g${b.length-1-i}</th>`).join('')}</tr><tr>${xs}</tr></table>
+  <p>Gray = <b class="mono">${g}</b>. Entre deux nombres consécutifs, un seul bit change : c'est pourquoi on l'utilise dans les codeurs de position et les tableaux de Karnaugh.</p>`;}
+function codes(){
+  const s=$('cd-val').value.trim();
+  if(!s){$('cd-out').innerHTML='';$('cd-gray').innerHTML='';return;}
+  if(!/^\d{1,8}$/.test(s)){$('cd-out').innerHTML='<p class="err">Saisissez un entier décimal positif (8 chiffres au maximum).</p>';$('cd-gray').innerHTML='';return;}
+  const dg=s.split('').map(Number),n=+s;
+  const row=k=>`<tr><th>${CODE[k].n}</th>${dg.map(d=>`<td>${CODE[k].f(d)}</td>`).join('')}</tr>`;
+  const bcd=dg.map(d=>nib(d)).join(' '),bin=n.toString(2);
+  $('cd-out').innerHTML=`<div class="res4"><div><small>BCD 8421</small><b>${bcd}</b></div><div><small>Excess-3</small><b>${dg.map(d=>nib(d+3)).join(' ')}</b></div><div><small>Aiken 2421</small><b>${dg.map(d=>AIK[d]).join(' ')}</b></div><div><small>Binaire naturel</small><b>${grp(bin)}</b></div></div>
+  <div class="steps"><h3>Méthode : chaque chiffre décimal est codé séparément sur 4 bits</h3>
+  <table class="t"><tr><th>Chiffre</th>${dg.map(d=>`<th>${d}</th>`).join('')}</tr>${row('bcd')}${row('xs3')}${row('aik')}</table>
+  <ul><li><b>BCD 8421</b> : chaque chiffre en binaire pur sur 4 bits (poids 8, 4, 2, 1). Les mots 1010 à 1111 sont interdits.</li>
+  <li><b>Excess-3</b> : on code le chiffre <b>+ 3</b> en binaire. Le complément à 9 s'obtient en inversant les bits (utile pour les soustractions).</li>
+  <li><b>Aiken 2421</b> : poids 2, 4, 2, 1 ; code lui aussi auto-complémentaire.</li></ul>
+  <p>Comparaison : en BCD, ${n} occupe ${dg.length*4} bits ; en binaire naturel, ${bin.length} bit${bin.length>1?'s':''} suffisent. Le BCD est moins compact, mais très simple à afficher (afficheurs 7 segments, calculatrices, horloges).</p></div>`;
+  $('cd-gray').innerHTML=n<=65535?`<div class="steps" style="margin-top:16px">${grayHtml(n)}</div>`:'';}
+function decode(){
+  const k=$('dc-code').value,s=$('dc-bin').value.replace(/\s/g,'');
+  if(!s){$('dc-out').innerHTML='';return;}
+  if(!/^[01]+$/.test(s)){$('dc-out').innerHTML='<p class="err">Le mot ne doit contenir que des 0 et des 1.</p>';return;}
+  if(k==='gray'){if(s.length>16){$('dc-out').innerHTML='<p class="err">16 bits au maximum.</p>';return;}
+    let b=s[0],rows=`<tr><td>b${s.length-1} = g${s.length-1}</td><td>${s[0]}</td></tr>`;
+    for(let i=1;i<s.length;i++){const v=(+b[i-1])^(+s[i]);rows+=`<tr><td>b${s.length-1-i} = b${s.length-i} ⊕ g${s.length-1-i} = ${b[i-1]} ⊕ ${s[i]}</td><td>${v}</td></tr>`;b+=v;}
+    $('dc-out').innerHTML=`<div class="steps"><h3>Gray → binaire</h3><p>On recopie le 1<sup>er</sup> bit, puis chaque bit binaire est le ⊕ du bit binaire précédent et du bit de Gray :</p><table class="t"><tr><th>Calcul</th><th>Bit</th></tr>${rows}</table><p>Binaire : <b class="mono">${b}</b> = <b>${parseInt(b,2)}</b> en décimal.</p></div>`;return;}
+  if(s.length%4){$('dc-out').innerHTML=`<p class="err">En ${CODE[k].n}, le mot doit compter un multiple de 4 bits (ici ${s.length}).</p>`;return;}
+  const g=s.match(/.{4}/g),tab=[0,1,2,3,4,5,6,7,8,9].map(d=>CODE[k].f(d));
+  const ds=g.map(x=>tab.indexOf(x));
+  const bad=g.filter((x,i)=>ds[i]<0);
+  $('dc-out').innerHTML=`<div class="steps"><h3>Décodage ${CODE[k].n} : groupes de 4 bits</h3>
+  <table class="t"><tr>${g.map(x=>`<td>${x}</td>`).join('')}</tr><tr>${ds.map(d=>`<th>${d<0?'✘':d}</th>`).join('')}</tr></table>
+  ${bad.length?`<p class="err">${bad.join(', ')} : ${bad.length>1?'ces mots n\'existent pas':'ce mot n\'existe pas'} en ${CODE[k].n} (code interdit). Le mot n'est pas valide.</p>`:`<p>Nombre décimal : <b class="mono">${ds.join('')}</b>.</p>`}</div>`;}
+function codeTable(){const r=[0,1,2,3,4,5,6,7,8,9].map(d=>`<tr><th>${d}</th><td>${nib(d)}</td><td>${nib(d+3)}</td><td>${AIK[d]}</td><td>${pad(toGray(d).toString(2),4)}</td></tr>`).join('');
+  $('cd-table').innerHTML=`<table class="t"><tr><th>Décimal</th><th>BCD 8421</th><th>Excess-3</th><th>Aiken 2421</th><th>Gray</th></tr>${r}</table>`;}
+$('cd-val').addEventListener('input',codes);['dc-bin','dc-code'].forEach(i=>$(i).addEventListener('input',decode));
+document.querySelectorAll('[data-cd]').forEach(b=>b.onclick=()=>{$('cd-val').value=b.dataset.cd;codes();});
+document.querySelectorAll('[data-dc]').forEach(b=>b.onclick=()=>{$('dc-bin').value=b.dataset.dc;$('dc-code').value=b.dataset.k;decode();});
+codes();decode();codeTable();
+
 /* ---------- 4. ASCII ---------- */
 function ascii(){
   const s=$('as-val').value;if(!s){$('as-out').innerHTML='';return;}
@@ -318,7 +386,7 @@ $('as-val').addEventListener('input',ascii);ascii();
 /* ---------- 5. Exercices ---------- */
 let cur=null,ok=0,tot=0,answered=false;const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function nouvel(){
-  let t=$('ex-type').value;if(t==='mix')t=['d2b','b2d','d2h','h2d','b2h','c2'][R(0,5)];
+  let t=$('ex-type').value;if(t==='mix')t=['d2b','b2d','d2h','h2d','b2h','c2','d2bcd','bcd2d','d2xs3','b2g','g2b'][R(0,10)];
   let n,q,a,sol;
   if(t==='d2b'){n=R(5,255);q=`Convertir ${sub(n,10)} en binaire.`;a=n.toString(2);sol=stepsFromDec(n,2);}
   if(t==='b2d'){n=R(5,255);const s=n.toString(2);q=`Convertir ${sub(s,2)} en décimal.`;a=String(n);sol=stepsToDec(s,2);}
@@ -327,8 +395,17 @@ function nouvel(){
   if(t==='b2h'){n=R(20,255);const s=n.toString(2);q=`Convertir ${sub(s,2)} en hexadécimal.`;a=n.toString(16).toUpperCase();sol=stepsBinGroups(n,16);}
   if(t==='c2'){n=-R(1,128);const code=n+256;q=`Donner la représentation de ${n} en complément à 2 sur 8 bits.`;a=pad(code.toString(2),8);
     const ab=pad((-n).toString(2),8),inv=ab.split('').map(x=>x==='0'?'1':'0').join('');sol=`<h3>Correction</h3><ol><li>|${n}| = ${-n} = <span class="mono">${ab}</span></li><li>Inversion : <span class="mono">${inv}</span></li><li>+1 : <b class="mono">${a}</b></li></ol>`;}
+  if(t==='d2bcd'){n=R(10,999);const dg=String(n).split('').map(Number);q=`Coder ${sub(n,10)} en BCD 8421 (4 bits par chiffre).`;a=dg.map(d=>nib(d)).join('');
+    sol=`<h3>Correction</h3><table class="t"><tr>${dg.map(d=>`<th>${d}</th>`).join('')}</tr><tr>${dg.map(d=>`<td>${nib(d)}</td>`).join('')}</tr></table><p>BCD : <b class="mono">${dg.map(d=>nib(d)).join(' ')}</b></p>`;}
+  if(t==='bcd2d'){n=R(10,999);const dg=String(n).split('').map(Number);const w=dg.map(d=>nib(d)).join(' ');q=`Quel nombre décimal est codé en BCD par <span class="mono">${w}</span> ?`;a=String(n);
+    sol=`<h3>Correction</h3><p>On lit chaque groupe de 4 bits comme un chiffre : ${dg.map(d=>`<span class="mono">${nib(d)}</span> = ${d}`).join(' ; ')}. Réponse : <b>${n}</b>.</p>`;}
+  if(t==='d2xs3'){n=R(10,99);const dg=String(n).split('').map(Number);q=`Coder ${sub(n,10)} en Excess-3.`;a=dg.map(d=>nib(d+3)).join('');
+    sol=`<h3>Correction</h3><p>On ajoute 3 à chaque chiffre, puis on le code sur 4 bits : ${dg.map(d=>`${d} + 3 = ${d+3} → <span class="mono">${nib(d+3)}</span>`).join(' ; ')}. Réponse : <b class="mono">${dg.map(d=>nib(d+3)).join(' ')}</b>.</p>`;}
+  if(t==='b2g'){n=R(4,63);const b=n.toString(2);q=`Convertir le binaire <span class="mono">${b}</span> en code Gray.`;a=toGray(n).toString(2).padStart(b.length,'0');sol=grayHtml(n);}
+  if(t==='g2b'){n=R(4,63);const b=n.toString(2),g=toGray(n).toString(2).padStart(b.length,'0');q=`Convertir le code Gray <span class="mono">${g}</span> en binaire.`;a=b;
+    sol=`<h3>Correction</h3><p>On recopie le 1<sup>er</sup> bit, puis b<sub>i</sub> = b<sub>i+1</sub> ⊕ g<sub>i</sub>. Binaire : <b class="mono">${b}</b> (= ${n}).</p>`;}
   cur={a,sol,t};answered=false;$('ex-q').innerHTML=q;$('ex-ans').value='';$('ex-fb').innerHTML='';$('ex-ans').focus();}
-function norm(s,t){s=s.trim().toUpperCase().replace(/\s/g,'').replace(/^0X/,'');if(['d2b','b2h','d2h'].includes(t)&&t!=='c2')s=s.replace(/^0+(?=.)/,'');return s;}
+function norm(s,t){s=s.trim().toUpperCase().replace(/\s/g,'').replace(/^0X/,'');if(['d2b','b2h','d2h'].includes(t)&&t!=='c2')s=s.replace(/^0+(?=.)/,'');if(['d2bcd','d2xs3','b2g','g2b'].includes(t)&&cur&&/^[01]+$/.test(s)&&s.length<cur.a.length)s=s.padStart(cur.a.length,'0');if(t==='g2b')s=s.replace(/^0+(?=.)/,'');return s;}
 $('ex-check').onclick=()=>{if(!cur)return;const v=norm($('ex-ans').value,cur.t);if(!v)return;
   if(!answered){tot++;if(v===cur.a)ok++;answered=true;}
   $('ex-score').textContent=`Score : ${ok} / ${tot}`;
@@ -338,7 +415,7 @@ $('ex-ans').addEventListener('keydown',e=>{if(e.key==='Enter')$('ex-check').clic
 $('ex-new').onclick=nouvel;nouvel();
 
 /* ---------- habillage ---------- */
-const TAG={d2b:'Décimal → binaire',b2d:'Binaire → décimal',d2h:'Décimal → hexa',h2d:'Hexa → décimal',b2h:'Binaire → hexa',c2:'Complément à 2'};
+const TAG={d2bcd:'Décimal → BCD',bcd2d:'BCD → décimal',d2xs3:'Décimal → Excess-3',b2g:'Binaire → Gray',g2b:'Gray → binaire',d2b:'Décimal → binaire',b2d:'Binaire → décimal',d2h:'Décimal → hexa',h2d:'Hexa → décimal',b2h:'Binaire → hexa',c2:'Complément à 2'};
 let streak=0;
 function upd(){$('sc-ok').textContent=ok;$('sc-tot').textContent=tot;$('sc-st').textContent=streak;
   const p=tot?Math.round(100*ok/tot):0;$('sc-pc').textContent=tot?p+' %':'–';$('sc-bar').style.width=p+'%';}
