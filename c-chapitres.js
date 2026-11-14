@@ -1,5 +1,5 @@
 /* =====================================================================
-   C pas à pas — contenu des chapitres (Pr Mounir HANINE)
+   Programmation C 1 — contenu des chapitres (Pr Mounir HANINE)
    Chaque chapitre contient :
      cours      : sections { h:"titre", p:"texte (HTML permis)", code:"exemple", liste:[...] }
      exemples   : programmes à exécuter { titre, code, entree }

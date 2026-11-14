@@ -73,7 +73,7 @@ $('content').innerHTML=`
   </div>
   <aside class="stack">
    <section class="panel"><h2>Prérequis</h2><p class="sub" style="margin:0">${esc(m.prerequis)}</p></section>
-   ${m.id==='c'?`<section class="panel"><h2>S'entraîner en ligne</h2><p class="sub">Cours, exemples à exécuter et exercices corrigés automatiquement, chapitre par chapitre, sans rien installer.</p><a class="btn" href="c-pas-a-pas.html">Ouvrir C pas à pas</a></section>`:''}
+   ${m.id==='c'?`<section class="panel"><h2>S'entraîner en ligne</h2><p class="sub">Cours, exemples à exécuter et exercices corrigés automatiquement, chapitre par chapitre, sans rien installer.</p><a class="btn" href="c-pas-a-pas.html">Ouvrir Programmation C 1</a></section>`:''}
    ${QCM[m.id]?`<section class="panel"><h2>Auto-évaluation</h2><p class="sub">${QCM[m.id].length} questions en trois niveaux (facile, moyen, difficile), avec correction immédiate.</p><a class="btn" href="qcm.html?m=${m.id}">Faire le QCM</a></section>`:''}
    <section class="panel"><h2>Autres modules</h2><ul>${MODULES.filter(x=>x.id!==m.id).map(x=>`<li><a href="module.html?m=${x.id}">${esc(x.titre)}</a></li>`).join('')}</ul></section>
   </aside>
