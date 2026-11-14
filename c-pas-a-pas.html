@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>C pas à pas – Cours Pr. Hanine</title>
+<meta name="description" content="Apprendre le langage C chapitre par chapitre : cours, exemples à exécuter, exercices corrigés automatiquement et quiz, dans le navigateur.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--hk:#0e6e6b;--ht:#8a4fbf;--hs:#b5452e;--hn:#2b62b0;--hc:#7a8a90;--hp:#a8701c;--hf:#14506b;--good:#23794a;--bad:#c0392b;--term:#0f1a1d;--term-ink:#d7ecea}
+@media (prefers-color-scheme:dark){:root{--hk:#4fd1c5;--ht:#c49af0;--hs:#f0957f;--hn:#7fb2f0;--hc:#7f9399;--hp:#e0a64a;--hf:#9fd8f0;--good:#4cc287;--bad:#ef7564;--term:#0a1214}}
+.cp-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.cp-top .lead{margin-bottom:6px}
+.byline{font-size:15px;color:var(--muted);margin:0}.byline b{color:var(--ink)}
+.gprog{min-width:240px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.gprog small{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.gprog b{font:700 26px var(--display)}.gprog span{font:13px var(--mono);color:var(--muted);margin-left:6px}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.cp{display:grid;grid-template-columns:270px minmax(0,1fr);gap:26px;align-items:start}
+.side{position:sticky;top:12px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:2px;max-height:calc(100vh - 24px);overflow:auto}
+.side a{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:9px;text-decoration:none;color:var(--ink);font-size:14.5px;line-height:1.3}
+.side a:hover{background:var(--bg)}
+.side a.on{background:var(--ink);color:var(--bg)}
+.side .no{font:600 12px var(--mono);width:28px;height:28px;border-radius:7px;display:grid;place-items:center;background:var(--sand-soft);color:var(--sand)}
+.side a.on .no{background:var(--accent);color:var(--accent-ink)}
+.side .pc{font:500 11.5px var(--mono);color:var(--muted)}.side a.on .pc{color:inherit;opacity:.8}
+.side a.done .pc{color:var(--good);font-weight:600}.side a.on.done .pc{color:#7ee0a8}
+.side hr{border:0;border-top:1px dashed var(--line);margin:6px 4px}
+.side .reset{font:500 12.5px var(--body);color:var(--muted);background:none;border:0;cursor:pointer;padding:8px 10px;text-align:left}
+.side .reset:hover{color:var(--bad)}
+@media (max-width:900px){.cp{grid-template-columns:1fr}.side{position:static;flex-direction:row;overflow-x:auto;max-height:none;padding:8px}.side a{display:flex;flex:none;padding:6px}.side a .tt,.side hr,.side .reset{display:none}.side a .pc{display:none}}
+.chead{display:flex;gap:16px;align-items:flex-start;margin-bottom:8px}
+.chead .big{font:700 15px var(--mono);width:52px;height:52px;border-radius:12px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.chead h2{font:700 24px/1.2 var(--display);margin:4px 0 4px}.chead p{margin:0;color:var(--muted)}
+.tabs{margin-top:18px}
+.pane{animation:fade .2s ease}@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+.sec{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:14px}
+.sec h3{display:flex;align-items:center;gap:10px;margin:0 0 8px;font:600 17px var(--body)}
+.sec h3:before{content:"";width:8px;height:8px;border-radius:2px;background:var(--accent);transform:rotate(45deg);flex:none}
+.sec p{margin:0 0 10px}.sec p:last-child{margin-bottom:0}
+.sec ul{margin:6px 0 0;padding-left:20px}.sec li{margin:4px 0}
+code{font:14px var(--mono);background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--line)}
+pre.cv{font:14px/1.6 var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0 0;overflow-x:auto;white-space:pre;tab-size:4}
+.k{color:var(--hk);font-weight:500}.ty{color:var(--ht)}.s{color:var(--hs)}.n{color:var(--hn)}.c{color:var(--hc);font-style:italic}.p{color:var(--hp)}.f{color:var(--hf)}
+/* éditeur */
+.ed{border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden}
+.ed-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg);flex-wrap:wrap}
+.ed-bar .nm{font:500 13px var(--mono);color:var(--muted)}
+.ed-bar .acts{display:flex;gap:6px;flex-wrap:wrap}
+.sbtn{font:500 13px var(--body);padding:6px 11px;border-radius:7px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.sbtn:hover{border-color:var(--accent);color:var(--accent)}
+.sbtn.run{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.sbtn.run:hover{filter:brightness(1.08);color:var(--accent-ink)}
+.sbtn.stop{background:var(--bad);border-color:var(--bad);color:#fff}
+.sbtn:disabled{opacity:.5;cursor:default}
+.scroll{overflow:auto;max-height:520px}
+.ins{display:flex;min-width:100%;width:max-content}
+.gut{font:14px/1.6 var(--mono);color:var(--hc);text-align:right;padding:12px 10px 12px 12px;user-select:none;background:var(--paper);position:sticky;left:0;border-right:1px solid var(--line);white-space:pre;z-index:1}
+.gut .el{color:#fff;background:var(--bad);border-radius:3px;padding:0 3px;margin:0 -3px}
+.zone{position:relative;flex:1}
+.zone pre,.zone textarea{font:14px/1.6 var(--mono);padding:12px 16px;margin:0;white-space:pre;tab-size:4;border:0;letter-spacing:0;word-spacing:0}
+.zone pre{color:var(--ink);pointer-events:none;min-height:100%}
+.zone textarea{position:absolute;inset:0;width:100%;height:100%;resize:none;background:transparent;color:transparent;caret-color:var(--ink);outline:0;overflow:hidden}
+.zone textarea::selection{background:color-mix(in srgb,var(--accent) 30%,transparent);color:transparent}
+.io{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);border-top:1px solid var(--line)}
+@media (max-width:700px){.io{grid-template-columns:1fr}}
+.io label{display:block;font:500 11.5px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:8px 12px 0}
+.io textarea{display:block;width:100%;min-height:92px;border:0;padding:6px 12px 10px;font:14px/1.5 var(--mono);background:var(--paper);color:var(--ink);resize:vertical;outline:0}
+.io .inp{border-right:1px solid var(--line)}
+.term{background:var(--term);color:var(--term-ink);font:14px/1.5 var(--mono);display:flex;flex-direction:column}
+.term label{color:#7fa5a2}
+.term pre{margin:0;padding:6px 12px 12px;white-space:pre-wrap;word-break:break-word;min-height:92px;max-height:320px;overflow:auto}
+.term .meta{font:12px var(--mono);color:#7fa5a2;padding:0 12px 8px}
+.term .er{color:#ffb4a6;display:block;margin-top:6px;border-left:3px solid #ef7564;padding-left:8px}
+.term .hint{color:#ffe0a3;display:block;margin-top:4px}
+.term .ok2{color:#7ee0a8}
+.cur{display:inline-block;width:8px;height:1em;background:#3fb6ad;vertical-align:-2px;animation:blink 1s steps(1) infinite}@keyframes blink{50%{opacity:0}}
+/* exercices */
+.exo{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.exo.ok{border-color:var(--good);box-shadow:inset 4px 0 0 var(--good)}
+.exo-h{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.qtag{display:inline-block;font:500 11.5px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--sand);background:var(--sand-soft);padding:4px 9px;border-radius:6px}
+.st{font:600 12.5px var(--mono);color:var(--muted)}.st.ok{color:var(--good)}
+.enonce{margin:0 0 12px}.enonce pre{font:14px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:8px 0 0;white-space:pre}
+.ans{width:100%;font:14px/1.5 var(--mono);padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);min-height:84px;resize:vertical;margin-top:10px}
+.ans:focus,.blank:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.row-b{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.fb{margin-top:10px;font-size:15px;padding:10px 14px;border-radius:8px;display:none}
+.fb.show{display:block}.fb.good{background:color-mix(in srgb,var(--good) 12%,transparent);border-left:3px solid var(--good)}.fb.bad{background:color-mix(in srgb,var(--bad) 9%,transparent);border-left:3px solid var(--bad)}
+.fb pre{font:13.5px var(--mono);margin:6px 0 0;white-space:pre-wrap}
+.blank{font:14px var(--mono);border:1px dashed var(--accent);border-radius:5px;background:var(--paper);color:var(--ink);padding:0 4px;margin:0 1px;height:1.55em;vertical-align:baseline}
+.blank.g{border:1px solid var(--good);background:color-mix(in srgb,var(--good) 14%,var(--paper))}.blank.b{border:1px solid var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--paper))}
+.tests{width:100%;border-collapse:collapse;font:13.5px var(--mono);margin-top:10px}
+.tests th,.tests td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top;white-space:pre-wrap}
+.tests th{font-size:11.5px;color:var(--muted);text-transform:uppercase}
+.tests .y{color:var(--good);font-weight:600}.tests .x{color:var(--bad);font-weight:600}
+.sol{margin-top:10px}
+/* quiz */
+.qq{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.qq h4{font:600 16px/1.4 var(--body);margin:0 0 10px}
+.qq .num{font:500 12px var(--mono);color:var(--sand);display:block;margin-bottom:2px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 12px;border:1px solid var(--line);border-radius:8px;margin:6px 0;cursor:pointer;background:var(--bg)}
+.opt input{margin-top:4px}.opt.okk{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}.opt.ko{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 9%,transparent)}
+.expl{margin-top:8px;font-size:14px;color:var(--muted);border-left:3px solid var(--accent);padding-left:10px}
+.qscore{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;margin-top:6px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:22px;flex-wrap:wrap}
+.note{margin-top:28px;font-size:14px;color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:12px 16px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;max-width:calc(100% - 32px);z-index:10}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662"><span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span></a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a><a href="apropos.html">A propos</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap page">
+  <div class="crumb"><a href="index.html">Accueil</a> / <a href="logiciels.html">Logiciels</a> / C pas à pas</div>
+  <div class="cp-top">
+    <div>
+      <div class="eyebrow">Programmation en langage C · Licence</div>
+      <h1>C pas à pas</h1>
+      <p class="lead">Apprenez le C chapitre par chapitre : l'essentiel du cours, des exemples à exécuter et modifier, des exercices corrigés automatiquement et un quiz. Tout fonctionne dans le navigateur, sur ordinateur ou téléphone.</p>
+      <p class="byline">Conçu et développé par <b>Pr Mounir HANINE</b> · Faculté des Sciences Errachidia · Université Moulay Ismail</p>
+    </div>
+    <div class="gprog" aria-live="polite"><small>Ma progression</small><b id="gp">0 %</b><span id="gpd"></span><div class="bar"><i id="gpb"></i></div></div>
+  </div>
+  <div class="cp">
+    <nav class="side" id="side" aria-label="Chapitres"></nav>
+    <section id="view" aria-live="polite"></section>
+  </div>
+  <p class="note"><b>A propos de l'exécution.</b> Les programmes sont exécutés par un interpréteur C pédagogique intégré à la page : types de base, opérateurs, printf et scanf, structures de contrôle, tableaux, chaînes, pointeurs et fonctions. Il signale en français les erreurs fréquentes (point-virgule oublié, variable non initialisée, dépassement de tableau, boucle infinie). Les structures (<code>struct</code>) et l'allocation dynamique (<code>malloc</code>) ne sont pas encore prises en charge. Votre progression est enregistrée dans ce navigateur.</p>
+</main>
+<footer>
+  <div class="wrap">
+    <span>Errachidia · Université Moulay Ismaïl</span>
+    <span class="yr" id="copyr"></span>
+  </div>
+</footer>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script src="c-chapitres.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2600);}
+
+/* ---------- progression (localStorage) ---------- */
+const KEY='c-pas-a-pas-v1';
+let P={ex:{},quiz:{},code:{},last:null};
+try{P=Object.assign(P,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(_){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P));}catch(_){}}
+function chStat(ch){const n=ch.exercices.length+1;let d=ch.exercices.filter((_,i)=>P.ex[ch.id+'-'+i]===1).length;if((P.quiz[ch.id]||0)>=4)d++;return{d,n,pc:Math.round(100*d/n)};}
+function drawProgress(){let d=0,n=0;CHAPITRES.forEach(c=>{const s=chStat(c);d+=s.d;n+=s.n;});const pc=Math.round(100*d/n);
+  $('gp').textContent=pc+' %';$('gpd').textContent=d+' / '+n+' étapes';$('gpb').style.width=pc+'%';}
+
+/* ---------- coloration syntaxique ---------- */
+const KW=new Set('if else for while do switch case default break continue return goto sizeof typedef struct union enum const static extern register volatile auto'.split(' '));
+const TY=new Set('int char float double void long short unsigned signed bool size_t FILE'.split(' '));
+function hl(src){
+  const re=/(\/\*[\s\S]*?(?:\*\/|$)|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?)|(^[ \t]*#[^\n]*)|(\b\d+\.?\d*(?:[eE][+-]?\d+)?[fFlLuU]*\b|\.\d+\b)|([A-Za-z_]\w*)(?=\s*\()|([A-Za-z_]\w*)/gm;
+  let out='',last=0,m;
+  while((m=re.exec(src))){out+=esc(src.slice(last,m.index));const t=m[0];
+    if(m[1])out+='<span class="c">'+esc(t)+'</span>';
+    else if(m[2])out+='<span class="s">'+esc(t)+'</span>';
+    else if(m[3])out+='<span class="p">'+esc(t)+'</span>';
+    else if(m[4])out+='<span class="n">'+esc(t)+'</span>';
+    else if(m[5])out+=KW.has(t)?'<span class="k">'+t+'</span>':TY.has(t)?'<span class="ty">'+t+'</span>':'<span class="f">'+t+'</span>';
+    else out+=KW.has(t)?'<span class="k">'+t+'</span>':TY.has(t)?'<span class="ty">'+t+'</span>':esc(t);
+    last=m.index+t.length;if(!t.length)re.lastIndex++;}
+  return out+esc(src.slice(last));
+}
+
+/* ---------- exécution (Web Worker) ---------- */
+let W=null,wid=0,pending=null;
+function worker(){if(!W){W=new Worker('c-worker.js');W.onmessage=e=>{if(pending&&e.data.id===pending.id){const p=pending;pending=null;p.resolve(e.data);}};
+  W.onerror=e=>{if(pending){const p=pending;pending=null;p.resolve({ok:false,out:'',err:'Erreur interne : '+(e.message||'interpréteur indisponible')});}};}return W;}
+function execC(code,input){if(pending){stopC();}return new Promise(resolve=>{const id=++wid;pending={id,resolve};
+  try{worker().postMessage({id,code,input:input||''});}catch(err){pending=null;resolve({ok:false,out:'',err:"L'interpréteur ne peut pas démarrer dans ce navigateur."});}});}
+function stopC(){if(W){W.terminate();W=null;}if(pending){const p=pending;pending=null;p.resolve({ok:false,out:'',err:'__STOP__'});}}
+
+const LIBS={printf:'stdio.h',scanf:'stdio.h',puts:'stdio.h',getchar:'stdio.h',putchar:'stdio.h',gets:'stdio.h',fgets:'stdio.h',strlen:'string.h',strcpy:'string.h',strcat:'string.h',strcmp:'string.h',strncpy:'string.h',strncmp:'string.h',sqrt:'math.h',pow:'math.h',fabs:'math.h',cos:'math.h',sin:'math.h',toupper:'ctype.h',tolower:'ctype.h',isdigit:'ctype.h',isalpha:'ctype.h',isupper:'ctype.h',islower:'ctype.h',abs:'stdlib.h',rand:'stdlib.h',srand:'stdlib.h',exit:'stdlib.h'};
+function explain(err,code,input){
+  let line=null,msg=err,hint='';
+  let m=err.match(/Parsing Failure:\s*\n?line (\d+) \(column (\d+)\)/);
+  if(m){line=+m[1];
+    return{line,msg:`Erreur de syntaxe (colonne ${m[2]}).`,hint:"Vérifiez le point-virgule à la fin de l'instruction précédente, les parenthèses, les accolades et les guillemets."};}
+  m=err.match(/^(?:ligne )?(\d+)(?::(\d+))?\s*:?\s*(.*)$/s);if(m&&/^\d/.test(err)||/^ligne \d+/.test(err)){line=+m[1];msg=m[3];}
+  const r=[
+    [/variable (\w+) does not exist/,x=>LIBS[x[1]]?[`La fonction « ${x[1]} » est inconnue.`,`Ajoutez #include <${LIBS[x[1]]}> en haut du programme.`]:[`« ${x[1]} » n'est pas déclarée.`,"Déclarez la variable (ou la fonction) avant de l'utiliser et vérifiez l'orthographe : le C distingue majuscules et minuscules."]],
+    [/uninitialized value/,()=>["Une variable est utilisée sans avoir reçu de valeur (variable non initialisée).",/scanf/.test(code)&&!String(input||'').trim()?"Le programme lit des données avec scanf : tapez-les dans la zone « Entrée (clavier) » avant d'exécuter.":"Donnez-lui une valeur (affectation ou scanf) avant de l'utiliser."]],
+    [/index out of bound (-?\d+) >= (\d+)/,x=>[`Dépassement de tableau : indice ${x[1]} alors que le tableau n'a que ${x[2]} cases (indices 0 à ${x[2]-1}).`,"Vérifiez la condition de la boucle (< et non <=)."]],
+    [/negative index (-?\d+)/,x=>[`Indice négatif (${x[1]}) dans un tableau.`,"Les indices commencent à 0."]],
+    [/Time limit exceeded/,()=>["Le programme ne s'est pas arrêté au bout de 15 secondes : boucle infinie probable.","Vérifiez que la condition de la boucle finit par devenir fausse (la variable de contrôle est-elle modifiée ?)."]],
+    [/Infinity|NaN\(int\)|divide by zero|division by zero/i,()=>["Division par zéro.","Testez le diviseur avant de diviser."]],
+    [/you must return a value/,()=>["Une fonction se termine sans renvoyer de valeur.","Ajoutez une instruction return dans tous les cas."]],
+    [/cannot return a value from a void function/,()=>["Une fonction void ne peut pas renvoyer de valeur.","Changez le type de la fonction ou retirez la valeur après return."]],
+    [/unitialized pointer|uninitialized pointer/,()=>["Utilisation d'un pointeur qui ne pointe sur rien.","Donnez-lui d'abord une adresse : p = &variable;"]],
+    [/type struct/,()=>["Les structures (struct) ne sont pas encore prises en charge par cet outil.",""]],
+    [/malloc|calloc|free/,()=>["L'allocation dynamique (malloc) n'est pas encore prise en charge par cet outil.",""]],
+    [/il manque le & devant/,()=>["scanf : il manque le & devant la variable.","Ecrivez scanf(\"%d\", &n);"]],
+    [/insufficient arguments|got \d+ printf arguments/,()=>["printf : il y a plus de codes de format (%d, %f...) que de valeurs à afficher.","Ajoutez les variables manquantes après la chaîne de format."]],
+    [/overflow/,()=>["Valeur trop grande pour le type de la variable (dépassement de capacité).","Utilisez un type plus large ou vérifiez le calcul."]],
+    [/Sortie trop longue/,()=>["Le programme affiche beaucoup trop de texte : boucle infinie probable.",""]],
+    [/function main is not defined|main is not defined/,()=>["La fonction main est introuvable.","Tout programme C doit contenir int main()."]],
+  ];
+  for(const [re,f] of r){const x=msg.match(re);if(x){const [a,b]=f(x);return{line,msg:a,hint:b};}}
+  return{line,msg:'Erreur : '+msg,hint:''};
+}
+
+/* ---------- éditeur ---------- */
+function editor(host,code,opt){
+  opt=opt||{};
+  host.innerHTML=`<div class="ed"><div class="ed-bar"><span class="nm">${esc(opt.name||'programme.c')}</span><span class="acts">
+    <button class="sbtn run" type="button" data-a="run">▶ Exécuter</button>
+    ${opt.reset!==false?'<button class="sbtn" type="button" data-a="reset">Réinitialiser</button>':''}
+    <button class="sbtn" type="button" data-a="copy">Copier</button></span></div>
+    <div class="scroll"><div class="ins"><div class="gut" aria-hidden="true"></div><div class="zone"><pre aria-hidden="true"></pre><textarea spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Code C"></textarea></div></div></div>
+    <div class="io"><div class="inp"><label>Entrée (clavier)</label><textarea class="stdin" spellcheck="false" placeholder="Valeurs lues par scanf"></textarea></div>
+    <div class="term"><label>Console</label><pre class="out">Cliquez sur « Exécuter ».</pre><div class="meta"></div></div></div></div>`;
+  const ta=host.querySelector('.zone textarea'),pre=host.querySelector('.zone pre'),gut=host.querySelector('.gut'),out=host.querySelector('.out'),meta=host.querySelector('.meta'),stdin=host.querySelector('.stdin'),runB=host.querySelector('[data-a=run]');
+  let errLine=null;
+  function paint(){const v=ta.value;pre.innerHTML=hl(v)+'\n';const n=v.split('\n').length;let g='';for(let i=1;i<=n;i++)g+=(i===errLine?'<span class="el">'+i+'</span>':i)+'\n';gut.innerHTML=g;}
+  ta.value=code;stdin.value=opt.input||'';paint();
+  ta.addEventListener('input',()=>{errLine=null;paint();opt.onchange&&opt.onchange(ta.value);});
+  ta.addEventListener('keydown',e=>{
+    const s=ta.selectionStart,en=ta.selectionEnd,v=ta.value;
+    if(e.key==='Tab'&&!e.shiftKey){e.preventDefault();document.execCommand?document.execCommand('insertText',false,'    '):(ta.setRangeText('    ',s,en,'end'));ta.dispatchEvent(new Event('input'));}
+    else if(e.key==='Enter'&&!e.ctrlKey&&!e.metaKey){const ls=v.lastIndexOf('\n',s-1)+1;const ind=(v.slice(ls,s).match(/^[ \t]*/)||[''])[0];const extra=/\{\s*$/.test(v.slice(ls,s))?'    ':'';
+      e.preventDefault();const ins='\n'+ind+extra;if(document.execCommand&&document.execCommand('insertText',false,ins)){}else{ta.setRangeText(ins,s,en,'end');}ta.dispatchEvent(new Event('input'));}
+    else if(e.key==='}'&&s===en){const ls=v.lastIndexOf('\n',s-1)+1;if(/^ {4,}$/.test(v.slice(ls,s))){e.preventDefault();ta.setSelectionRange(s-4,s);document.execCommand?document.execCommand('insertText',false,'}'):ta.setRangeText('}',s-4,s,'end');ta.dispatchEvent(new Event('input'));}}
+    else if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();run();}
+  });
+  async function run(){
+    if(pending&&runB.classList.contains('stop')){stopC();return;}
+    runB.textContent='■ Arrêter';runB.classList.add('stop');out.innerHTML='<span class="cur"></span>';meta.textContent='Exécution…';
+    const r=await execC(ta.value,stdin.value);
+    runB.textContent='▶ Exécuter';runB.classList.remove('stop');
+    if(r.err==='__STOP__'){out.innerHTML=esc(r.out||'')+'<span class="er">Exécution arrêtée.</span>';meta.textContent='';return;}
+    let h=esc(r.out||'');
+    if(r.ok){meta.innerHTML=`<span class="ok2">✓ Programme terminé</span> · code de retour ${esc(r.exit)} · ${r.ms} ms`;errLine=null;if(!r.out)h='<span style="opacity:.6">(aucun affichage)</span>';}
+    else{const x=explain(r.err,ta.value,stdin.value);errLine=x.line;h+=`<span class="er">${x.line?'Ligne '+x.line+' — ':''}${esc(x.msg)}</span>${x.hint?`<span class="hint">→ ${esc(x.hint)}</span>`:''}`;meta.textContent='Le programme s\'est arrêté sur une erreur.';}
+    paint();out.innerHTML=h;
+  }
+  host.querySelector('[data-a=run]').addEventListener('click',run);
+  const rb=host.querySelector('[data-a=reset]');if(rb)rb.addEventListener('click',()=>{ta.value=opt.original!==undefined?opt.original:code;stdin.value=opt.input||'';errLine=null;paint();opt.onchange&&opt.onchange(ta.value);toast('Code d\'origine rétabli.');});
+  host.querySelector('[data-a=copy]').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(ta.value);toast('Code copié.');}catch(_){ta.select();toast('Code sélectionné : Ctrl+C pour copier.');}});
+  return{get:()=>ta.value,set:v=>{ta.value=v;errLine=null;paint();opt.onchange&&opt.onchange(v);},input:()=>stdin.value,setInput:v=>stdin.value=v};
+}
+
+/* ---------- vérifications ---------- */
+const norm=s=>String(s).replace(/\r/g,'').split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/^\n+|\n+$/g,'');
+const flat=s=>String(s).replace(/\s+/g,' ').trim().toLowerCase();
+const BL=/\[\[(.*?)\]\](?!\])/g;
+const sq=s=>s.replace(/\s+/g,'');
+
+/* ---------- navigation ---------- */
+let cur=null,tab='cours';
+function drawSide(){
+  $('side').innerHTML=CHAPITRES.map((c,i)=>{const s=chStat(c);return `<a href="#${c.id}" class="${cur===c.id?'on':''} ${s.pc===100?'done':''}" ${cur===c.id?'aria-current="page"':''}><span class="no">${i+1}</span><span class="tt">${esc(c.titre)}</span><span class="pc">${s.pc===100?'✓':s.pc+' %'}</span></a>`;}).join('')+
+  `<hr><a href="#bac" class="${cur==='bac'?'on':''}"><span class="no">{ }</span><span class="tt">Bac à sable</span><span class="pc"></span></a><button class="reset" type="button" id="rz">Remettre ma progression à zéro</button>`;
+  $('rz').onclick=e=>{const b=e.currentTarget;if(!b.dataset.c){b.dataset.c=1;b.textContent='Cliquez encore pour confirmer l\'effacement';b.style.color='var(--bad)';setTimeout(()=>{if(b.isConnected){delete b.dataset.c;b.textContent='Remettre ma progression à zéro';b.style.color='';}},4000);return;}P={ex:{},quiz:{},code:{},last:null};save();route();toast('Progression remise à zéro.');};
+  drawProgress();
+}
+function route(){
+  const h=location.hash.slice(1).split('/');
+  let id=h[0]||P.last||CHAPITRES[0].id;
+  if(id!=='bac'&&!CHAPITRES.some(c=>c.id===id))id=CHAPITRES[0].id;
+  if(h[1]&&['cours','exemples','exercices','quiz'].includes(h[1]))tab=h[1];else if(id!==cur)tab='cours';
+  cur=id;if(id!=='bac'){P.last=id;save();}
+  drawSide();
+  if(id==='bac')return bac();
+  chapter(CHAPITRES.find(c=>c.id===id));
+}
+window.addEventListener('hashchange',()=>{route();});
+
+function chapter(ch){
+  const i=CHAPITRES.indexOf(ch),s=chStat(ch),ne=ch.exercices.length,de=ch.exercices.filter((_,k)=>P.ex[ch.id+'-'+k]===1).length;
+  const tabs=[['cours','Cours'],['exemples','Exemples',ch.exemples.length],['exercices','Exercices',de+'/'+ne],['quiz','Quiz',P.quiz[ch.id]!==undefined?P.quiz[ch.id]+'/'+ch.quiz.length:ch.quiz.length]];
+  $('view').innerHTML=`<div class="chead"><span class="big">${String(i+1).padStart(2,'0')}</span><div><div class="eyebrow">Chapitre ${i+1} sur ${CHAPITRES.length}</div><h2>${esc(ch.titre)}</h2><p>${esc(ch.resume)}</p></div></div>
+  <div class="tabs" role="tablist">${tabs.map(t=>`<button class="tab" role="tab" type="button" data-t="${t[0]}" aria-selected="${tab===t[0]}">${t[1]}${t[2]!==undefined?`<span class="n">${t[2]}</span>`:''}</button>`).join('')}</div>
+  <div id="pane" class="pane"></div>
+  <div class="pager">${i>0?`<a class="btn ghost" href="#${CHAPITRES[i-1].id}">← ${esc(CHAPITRES[i-1].titre)}</a>`:'<span></span>'}${i<CHAPITRES.length-1?`<a class="btn" href="#${CHAPITRES[i+1].id}">${esc(CHAPITRES[i+1].titre)} →</a>`:'<a class="btn" href="#bac">Bac à sable →</a>'}</div>`;
+  $('view').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=b.dataset.t;try{history.replaceState(null,'','#'+ch.id+'/'+tab);}catch(_){}chapter(ch);});
+  const pane=$('pane');
+  if(tab==='cours')cours(ch,pane);else if(tab==='exemples')exemples(ch,pane);else if(tab==='exercices')exercices(ch,pane);else quiz(ch,pane);
+}
+function refreshCounts(ch){drawSide();const t=$('view').querySelector('[data-t=exercices] .n');if(t)t.textContent=ch.exercices.filter((_,k)=>P.ex[ch.id+'-'+k]===1).length+'/'+ch.exercices.length;}
+
+function cours(ch,pane){
+  pane.innerHTML=ch.cours.map(s=>`<div class="sec"><h3>${esc(s.h)}</h3>${s.p?`<p>${s.p}</p>`:''}${s.liste?`<ul>${s.liste.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}${s.code?`<pre class="cv">${hl(s.code)}</pre>`:''}</div>`).join('')+
+  `<div class="row-b"><button class="btn" type="button" id="goex">Passer aux exemples →</button></div>`;
+  $('goex').onclick=()=>{tab='exemples';try{history.replaceState(null,'','#'+ch.id+'/exemples');}catch(_){}chapter(ch);scrollTo({top:$('view').offsetTop-10,behavior:'smooth'});};
+}
+function exemples(ch,pane){
+  pane.innerHTML=ch.exemples.map((e,k)=>`<div class="exo"><div class="exo-h"><span class="qtag">Exemple ${k+1}</span></div><h3 style="margin:0 0 10px;font:600 17px var(--body)">${esc(e.titre)}</h3><div class="edh" id="ex-${k}"></div>${e.entree?'<p class="sub" style="margin:8px 0 0;font-size:14px">Les valeurs d\'entrée sont déjà saisies : modifiez-les pour tester d\'autres cas.</p>':''}</div>`).join('')+
+  `<p class="sub">Modifiez librement ces programmes puis exécutez-les : c'est la meilleure façon de comprendre. « Réinitialiser » rétablit le code d'origine.</p>
+  <div class="row-b"><button class="btn" type="button" id="goex">Passer aux exercices →</button></div>`;
+  ch.exemples.forEach((e,k)=>editor($('ex-'+k),e.code,{name:'exemple'+(k+1)+'.c',input:e.entree||''}));
+  $('goex').onclick=()=>{tab='exercices';try{history.replaceState(null,'','#'+ch.id+'/exercices');}catch(_){}chapter(ch);scrollTo({top:$('view').offsetTop-10,behavior:'smooth'});};
+}
+
+function exercices(ch,pane){
+  const lab={sortie:'Prédire l\'affichage',trou:'Compléter le code',prog:'Ecrire un programme'};
+  pane.innerHTML=ch.exercices.map((x,k)=>{const key=ch.id+'-'+k,ok=P.ex[key]===1;
+    return `<div class="exo ${ok?'ok':''}" id="x-${k}"><div class="exo-h"><span class="qtag">Exercice ${k+1} · ${lab[x.type]}</span><span class="st ${ok?'ok':''}">${ok?'✓ Réussi':''}</span></div><div class="enonce">${x.enonce}</div><div class="body"></div></div>`;}).join('');
+  ch.exercices.forEach((x,k)=>{const box=$('x-'+k),body=box.querySelector('.body'),key=ch.id+'-'+k;
+    const done=()=>{if(P.ex[key]!==1){P.ex[key]=1;save();}box.classList.add('ok');const st=box.querySelector('.st');st.textContent='✓ Réussi';st.classList.add('ok');refreshCounts(ch);};
+    const fb=(cls,html)=>{const f=body.querySelector('.fb');f.className='fb show '+cls;f.innerHTML=html;};
+    if(x.type==='sortie'){
+      body.innerHTML=`<pre class="cv">${hl(x.code)}</pre><textarea class="ans" spellcheck="false" placeholder="Tapez ici exactement ce que le programme affiche (une ligne par ligne d'affichage)"></textarea>
+      <div class="row-b"><button class="sbtn run" type="button" data-a="v">Vérifier</button><button class="sbtn" type="button" data-a="s">Voir la réponse</button><button class="sbtn" type="button" data-a="e">Exécuter le code</button></div><div class="fb"></div><div class="runout"></div>`;
+      const ans=body.querySelector('.ans');let essais=0;
+      body.querySelector('[data-a=v]').onclick=()=>{if(!ans.value.trim()){toast('Tapez d\'abord votre réponse.');return;}essais++;
+        if(norm(ans.value)===norm(x.reponse)){fb('good','<b>Bravo, c\'est exact !</b>');done();}
+        else if(flat(ans.value)===flat(x.reponse)){fb('bad','<b>Presque !</b> Les valeurs sont justes mais vérifiez les retours à la ligne et les espaces.');}
+        else fb('bad','<b>Pas encore.</b> '+(x.aide&&essais>=1?'Indice : '+esc(x.aide):'Relisez le code ligne par ligne.'));};
+      body.querySelector('[data-a=s]').onclick=()=>fb('good','<b>Affichage attendu :</b><pre>'+esc(x.reponse)+'</pre>'+(x.aide?'<p style="margin:6px 0 0">'+esc(x.aide)+'</p>':''));
+      body.querySelector('[data-a=e]').onclick=async()=>{const ro=body.querySelector('.runout');ro.innerHTML='<div class="term" style="border-radius:10px;margin-top:10px"><label>Console</label><pre><span class="cur"></span></pre></div>';const r=await execC(x.code,'');ro.querySelector('pre').innerHTML=esc(r.out)+(r.ok?'':'<span class="er">'+esc(explain(r.err,x.code,'').msg)+'</span>');};
+    }
+    else if(x.type==='trou'){
+      const answers=[];let idx=0;
+      const html=hl(x.code.replace(BL,(_,a)=>{answers.push(a.split('|'));return String.fromCharCode(0xE000+(idx++));})).replace(/[\uE000-\uE0FF]/g,ch=>{const n=ch.charCodeAt(0)-0xE000;const w=Math.max(3,Math.max(...answers[n].map(s=>s.length))+1);return `<input class="blank" data-i="${n}" style="width:${w+1}ch" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Trou ${+n+1}">`;});
+      body.innerHTML=`<pre class="cv">${html}</pre>
+      <div class="row-b"><button class="sbtn run" type="button" data-a="v">Vérifier</button><button class="sbtn" type="button" data-a="e">Exécuter avec mes réponses</button><button class="sbtn" type="button" data-a="s">Voir la solution</button></div><div class="fb"></div><div class="runout"></div>`;
+      const ins=[...body.querySelectorAll('.blank')];
+      const filled=()=>{let n=0;return x.code.replace(BL,()=>ins[n++].value);};
+      body.querySelector('[data-a=v]').onclick=()=>{let good=0;ins.forEach((inp,n)=>{const ok=answers[n].some(a=>sq(a)===sq(inp.value));inp.classList.toggle('g',ok);inp.classList.toggle('b',!ok);if(ok)good++;});
+        if(good===ins.length){fb('good','<b>Bravo, tout est juste !</b> Exécutez le programme pour voir le résultat.');done();}else fb('bad',`<b>${good} / ${ins.length} correct${good>1?'s':''}.</b> Corrigez les cases en rouge.`);};
+      body.querySelector('[data-a=s]').onclick=()=>{ins.forEach((inp,n)=>{inp.value=answers[n][0];inp.classList.remove('b');inp.classList.add('g');});fb('good','<b>Solution affichée.</b> Exécutez le code pour vérifier l\'affichage : <code>'+esc(x.sortie)+'</code>');};
+      body.querySelector('[data-a=e]').onclick=async()=>{const ro=body.querySelector('.runout');const c=filled();ro.innerHTML='<div class="term" style="border-radius:10px;margin-top:10px"><label>Console</label><pre><span class="cur"></span></pre></div>';const r=await execC(c,x.entree||'');const e=r.ok?null:explain(r.err,c,'');ro.querySelector('pre').innerHTML=esc(r.out)+(r.ok?'':'<span class="er">'+(e.line?'Ligne '+e.line+' — ':'')+esc(e.msg)+'</span>');};
+    }
+    else{
+      body.innerHTML=`<div class="edh"></div><div class="row-b"><button class="sbtn run" type="button" data-a="t">✓ Tester mon programme</button><button class="sbtn" type="button" data-a="s">Voir une solution</button><span class="st" style="font-weight:400">${x.tests.length} test${x.tests.length>1?'s':''} automatique${x.tests.length>1?'s':''}</span></div><div class="fb"></div><div class="sol"></div>`;
+      const E=editor(body.querySelector('.edh'),P.code[key]!==undefined?P.code[key]:x.depart,{name:'exercice'+(k+1)+'.c',input:x.tests[0].entree,original:x.depart,onchange:v=>{P.code[key]=v;save();}});
+      const tb=body.querySelector('[data-a=t]');
+      tb.onclick=async()=>{const code=E.get();tb.disabled=true;tb.textContent='Tests en cours…';
+        const rows=[];let pass=0;
+        for(const [n,t] of x.tests.entries()){const r=await execC(code,t.entree);let ok=false,got;
+          if(r.err==='__STOP__'){got='(arrêté)';}else if(r.ok){got=r.out;ok=flat(r.out).includes(flat(t.sortie));}else{const e=explain(r.err,code,t.entree);got=(r.out||'')+'\n⚠ '+(e.line?'Ligne '+e.line+' — ':'')+e.msg;}
+          if(ok)pass++;rows.push(`<tr><td>${n+1}</td><td>${esc(t.entree||'—')}</td><td>${esc(t.sortie)}</td><td>${esc(got.trim()).slice(0,600)}</td><td class="${ok?'y':'x'}">${ok?'✓':'✗'}</td></tr>`);}
+        const miss=(x.exige||[]).filter(e=>!new RegExp(e.re).test(code));
+        tb.disabled=false;tb.textContent='✓ Tester mon programme';
+        const table=`<table class="tests"><tr><th>#</th><th>Entrée</th><th>Attendu</th><th>Obtenu</th><th></th></tr>${rows.join('')}</table>`;
+        if(pass===x.tests.length&&!miss.length){fb('good',`<b>Bravo ! ${pass} / ${x.tests.length} tests réussis.</b>${table}`);done();}
+        else fb('bad',`<b>${pass} / ${x.tests.length} tests réussis.</b>${miss.length?'<br>'+miss.map(e=>'• '+esc(e.msg)).join('<br>'):''}${pass<x.tests.length?'<br>L\'affichage attendu doit apparaître dans la sortie de votre programme (les messages comme « Entrez un nombre : » sont acceptés).':''}${table}`);};
+      body.querySelector('[data-a=s]').onclick=e=>{const sol=body.querySelector('.sol'),b=e.currentTarget;if(sol.innerHTML){sol.innerHTML='';b.textContent='Voir une solution';return;}
+        if(!b.dataset.c){b.dataset.c=1;b.textContent='Sûr ? Cliquez encore';toast('Essayez d\'abord par vous-même : c\'est en cherchant qu\'on apprend.');return;}
+        delete b.dataset.c;b.textContent='Masquer la solution';
+        sol.innerHTML=`<div class="sec" style="margin:10px 0 0"><h3>Une solution possible</h3><pre class="cv">${hl(x.solution)}</pre><div class="row-b"><button class="sbtn" type="button">Copier dans l'éditeur</button></div></div>`;
+        sol.querySelector('button').onclick=()=>{E.set(x.solution);toast('Solution copiée dans l\'éditeur.');};};
+    }
+  });
+}
+
+function quiz(ch,pane){
+  pane.innerHTML=ch.quiz.map((q,k)=>`<div class="qq" id="q-${k}"><span class="num">Question ${k+1}</span><h4>${esc(q[0])}</h4>${q[1].map((o,j)=>`<label class="opt"><input type="radio" name="q${k}" value="${j}"><span>${esc(o)}</span></label>`).join('')}</div>`).join('')+
+  `<div class="qscore"><span id="qs">${P.quiz[ch.id]!==undefined?'Meilleur score : '+P.quiz[ch.id]+' / '+ch.quiz.length:'Répondez puis validez.'} (4 bonnes réponses valident le chapitre)</span><span><button class="btn" type="button" id="qv">Valider</button> <button class="btn ghost" type="button" id="qr">Recommencer</button></span></div>`;
+  $('qv').onclick=()=>{let sc=0,miss=0;ch.quiz.forEach((q,k)=>{const box=$('q-'+k),sel=box.querySelector('input:checked');box.querySelectorAll('.opt').forEach((o,j)=>{o.classList.remove('okk','ko');if(j===q[2])o.classList.add('okk');else if(sel&&+sel.value===j)o.classList.add('ko');});
+      if(!sel)miss++;if(sel&&+sel.value===q[2])sc++;let ex=box.querySelector('.expl');if(!ex){ex=document.createElement('div');ex.className='expl';box.appendChild(ex);}ex.textContent=q[3];});
+    P.quiz[ch.id]=Math.max(P.quiz[ch.id]||0,sc);save();drawSide();
+    const t=$('view').querySelector('[data-t=quiz] .n');if(t)t.textContent=P.quiz[ch.id]+'/'+ch.quiz.length;
+    $('qs').textContent=`Score : ${sc} / ${ch.quiz.length}${miss?' ('+miss+' sans réponse)':''} — ${sc>=4?'chapitre validé ✓':'il faut 4 bonnes réponses pour valider'}`;};
+  $('qr').onclick=()=>quiz(ch,pane);
+}
+
+function bac(){
+  $('view').innerHTML=`<div class="chead"><span class="big">{ }</span><div><div class="eyebrow">Atelier libre</div><h2>Bac à sable</h2><p>Ecrivez et exécutez vos propres programmes C. Votre code est conservé dans ce navigateur.</p></div></div><div id="bacE" style="margin-top:18px"></div>
+  <p class="sub" style="margin-top:12px;font-size:14px">Raccourcis : Tab insère 4 espaces, Entrée conserve l'indentation, Ctrl + Entrée exécute.</p>`;
+  const def=R`#include <stdio.h>
+
+int main()
+{
+    int n;
+    printf("Entrez un entier : ");
+    scanf("%d", &n);
+    printf("Le carre de %d est %d\n", n, n * n);
+    return 0;
+}`;
+  editor($('bacE'),P.code.bac||def,{name:'mon_programme.c',input:P.code.bacIn||'12',original:def,onchange:v=>{P.code.bac=v;save();}});
+  $('bacE').querySelector('.stdin').addEventListener('input',e=>{P.code.bacIn=e.target.value;save();});
+}
+route();
+</script>
+</body>
+</html>
