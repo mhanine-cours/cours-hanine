@@ -56,6 +56,18 @@ pre.cv{font:14px/1.6 var(--mono);background:var(--bg);border:1px solid var(--lin
 .sbtn.run:hover{filter:brightness(1.08);color:var(--accent-ink)}
 .sbtn.stop{background:var(--bad);border-color:var(--bad);color:#fff}
 .sbtn:disabled{opacity:.5;cursor:default}
+.side a.mine{border:1px solid var(--accent);margin-bottom:2px}.side a.mine .no{background:var(--accent);color:var(--accent-ink)}
+.cta-mine{margin-top:14px}
+.mp-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.mp-chip{font:500 13px var(--mono);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp-chip:hover{border-color:var(--accent)}.mp-chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mp-chip.new{border-style:dashed;color:var(--accent);font-family:var(--body);font-weight:600}
+.mp-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0 14px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.mp-bar label{font:600 12.5px var(--body);color:var(--muted)}
+.mp-bar input[type=text],.mp-bar select{font:500 13.5px var(--mono);padding:6px 9px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink);min-width:0}
+.mp-bar input[type=text]{width:190px}.mp-bar .sp{flex:1}
+.mp-bar .sbtn.del:hover{border-color:var(--bad);color:var(--bad)}
+
 .scroll{overflow:auto;max-height:520px}
 .ins{display:flex;min-width:100%;width:max-content}
 .gut{font:14px/1.6 var(--mono);color:var(--hc);text-align:right;padding:12px 10px 12px 12px;user-select:none;background:var(--paper);position:sticky;left:0;border-right:1px solid var(--line);white-space:pre;z-index:1}
@@ -126,8 +138,9 @@ pre.cv{font:14px/1.6 var(--mono);background:var(--bg);border:1px solid var(--lin
     <div>
       <div class="eyebrow">Programmation en langage C · Licence Digitalisation – Tronc commun Informatique appliquée (S1)</div>
       <h1>Programmation C 1</h1>
-      <p class="lead">Apprenez le C chapitre par chapitre : l'essentiel du cours, des exemples à exécuter et modifier, des exercices corrigés automatiquement et un quiz. Tout fonctionne dans le navigateur, sur ordinateur ou téléphone.</p>
+      <p class="lead">Apprenez le C chapitre par chapitre : l'essentiel du cours, des exemples à exécuter et modifier, des exercices corrigés automatiquement, un quiz et un espace « Mon programme » pour écrire et tester vos propres programmes. Tout fonctionne dans le navigateur, sur ordinateur ou téléphone.</p>
       <p class="byline">Conçu et développé par <b>Pr Mounir HANINE</b> · Faculté des Sciences Errachidia · Université Moulay Ismail</p>
+      <a class="btn cta-mine" href="#bac">{ } Ecrire et tester mon programme</a>
     </div>
     <div class="gprog" aria-live="polite"><small>Ma progression</small><b id="gp">0 %</b><span id="gpd"></span><div class="bar"><i id="gpb"></i></div></div>
   </div>
@@ -264,9 +277,10 @@ const sq=s=>s.replace(/\s+/g,'');
 /* ---------- navigation ---------- */
 let cur=null,tab='cours';
 function drawSide(){
-  $('side').innerHTML=CHAPITRES.map((c,i)=>{const s=chStat(c);return `<a href="#${c.id}" class="${cur===c.id?'on':''} ${s.pc===100?'done':''}" ${cur===c.id?'aria-current="page"':''}><span class="no">${i+1}</span><span class="tt">${esc(c.titre)}</span><span class="pc">${s.pc===100?'✓':s.pc+' %'}</span></a>`;}).join('')+
-  `<hr><a href="#bac" class="${cur==='bac'?'on':''}"><span class="no">{ }</span><span class="tt">Bac à sable</span><span class="pc"></span></a><button class="reset" type="button" id="rz">Remettre ma progression à zéro</button>`;
-  $('rz').onclick=e=>{const b=e.currentTarget;if(!b.dataset.c){b.dataset.c=1;b.textContent='Cliquez encore pour confirmer l\'effacement';b.style.color='var(--bad)';setTimeout(()=>{if(b.isConnected){delete b.dataset.c;b.textContent='Remettre ma progression à zéro';b.style.color='';}},4000);return;}P={ex:{},quiz:{},code:{},last:null};save();route();toast('Progression remise à zéro.');};
+  $('side').innerHTML=`<a href="#bac" class="mine ${cur==='bac'?'on':''}" ${cur==='bac'?'aria-current="page"':''}><span class="no">{ }</span><span class="tt"><b>Mon programme</b><br><small style="opacity:.75">écrire et tester mon code</small></span><span class="pc"></span></a><hr>`+
+  CHAPITRES.map((c,i)=>{const s=chStat(c);return `<a href="#${c.id}" class="${cur===c.id?'on':''} ${s.pc===100?'done':''}" ${cur===c.id?'aria-current="page"':''}><span class="no">${i+1}</span><span class="tt">${esc(c.titre)}</span><span class="pc">${s.pc===100?'✓':s.pc+' %'}</span></a>`;}).join('')+
+  `<hr><button class="reset" type="button" id="rz">Remettre ma progression à zéro</button>`;
+  $('rz').onclick=e=>{const b=e.currentTarget;if(!b.dataset.c){b.dataset.c=1;b.textContent='Cliquez encore pour confirmer l\'effacement';b.style.color='var(--bad)';setTimeout(()=>{if(b.isConnected){delete b.dataset.c;b.textContent='Remettre ma progression à zéro';b.style.color='';}},4000);return;}P={ex:{},quiz:{},code:{},last:null,progs:P.progs,curProg:P.curProg};save();route();toast('Progression remise à zéro (vos programmes sont conservés).');};
   drawProgress();
 }
 function route(){
@@ -287,7 +301,7 @@ function chapter(ch){
   $('view').innerHTML=`<div class="chead"><span class="big">${String(i+1).padStart(2,'0')}</span><div><div class="eyebrow">Chapitre ${i+1} sur ${CHAPITRES.length}</div><h2>${esc(ch.titre)}</h2><p>${esc(ch.resume)}</p></div></div>
   <div class="tabs" role="tablist">${tabs.map(t=>`<button class="tab" role="tab" type="button" data-t="${t[0]}" aria-selected="${tab===t[0]}">${t[1]}${t[2]!==undefined?`<span class="n">${t[2]}</span>`:''}</button>`).join('')}</div>
   <div id="pane" class="pane"></div>
-  <div class="pager">${i>0?`<a class="btn ghost" href="#${CHAPITRES[i-1].id}">← ${esc(CHAPITRES[i-1].titre)}</a>`:'<span></span>'}${i<CHAPITRES.length-1?`<a class="btn" href="#${CHAPITRES[i+1].id}">${esc(CHAPITRES[i+1].titre)} →</a>`:'<a class="btn" href="#bac">Bac à sable →</a>'}</div>`;
+  <div class="pager">${i>0?`<a class="btn ghost" href="#${CHAPITRES[i-1].id}">← ${esc(CHAPITRES[i-1].titre)}</a>`:'<span></span>'}${i<CHAPITRES.length-1?`<a class="btn" href="#${CHAPITRES[i+1].id}">${esc(CHAPITRES[i+1].titre)} →</a>`:'<a class="btn" href="#bac">Mon programme →</a>'}</div>`;
   $('view').querySelectorAll('.tab').forEach(b=>b.onclick=()=>{tab=b.dataset.t;try{history.replaceState(null,'','#'+ch.id+'/'+tab);}catch(_){}chapter(ch);});
   const pane=$('pane');
   if(tab==='cours')cours(ch,pane);else if(tab==='exemples')exemples(ch,pane);else if(tab==='exercices')exercices(ch,pane);else quiz(ch,pane);
@@ -371,10 +385,15 @@ function quiz(ch,pane){
   $('qr').onclick=()=>quiz(ch,pane);
 }
 
-function bac(){
-  $('view').innerHTML=`<div class="chead"><span class="big">{ }</span><div><div class="eyebrow">Atelier libre</div><h2>Bac à sable</h2><p>Ecrivez et exécutez vos propres programmes C. Votre code est conservé dans ce navigateur.</p></div></div><div id="bacE" style="margin-top:18px"></div>
-  <p class="sub" style="margin-top:12px;font-size:14px">Raccourcis : Tab insère 4 espaces, Entrée conserve l'indentation, Ctrl + Entrée exécute.</p>`;
-  const def=R`#include <stdio.h>
+const MODELES=[
+['Programme vide',R`#include <stdio.h>
+
+int main()
+{
+    
+    return 0;
+}`,''],
+['Lire et afficher (scanf / printf)',R`#include <stdio.h>
 
 int main()
 {
@@ -383,9 +402,101 @@ int main()
     scanf("%d", &n);
     printf("Le carre de %d est %d\n", n, n * n);
     return 0;
-}`;
-  editor($('bacE'),P.code.bac||def,{name:'mon_programme.c',input:P.code.bacIn||'12',original:def,onchange:v=>{P.code.bac=v;save();}});
-  $('bacE').querySelector('.stdin').addEventListener('input',e=>{P.code.bacIn=e.target.value;save();});
+}`,'12'],
+['Condition (if / else)',R`#include <stdio.h>
+
+int main()
+{
+    int note;
+    printf("Note sur 20 : ");
+    scanf("%d", &note);
+    if (note >= 10)
+        printf("Valide\n");
+    else
+        printf("Non valide\n");
+    return 0;
+}`,'13'],
+['Boucle (for)',R`#include <stdio.h>
+
+int main()
+{
+    int i, n, somme = 0;
+    printf("Combien de termes ? ");
+    scanf("%d", &n);
+    for (i = 1; i <= n; i++)
+        somme = somme + i;
+    printf("1 + 2 + ... + %d = %d\n", n, somme);
+    return 0;
+}`,'10'],
+['Tableau',R`#include <stdio.h>
+#define N 5
+
+int main()
+{
+    int t[N], i, max;
+    for (i = 0; i < N; i++)
+        scanf("%d", &t[i]);
+    max = t[0];
+    for (i = 1; i < N; i++)
+        if (t[i] > max)
+            max = t[i];
+    printf("Le maximum est %d\n", max);
+    return 0;
+}`,'4 9 2 7 5'],
+['Fonction',R`#include <stdio.h>
+
+int cube(int x)
+{
+    return x * x * x;
+}
+
+int main()
+{
+    int a;
+    scanf("%d", &a);
+    printf("Le cube de %d est %d\n", a, cube(a));
+    return 0;
+}`,'3'],
+];
+function mesProgs(){
+  if(!Array.isArray(P.progs)||!P.progs.length){
+    P.progs=[{id:Date.now(),name:'mon_programme.c',code:(P.code&&P.code.bac)||MODELES[1][1],input:(P.code&&P.code.bacIn!==undefined)?P.code.bacIn:'12'}];
+    P.curProg=P.progs[0].id;save();}
+  if(!P.progs.some(p=>p.id===P.curProg))P.curProg=P.progs[0].id;
+  return P.progs;
+}
+function nomC(n){n=String(n||'').trim().replace(/[\\/:*?"<>|]/g,'_').slice(0,40)||'programme';return /\.c$/i.test(n)?n:n+'.c';}
+function bac(){
+  const L=mesProgs();const pr=L.find(p=>p.id===P.curProg);
+  $('view').innerHTML=`<div class="chead"><span class="big">{ }</span><div><div class="eyebrow">Atelier libre</div><h2>Mon programme</h2><p>Ecrivez votre propre programme C, exécutez-le et corrigez-le. Vos programmes sont conservés dans ce navigateur ; téléchargez-les pour les garder ou les remettre à votre enseignant.</p></div></div>
+  <div class="mp-list" id="mpL">${L.map(p=>`<button type="button" class="mp-chip ${p.id===pr.id?'on':''}" data-id="${p.id}" title="${esc(p.name)}">${esc(p.name)}</button>`).join('')}<button type="button" class="mp-chip new" id="mpNew">+ Nouveau programme</button></div>
+  <div class="mp-bar">
+    <label for="mpName">Nom du fichier</label><input type="text" id="mpName" maxlength="40" value="${esc(pr.name)}" spellcheck="false">
+    <label for="mpMod">Modèle</label><select id="mpMod"><option value="">Partir d'un modèle…</option>${MODELES.map((m,i)=>`<option value="${i}">${esc(m[0])}</option>`).join('')}</select>
+    <span class="sp"></span>
+    <button class="sbtn" type="button" id="mpOpen">Ouvrir un fichier .c</button>
+    <button class="sbtn" type="button" id="mpDl">Télécharger (.c)</button>
+    <button class="sbtn del" type="button" id="mpDel">Supprimer</button>
+    <input type="file" id="mpFile" accept=".c,.h,.txt,text/plain" hidden>
+  </div>
+  <div id="bacE"></div>
+  <p class="sub" style="margin-top:12px;font-size:14px">Si votre programme lit des données avec scanf, tapez-les d'abord dans la zone « Entrée (clavier) », séparées par un espace ou un retour à la ligne. Raccourcis : Tab insère 4 espaces, Entrée conserve l'indentation, Ctrl + Entrée exécute.</p>`;
+  const ed=editor($('bacE'),pr.code,{name:pr.name,input:pr.input,reset:false,onchange:v=>{pr.code=v;save();}});
+  $('bacE').querySelector('.stdin').addEventListener('input',e=>{pr.input=e.target.value;save();});
+  $('mpL').querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{P.curProg=+b.dataset.id;save();bac();});
+  $('mpNew').onclick=()=>{let k=L.length+1,n;do{n='programme'+(k++)+'.c';}while(L.some(p=>p.name===n));
+    const np={id:Date.now(),name:n,code:MODELES[0][1],input:''};L.push(np);P.curProg=np.id;save();bac();toast('Nouveau programme créé.');};
+  $('mpName').addEventListener('change',e=>{pr.name=nomC(e.target.value);save();bac();});
+  $('mpMod').onchange=e=>{const b=e.target;if(b.value==='')return;const m=MODELES[+b.value];
+    const vide=!pr.code.trim()||MODELES.some(x=>x[1]===pr.code);
+    if(!vide&&b.dataset.c!==b.value){b.dataset.c=b.value;toast('Ce modèle remplacera votre code : choisissez-le une seconde fois pour confirmer.');b.value='';return;}
+    delete b.dataset.c;pr.input=m[2];ed.set(m[1]);ed.setInput(m[2]);save();b.value='';toast('Modèle chargé : '+m[0]);};
+  $('mpOpen').onclick=()=>$('mpFile').click();
+  $('mpFile').onchange=e=>{const f=e.target.files[0];if(!f)return;if(f.size>200000){toast('Fichier trop volumineux.');return;}
+    const rd=new FileReader();rd.onload=()=>{const np={id:Date.now(),name:nomC(f.name.replace(/\.(txt|h)$/i,'')),code:String(rd.result).replace(/\r\n?/g,'\n'),input:''};L.push(np);P.curProg=np.id;save();bac();toast('Fichier ouvert : '+np.name);};rd.readAsText(f);};
+  $('mpDl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ed.get()],{type:'text/plain;charset=utf-8'}));a.download=nomC(pr.name);document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);toast('Programme téléchargé : '+nomC(pr.name));};
+  $('mpDel').onclick=e=>{const b=e.currentTarget;if(!b.dataset.c){b.dataset.c=1;b.textContent='Cliquez encore pour confirmer';setTimeout(()=>{if(b.isConnected){delete b.dataset.c;b.textContent='Supprimer';}},4000);return;}
+    P.progs=L.filter(p=>p.id!==pr.id);if(P.code){delete P.code.bac;delete P.code.bacIn;}P.curProg=null;save();bac();toast('Programme supprimé.');};
 }
 route();
 </script>
