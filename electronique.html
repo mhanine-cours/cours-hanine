@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Electronique numérique – Cours Pr. Hanine</title>
+<meta name="description" content="Logiciel didactique d’électronique numérique du Pr. Mounir Hanine : numération, fonctions binaires, Karnaugh, circuits combinatoires et séquentiels, exercices corrigés.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f8;--panel:#fff;--ink:#17202d;--muted:#5b6575;--line:#dce1e8;--accent:#1c4d8f;--accent2:#e6edf7;--on:#14a050;--off:#b9c1cc;--warn:#b45309;--bad:#b42318;--good:#137a3a;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html{font-size:15px}
+html.big{font-size:18.5px}
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+header{background:#0f2747;color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.2)}
+.sitebar{background:#0a1b33;font-size:.82rem}.sitebar div{max-width:1240px;margin:0 auto;padding:5px 20px;display:flex;gap:14px;flex-wrap:wrap}.sitebar a{color:#9fb6d6;text-decoration:none}.sitebar a:hover{color:#fff}
+.hwrap{max-width:1240px;margin:0 auto;padding:12px 20px 4px;display:flex;align-items:center;gap:14px}
+.logo{font-family:var(--mono);font-weight:600;background:#fff;color:#0f2747;border-radius:8px;padding:6px 9px;font-size:1.1rem;letter-spacing:1px}
+header h1{font-size:1.25rem;margin:0;font-weight:600}
+header p{margin:0;color:#b8c7dc;font-size:.88rem}
+.hwrap .sp1{flex:1}
+#bigBtn{background:transparent;border:1px solid #4d6890;color:#dfe8f5;border-radius:6px;padding:6px 10px;font:inherit;font-size:.85rem;cursor:pointer}
+#bigBtn.on{background:#fff;color:#0f2747}
+nav.main{max-width:1240px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;padding:0 14px}
+nav.main a{padding:10px 13px;color:#b8c7dc;text-decoration:none;white-space:nowrap;font-weight:500;border-bottom:3px solid transparent;font-size:.95rem}
+nav.main a:hover{color:#fff}
+nav.main a.active{color:#fff;border-color:#5fa8ff}
+main{max-width:1240px;margin:0 auto;padding:22px 20px 40px}
+main>section{display:none}
+main>section.active{display:block}
+h2{font-size:1.45rem;margin:0 0 14px;font-weight:600}
+h3{font-size:1.08rem;margin:0 0 10px;font-weight:600}
+h4{font-size:.98rem;margin:16px 0 8px;font-weight:600}
+.hidden{display:none!important}
+.subtabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
+.subtabs button{border:1px solid var(--line);background:#fff;padding:7px 15px;border-radius:999px;cursor:pointer;font:inherit;font-size:.93rem;color:var(--muted)}
+.subtabs button:hover{border-color:var(--accent);color:var(--accent)}
+.subtabs button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;align-items:start}
+.grid2>.card{margin-bottom:0}
+.row{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;margin-bottom:12px}
+.row label{display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted);font-weight:500}
+.row label.chk{flex-direction:row;align-items:center;gap:6px;font-size:.92rem;color:var(--ink)}
+input[type=text],input[type=number],select{font:inherit;font-size:.98rem;padding:7px 10px;border:1px solid #c9d0da;border-radius:6px;background:#fff;color:var(--ink);min-width:0}
+input[type=text]:focus,input[type=number]:focus,select:focus{outline:2px solid #9cc3f5;border-color:var(--accent)}
+input.mono,.mono{font-family:var(--mono)}
+input.wide{width:min(560px,80vw)}
+.btn{font:inherit;font-size:.92rem;background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:6px;padding:7px 14px;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:#fff;color:var(--accent)}
+.btn.ghost.on{background:#fff4d6;border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:4px 10px;font-size:.84rem}
+.hint{color:var(--muted);font-size:.86rem;margin:6px 0}
+code{font-family:var(--mono);background:#eef1f5;padding:1px 5px;border-radius:4px;font-size:.9em}
+.err{color:var(--bad);font-weight:500}
+.okc{color:var(--good);font-weight:600}
+.warnc{color:var(--warn);font-weight:600}
+.ov{text-decoration:overline;text-decoration-thickness:1.5px;margin:0 .1em}
+.res{font-family:var(--mono);background:var(--accent2);color:#0f2747;padding:2px 8px;border-radius:5px;font-weight:600}
+.results{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 4px}
+.rbox{border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:130px;background:#fafbfd}
+.rbox span{display:block;font-size:.78rem;color:var(--muted)}
+.rbox b{font-size:1.12rem;word-break:break-all}
+.rbox.src{border-color:var(--accent);background:var(--accent2)}
+.step{border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin:12px 0}
+.step>b{display:block;margin-bottom:4px}
+.wrap{word-break:break-all}
+.flex{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}
+details{margin:6px 0}
+summary{cursor:pointer;color:var(--accent);font-weight:500}
+table.tt{border-collapse:collapse;font-family:var(--mono);font-size:.88rem;margin:4px 0}
+table.tt th,table.tt td{border:1px solid var(--line);padding:3px 9px;text-align:center}
+table.tt th{background:#f1f4f8;font-weight:600}
+table.tt td.sep,table.tt th.sep{border-left:2px solid #8a96a8}
+table.tt tr.cur td{background:#fff1b8}
+table.tt td.hl{color:var(--accent);font-weight:700}
+table.tt td.l{text-align:left}
+.ttscroll{max-height:440px;overflow:auto;display:inline-block;border-radius:4px}
+table.grid{border-collapse:collapse;font-family:var(--mono);font-size:1.05rem;margin:8px 0}
+table.grid td{width:1.35em;text-align:center;padding:1px 0}
+table.grid th{font-family:'IBM Plex Sans';font-weight:500;font-size:.8rem;color:var(--muted);text-align:right;padding-right:10px;white-space:nowrap}
+table.grid td.opc{color:var(--accent);font-weight:700}
+table.grid tr.car td{color:var(--warn);font-size:.78rem}
+table.grid tr.sum td{border-top:2px solid var(--ink);font-weight:600}
+table.grid tr.dim td{color:#9aa3b1}
+/* switches */
+.swrow{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.sw{font:inherit;font-family:var(--mono);display:inline-flex;align-items:center;gap:8px;border:1px solid #c9d0da;background:#fff;border-radius:7px;padding:5px 10px;cursor:pointer;font-size:.95rem}
+.sw b{display:inline-block;min-width:24px;text-align:center;border-radius:4px;background:var(--off);color:#fff;padding:1px 0}
+.sw.on b{background:var(--on)}
+.led{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--off);vertical-align:-2px;box-shadow:inset 0 -2px 3px rgba(0,0,0,.15)}
+.led.on{background:#ef4444;box-shadow:0 0 8px #ef4444}
+/* karnaugh */
+table.km{border-collapse:collapse;font-family:var(--mono);margin:6px 0}
+table.km th{font-weight:600;font-size:.86rem;color:var(--muted);padding:4px 8px;background:#f5f7fa;border:1px solid var(--line)}
+table.km th.corner{font-size:.78rem;line-height:1.2}
+table.km td.cell{width:56px;height:50px;border:1px solid #aeb7c4;text-align:center;font-size:1.25rem;position:relative;background:#fff;user-select:none}
+table.km.edit td.cell{cursor:pointer}
+table.km.edit td.cell:hover{outline:2px solid #9cc3f5;outline-offset:-2px}
+table.km td.cell.one{font-weight:700;color:#0f2747}
+table.km td.cell.dc{color:var(--warn)}
+table.km td.cell.zero{color:#a3abb7}
+table.km td.cell small{position:absolute;top:2px;right:4px;font-size:.62rem;color:#a0a8b4;font-weight:400}
+.bars{position:absolute;left:4px;right:4px;bottom:3px;display:flex;gap:2px}
+.bars i{flex:1;height:5px;border-radius:2px}
+.legend{display:flex;flex-direction:column;gap:5px;margin:8px 0}
+.legend>span{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);cursor:default;padding:2px 6px;border-radius:5px}
+.legend>span:hover{background:#f1f4f8}
+.legend i{width:16px;height:10px;border-radius:3px;display:inline-block}
+/* combinatoire */
+.clayout{display:grid;grid-template-columns:230px 1fr;gap:16px;align-items:start}
+@media(max-width:760px){.clayout{grid-template-columns:1fr}}
+.clist{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.clist h5{margin:10px 6px 4px;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.clist button{display:block;width:100%;text-align:left;font:inherit;font-size:.9rem;border:0;background:none;padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--ink)}
+.clist button:hover{background:#f1f4f8}
+.clist button.active{background:var(--accent);color:#fff}
+svg text{font-family:'IBM Plex Sans',sans-serif}
+svg .pin{cursor:pointer}
+.bsvg{max-width:100%;height:auto}
+/* sequentiel */
+.chwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fcfdfe;margin:10px 0 4px}
+svg.chrono .cg{stroke:#eef1f5;stroke-width:1}
+svg.chrono .cl{font-family:var(--mono);font-size:13px;fill:#3b4553;dominant-baseline:middle}
+svg.chrono .cw{fill:none;stroke:var(--accent);stroke-width:2}
+svg.chrono .cw.clk{stroke:#6b7686}
+svg.chrono .cw.out{stroke:#c2410c}
+.ffwrap{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.regbox{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0}
+.rcell{border:2px solid #0f2747;border-radius:8px;width:66px;text-align:center;padding:4px 0;background:#fff}
+.rcell small{display:block;font-size:.75rem;color:var(--muted);font-family:var(--mono)}
+.rcell b{font-family:var(--mono);font-size:1.5rem}
+.rcell.one{background:#e8f7ee;border-color:var(--on)}
+.arrow{color:var(--muted);font-size:1.2rem}
+.pin-io{font-family:var(--mono);font-size:.9rem;padding:4px 8px;border-radius:6px;background:#f1f4f8}
+.bigbits{font-family:var(--mono);font-size:2.2rem;letter-spacing:.15em;font-weight:600}
+.bigbits span{cursor:pointer;padding:0 2px;border-radius:4px}
+.bigbits span:hover{background:#eef1f5}
+.bigbits span.b1{color:var(--on)}
+.bigbits span.b0{color:#9aa3b1}
+.notes{font-size:.9rem}
+.notes li{margin:3px 0}
+/* exercices */
+.qbox{font-size:1.08rem;margin:10px 0 12px;padding:12px 14px;background:#f8fafc;border:1px solid var(--line);border-radius:8px}
+.fb{margin-top:10px;padding:10px 14px;border-radius:8px}
+.fb.ok{background:#e8f7ee;border:1px solid #a7dfbd}
+.fb.ko{background:#fdecec;border:1px solid #f3b8b3}
+.fb.part{background:#fff6e5;border:1px solid #f4cf8a}
+.score{font-family:var(--mono);font-size:1rem;background:var(--accent2);padding:4px 10px;border-radius:6px}
+.qcm .q{border-top:1px solid var(--line);padding:12px 0}
+.qcm .q:first-child{border-top:0}
+.qcm label{display:block;padding:3px 0;cursor:pointer}
+.qcm .ex{font-size:.88rem;margin-top:4px}
+/* accueil */
+.home{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.home a{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;text-decoration:none;color:var(--ink);transition:border-color .15s}
+.home a:hover{border-color:var(--accent)}
+.home a b{display:block;color:var(--accent);font-size:1.02rem;margin-bottom:4px}
+.home a span{font-size:.9rem;color:var(--muted)}
+.tp h3{color:var(--accent)}
+.tp ol,.tp ul{padding-left:22px}
+.tp li{margin:4px 0}
+.tag{display:inline-block;font-size:.75rem;background:var(--accent2);color:var(--accent);border-radius:999px;padding:2px 9px;margin-right:6px;font-weight:600}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="sitebar"><div><a href="index.html">← Accueil du site Cours Pr. Hanine</a><a href="logiciels.html">Tous les logiciels didactiques</a></div></div>
+  <div class="hwrap">
+    <div class="logo">01</div>
+    <div><h1>Electronique numérique</h1><p>Licence Digitalisation – Tronc commun Informatique appliquée (S1) · par M. HANINE</p></div>
+    <div class="sp1"></div>
+    <button id="bigBtn" title="Agrandit l’affichage pour la projection en amphithéâtre">Affichage projection</button>
+  </div>
+  <nav class="main" id="nav">
+    <a href="#accueil">Accueil</a>
+    <a href="#numeration">1 · Bases mathématiques</a>
+    <a href="#fonctions">2 · Fonctions binaires</a>
+    <a href="#combinatoire">3 · Circuits combinatoires</a>
+    <a href="#sequentiel">4 · Circuits séquentiels</a>
+    <a href="#exercices">Exercices &amp; QCM</a>
+    <a href="#tp">Travaux pratiques</a>
+  </nav>
+</header>
+
+<main>
+<!-- ================= ACCUEIL ================= -->
+<section id="s-accueil">
+  <h2>Bienvenue</h2>
+  <div class="card">
+    <p style="margin-top:0">Ce logiciel accompagne le module <b>Electronique numérique</b>. Chaque chapitre propose des outils interactifs qui montrent <b>la méthode pas à pas</b>, et pas seulement le résultat : conversions par divisions successives, tables de vérité, tableaux de Karnaugh avec regroupements, circuits combinatoires manipulables, bascules, registres et compteurs avec chronogrammes.</p>
+    <p class="hint" style="margin-bottom:0">Conseil pour le cours en amphithéâtre : le bouton <b>Affichage projection</b> (en haut à droite) agrandit tous les textes.</p>
+  </div>
+  <div class="home">
+    <a href="#numeration"><b>Chapitre 1 : Bases mathématiques</b><span>Systèmes de numération, conversions détaillées, nombres signés (SVA, C1, C2), virgule flottante IEEE 754, opérations en binaire, codes BCD, Excess-3, Gray et ASCII.</span></a>
+    <a href="#fonctions"><b>Chapitre 2 : Fonctions binaires</b><span>Table de vérité d’une expression, formes canoniques, simplification algébrique automatique, tableaux de Karnaugh interactifs, théorèmes vérifiés.</span></a>
+    <a href="#combinatoire"><b>Chapitre 3 : Circuits combinatoires</b><span>Codeurs, décodeurs (et 7 segments), multiplexeurs, démultiplexeurs, additionneurs, comparateurs, circuits de parité, avec interrupteurs et table de vérité.</span></a>
+    <a href="#sequentiel"><b>Chapitre 4 : Circuits séquentiels</b><span>Bascules RS, D, T, JK, registres SISO, SIPO, PISO, PIPO, compteurs (binaire, anneau, Johnson) et conception d’un compteur à cycle quelconque.</span></a>
+    <a href="#exercices"><b>Exercices &amp; QCM</b><span>Exercices générés aléatoirement avec correction immédiate, et QCM de synthèse sur l’ensemble du module.</span></a>
+    <a href="#tp"><b>Travaux pratiques</b><span>Guides des 4 manipulations sous Logisim, avec renvois vers les simulateurs pour vérifier les résultats.</span></a>
+  </div>
+</section>
+
+<!-- ================= CHAPITRE 1 ================= -->
+<section id="s-numeration">
+  <h2>Chapitre 1 : Bases mathématiques</h2>
+  <div class="subtabs" data-g="num">
+    <button data-p="conv">Systèmes de numération</button>
+    <button data-p="repr">Représentation des nombres</button>
+    <button data-p="ops">Opérations en binaire</button>
+    <button data-p="codes">Codes binaires</button>
+  </div>
+
+  <div class="sp" data-g="num" data-p="conv">
+    <div class="card">
+      <h3>Conversion entre bases</h3>
+      <div class="row">
+        <label>Nombre à convertir <input id="cv-val" type="text" class="mono" value="181,625"></label>
+        <label>Base de départ <select id="cv-base"></select></label>
+        <label>Base cible supplémentaire <select id="cv-other"></select></label>
+      </div>
+      <p class="hint">Chiffres autorisés : 0–9 puis A–F. La virgule (ou le point) sépare la partie fractionnaire.</p>
+      <div id="cv-out"></div>
+    </div>
+  </div>
+
+  <div class="sp" data-g="num" data-p="repr">
+    <div class="grid2">
+      <div class="card">
+        <h3>Entiers signés sur n bits</h3>
+        <div class="row">
+          <label>Nombre décimal <input id="rp-val" type="text" class="mono" value="-45"></label>
+          <label>Nombre de bits <select id="rp-n"><option>4</option><option selected>8</option><option>16</option></select></label>
+        </div>
+        <div id="rp-out"></div>
+      </div>
+      <div class="card">
+        <h3>Interpréter un mot binaire</h3>
+        <div class="row"><label>Mot binaire (1 à 16 bits) <input id="rd-val" type="text" class="mono" value="11010011"></label></div>
+        <div id="rd-out"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Virgule flottante : norme IEEE 754 simple précision (32 bits)</h3>
+      <div class="row"><label>Nombre réel <input id="fl-val" type="text" class="mono" value="-12,375"></label></div>
+      <div id="fl-out"></div>
+    </div>
+  </div>
+
+  <div class="sp" data-g="num" data-p="ops">
+    <div class="card">
+      <h3>Opérations arithmétiques en binaire</h3>
+      <div class="row">
+        <label>A (binaire) <input id="op-a" type="text" class="mono" value="101101"></label>
+        <label>Opération <select id="op-op"><option value="add">+ Addition</option><option value="sub">− Soustraction</option><option value="mul">× Multiplication</option><option value="div">÷ Division</option></select></label>
+        <label>B (binaire) <input id="op-b" type="text" class="mono" value="11011"></label>
+      </div>
+      <div id="op-out"></div>
+    </div>
+    <div class="card">
+      <h3>Rappel des règles</h3>
+      <div class="flex">
+        <table class="tt"><tr><th colspan="3">Addition</th></tr><tr><td>0 + 0</td><td>=</td><td>0</td></tr><tr><td>0 + 1</td><td>=</td><td>1</td></tr><tr><td>1 + 1</td><td>=</td><td>0, retenue 1</td></tr><tr><td>1 + 1 + 1</td><td>=</td><td>1, retenue 1</td></tr></table>
+        <table class="tt"><tr><th colspan="3">Soustraction</th></tr><tr><td>0 − 0</td><td>=</td><td>0</td></tr><tr><td>1 − 0</td><td>=</td><td>1</td></tr><tr><td>1 − 1</td><td>=</td><td>0</td></tr><tr><td>0 − 1</td><td>=</td><td>1, emprunt 1</td></tr></table>
+        <table class="tt"><tr><th colspan="3">Multiplication</th></tr><tr><td>0 × 0</td><td>=</td><td>0</td></tr><tr><td>0 × 1</td><td>=</td><td>0</td></tr><tr><td>1 × 0</td><td>=</td><td>0</td></tr><tr><td>1 × 1</td><td>=</td><td>1</td></tr></table>
+      </div>
+      <p class="hint">En pratique, les circuits réalisent la soustraction A − B comme l’addition A + C2(B), en ignorant la retenue finale.</p>
+    </div>
+  </div>
+
+  <div class="sp" data-g="num" data-p="codes">
+    <div class="grid2">
+      <div class="card">
+        <h3>Codes d’un nombre décimal</h3>
+        <div class="row"><label>Nombre décimal (0 à 9999) <input id="cd-val" type="text" class="mono" value="1945"></label></div>
+        <div id="cd-out"></div>
+      </div>
+      <div class="card">
+        <h3>Code Gray → binaire naturel</h3>
+        <div class="row"><label>Mot en code Gray <input id="gb-val" type="text" class="mono" value="1101"></label></div>
+        <div id="gb-out"></div>
+        <h3 style="margin-top:18px">Code ASCII</h3>
+        <div class="row"><label>Texte <input id="as-val" type="text" class="mono" value="FS 2026"></label></div>
+        <div id="as-out"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Table de référence (0 à 15)</h3>
+      <div id="cd-table"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHAPITRE 2 ================= -->
+<section id="s-fonctions">
+  <h2>Chapitre 2 : Fonctions binaires</h2>
+  <div class="subtabs" data-g="fb">
+    <button data-p="expr">Représentation et simplification</button>
+    <button data-p="kmap">Tableau de Karnaugh</button>
+    <button data-p="theo">Théorèmes généraux</button>
+  </div>
+
+  <div class="sp" data-g="fb" data-p="expr">
+    <div class="card">
+      <h3>D’une expression logique à sa table de vérité</h3>
+      <div class="row"><label>F = <input id="ex-val" type="text" class="mono wide" value="A'B + AB'C + ABC + A'B'C'"></label></div>
+      <p class="hint">Syntaxe : variables A à Z · complément <code>A'</code>, <code>!A</code> ou <code>/A</code> · ET : <code>.</code>, <code>*</code> ou juxtaposition <code>AB</code> · OU : <code>+</code> · OU exclusif : <code>^</code> · parenthèses autorisées. Jusqu’à 6 variables.</p>
+      <div id="ex-out"></div>
+    </div>
+  </div>
+
+  <div class="sp" data-g="fb" data-p="kmap">
+    <div class="card">
+      <h3>Tableau de Karnaugh interactif</h3>
+      <div class="row">
+        <label>Nombre de variables <select id="km-n"><option>2</option><option>3</option><option selected>4</option></select></label>
+        <label>Regroupement <select id="km-mode"><option value="sop">des 1 → somme de produits</option><option value="pos">des 0 → produit de sommes</option></select></label>
+        <button class="btn ghost" id="km-clear">Tout à 0</button>
+        <button class="btn ghost" id="km-rand">Fonction aléatoire</button>
+      </div>
+      <div class="row">
+        <label>Remplir par Σm( … ) <input id="km-m" type="text" class="mono" placeholder="ex. 0,2,5,7,8,10,13,15"></label>
+        <label>Indifférents X( … ) <input id="km-x" type="text" class="mono" placeholder="ex. 1,9"></label>
+        <button class="btn" id="km-fill">Remplir</button>
+      </div>
+      <p class="hint">Cliquez sur une case pour la faire passer de 0 à 1, puis à X (état indifférent), puis à 0. Le petit nombre en haut à droite est le numéro du minterme. Survolez un terme de la solution pour voir son regroupement.</p>
+      <div class="flex">
+        <div id="km-grid"></div>
+        <div style="min-width:260px;flex:1"><div id="km-res"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sp" data-g="fb" data-p="theo">
+    <div class="card">
+      <h3>Axiomes et théorèmes de l’algèbre de Boole</h3>
+      <p class="hint">Chaque égalité est vérifiée par le logiciel à l’aide des tables de vérité. Cliquez sur une ligne pour afficher la démonstration.</p>
+      <div class="flex">
+        <div id="th-list"></div>
+        <div id="th-proof" style="min-width:260px"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Vérifier une égalité</h3>
+      <div class="row">
+        <label>Expression 1 <input id="eq-a" type="text" class="mono" value="(A+B)(A+C)"></label>
+        <label>Expression 2 <input id="eq-b" type="text" class="mono" value="A+BC"></label>
+      </div>
+      <div id="eq-out"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHAPITRE 3 ================= -->
+<section id="s-combinatoire">
+  <h2>Chapitre 3 : Fonctions et circuits combinatoires</h2>
+  <div class="clayout">
+    <div class="clist" id="c-list"></div>
+    <div>
+      <div class="card">
+        <h3 id="c-title"></h3>
+        <p id="c-desc" style="margin-top:0"></p>
+        <div class="flex">
+          <div id="c-svg"></div>
+          <div id="c-extra"></div>
+        </div>
+        <p class="hint">Cliquez sur les entrées (à gauche du bloc) pour les faire basculer entre 0 et 1. La ligne active de la table est surlignée.</p>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>Equations logiques</h3><div id="c-eq" class="mono"></div></div>
+        <div class="card"><h3>Table de vérité</h3><div id="c-table"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHAPITRE 4 ================= -->
+<section id="s-sequentiel">
+  <h2>Chapitre 4 : Fonctions et circuits séquentiels</h2>
+  <div class="subtabs" data-g="seq">
+    <button data-p="ff">Bascules</button>
+    <button data-p="reg">Registres</button>
+    <button data-p="cnt">Compteurs</button>
+    <button data-p="dz">Conception d’un compteur</button>
+  </div>
+
+  <div class="sp" data-g="seq" data-p="ff">
+    <div class="card">
+      <div class="row">
+        <label>Type de bascule <select id="ff-type">
+          <option value="RSL">Verrou RS asynchrone (portes NOR)</option>
+          <option value="RS">Bascule RS synchrone</option>
+          <option value="D">Bascule D</option>
+          <option value="T">Bascule T</option>
+          <option value="JK" selected>Bascule JK</option>
+        </select></label>
+        <label class="chk"><input type="checkbox" id="ff-async"> Entrées asynchrones PRE / CLR</label>
+      </div>
+      <div class="ffwrap">
+        <div id="ff-sym"></div>
+        <div style="flex:1;min-width:260px">
+          <div id="ff-ins" class="swrow"></div>
+          <div class="row" id="ff-clkrow">
+            <button class="btn" id="ff-pulse">⎍ Impulsion d’horloge</button>
+            <button class="btn ghost" id="ff-half">H : basculer</button>
+            <button class="btn ghost autoclk" id="ff-auto">▶ Horloge automatique</button>
+            <button class="btn ghost" id="ff-clear">Effacer</button>
+          </div>
+          <div id="ff-state"></div>
+        </div>
+      </div>
+      <div class="chwrap" id="ff-chrono"></div>
+      <p class="hint">Chaque colonne du chronogramme correspond à un événement : changement d’une entrée ou demi-période d’horloge. Les bascules synchrones réagissent au <b>front montant</b> de H.</p>
+    </div>
+    <div class="grid2">
+      <div class="card" id="ff-table"></div>
+      <div class="card" id="ff-exc"></div>
+    </div>
+  </div>
+
+  <div class="sp" data-g="seq" data-p="reg">
+    <div class="card">
+      <div class="row">
+        <label>Type de registre (4 bits) <select id="rg-mode">
+          <option value="SISO">SISO : entrée série, sortie série</option>
+          <option value="SIPO" selected>SIPO : entrée série, sorties parallèles</option>
+          <option value="PISO">PISO : entrées parallèles, sortie série</option>
+          <option value="PIPO">PIPO : entrées parallèles, sorties parallèles</option>
+        </select></label>
+        <label>Sens du décalage <select id="rg-dir"><option value="R">A droite (Q0 → Q3)</option><option value="L">A gauche (Q3 → Q0)</option></select></label>
+      </div>
+      <div id="rg-ins" class="swrow"></div>
+      <div id="rg-view"></div>
+      <div class="row">
+        <button class="btn" id="rg-pulse">⎍ Impulsion d’horloge</button>
+        <button class="btn ghost autoclk" id="rg-auto">▶ Horloge automatique</button>
+        <button class="btn ghost" id="rg-reset">Remise à zéro</button>
+        <span id="rg-sendbox" style="display:flex;gap:8px;align-items:flex-end">
+          <label style="display:flex;flex-direction:column;gap:4px;font-size:.85rem;color:var(--muted)">Mot à envoyer en série <input id="rg-word" type="text" class="mono" value="1011" size="8"></label>
+          <button class="btn ghost" id="rg-send">Envoyer</button>
+        </span>
+      </div>
+      <div class="chwrap" id="rg-chrono"></div>
+      <div id="rg-notes" class="notes"></div>
+    </div>
+  </div>
+
+  <div class="sp" data-g="seq" data-p="cnt">
+    <div class="card">
+      <div class="row">
+        <label>Type de compteur <select id="ct-type">
+          <option value="sync">Binaire synchrone</option>
+          <option value="async">Binaire asynchrone</option>
+          <option value="ring">En anneau</option>
+          <option value="johnson">Johnson</option>
+        </select></label>
+        <label id="ct-Nl">Modulo N <input id="ct-N" type="number" min="2" max="64" value="10" style="width:90px"></label>
+        <label id="ct-dirl">Sens <select id="ct-dir"><option value="up">Comptage</option><option value="down">Décomptage</option></select></label>
+        <label id="ct-nl" class="hidden">Nombre de bascules <select id="ct-n"><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
+      </div>
+      <div class="flex">
+        <div style="flex:1;min-width:280px">
+          <div id="ct-bits"></div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn" id="ct-pulse">⎍ Impulsion d’horloge</button>
+            <button class="btn ghost autoclk" id="ct-auto">▶ Horloge automatique</button>
+            <button class="btn ghost" id="ct-reset">Initialiser</button>
+          </div>
+          <div id="ct-notes" class="notes"></div>
+        </div>
+        <div id="ct-diag"></div>
+      </div>
+      <div class="chwrap" id="ct-chrono"></div>
+    </div>
+  </div>
+
+  <div class="sp" data-g="seq" data-p="dz">
+    <div class="card">
+      <h3>Conception d’un compteur synchrone à cycle quelconque</h3>
+      <div class="row">
+        <label>Séquence des états (en décimal) <input id="dz-seq" type="text" class="mono" value="0, 2, 3, 5, 7"></label>
+        <label>Bascules utilisées <select id="dz-type"><option value="JK">JK</option><option value="D">D</option><option value="T">T</option><option value="RS">RS</option></select></label>
+        <button class="btn" id="dz-go">Concevoir</button>
+      </div>
+      <p class="hint">Le logiciel construit la table de transition, déduit les entrées des bascules à l’aide de la table d’excitation, simplifie chaque équation (les états inutilisés sont des cas indifférents) et vérifie que le compteur démarre seul depuis un état non prévu.</p>
+      <div id="dz-out"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXERCICES ================= -->
+<section id="s-exercices">
+  <h2>Exercices &amp; QCM</h2>
+  <div class="subtabs" data-g="ex">
+    <button data-p="gen">Exercices aléatoires</button>
+    <button data-p="qcm">QCM de synthèse</button>
+  </div>
+  <div class="sp" data-g="ex" data-p="gen">
+    <div class="card">
+      <div class="row">
+        <label>Thème <select id="xg-type"></select></label>
+        <button class="btn" id="xg-new">Nouvel exercice</button>
+        <span class="score" id="xg-score">Score : 0 / 0</span>
+      </div>
+      <div class="qbox" id="xg-q"></div>
+      <div class="row">
+        <label style="flex:1">Votre réponse <input id="xg-ans" type="text" class="mono" style="width:100%"></label>
+        <button class="btn" id="xg-check">Vérifier</button>
+        <button class="btn ghost" id="xg-sol">Voir la solution</button>
+      </div>
+      <div id="xg-fb"></div>
+    </div>
+  </div>
+  <div class="sp" data-g="ex" data-p="qcm">
+    <div class="card qcm">
+      <div id="qcm-list"></div>
+      <div class="row" style="margin-top:12px"><button class="btn" id="qcm-go">Corriger le QCM</button><button class="btn ghost" id="qcm-reset">Recommencer</button><span class="score" id="qcm-score"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TP ================= -->
+<section id="s-tp">
+  <h2>Travaux pratiques</h2>
+  <div class="card">
+    <p style="margin:0">Les manipulations se font avec <b>Logisim-evolution</b>, logiciel libre de description, conception et simulation de circuits logiques (Java requis) : <a href="https://github.com/logisim-evolution/logisim-evolution" target="_blank" rel="noopener">github.com/logisim-evolution/logisim-evolution</a>. Les noms de menus et de bibliothèques ci-dessous sont ceux de la version anglaise. Chaque manipulation renvoie vers le simulateur correspondant de ce logiciel pour vérifier vos résultats.</p>
+  </div>
+  <div class="tp">
+    <div class="card">
+      <h3><span class="tag">Manipulation 1</span>Prise en main de Logisim</h3>
+      <p><b>Objectifs :</b> savoir décrire, concevoir et simuler un circuit logique ; obtenir automatiquement la table de vérité et les équations d’un circuit.</p>
+      <ol>
+        <li>Créer un projet (<code>File › New</code>). Repérer la barre d’outils : outil de manipulation (main), outil de sélection, outil de texte.</li>
+        <li>Bibliothèque <code>Wiring</code> : placer deux broches d’entrée <code>Pin</code> (A, B) et une broche de sortie (F). Nommer chaque broche avec la propriété <code>Label</code>.</li>
+        <li>Bibliothèque <code>Gates</code> : placer les portes NOT, AND, OR, NAND, NOR, XOR. Câbler chaque porte et relever sa table de vérité en manipulant les entrées avec l’outil main.</li>
+        <li>Réaliser la fonction <b>F = A·B + Ā·C</b>. Relever sa table de vérité à la main.</li>
+        <li>Utiliser <code>Project › Analyze Circuit</code> : comparer la table et l’expression obtenues avec celles calculées dans le <a href="#fonctions">chapitre 2 du logiciel</a>.</li>
+        <li>Faire l’inverse : dans la fenêtre d’analyse, saisir une expression puis cliquer sur <code>Build Circuit</code> pour générer le logigramme.</li>
+        <li>Créer un sous-circuit (<code>Project › Add Circuit</code>), lui donner un symbole et l’utiliser dans le circuit principal.</li>
+      </ol>
+      <p><b>Compte rendu :</b> tables de vérité des portes de base ; réalisation des portes NOT, AND et OR uniquement avec des NAND (vérifiables dans l’onglet <a href="#fonctions">Théorèmes généraux</a>).</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag">Manipulation 2</span>Etude des fonctions combinatoires</h3>
+      <p><b>Objectifs :</b> réaliser à partir de portes logiques les circuits combinatoires du chapitre 3, puis les comparer aux composants intégrés.</p>
+      <ol>
+        <li><b>Additionneurs :</b> réaliser un demi-additionneur, puis un additionneur complet à partir de deux demi-additionneurs. En faire un sous-circuit et câbler un additionneur 4 bits à propagation de retenue. Comparer avec le composant <code>Arithmetic › Adder</code>.</li>
+        <li><b>Multiplexeur 4 → 1 :</b> le réaliser avec des portes AND, OR et NOT, puis comparer avec <code>Plexers › Multiplexer</code>. Réaliser une fonction logique de 3 variables avec un multiplexeur.</li>
+        <li><b>Décodeur 3 → 8 et démultiplexeur 1 → 4 :</b> réalisation par portes et comparaison avec <code>Plexers › Decoder</code> et <code>Demultiplexer</code>.</li>
+        <li><b>Codeur prioritaire 8 → 3 :</b> utiliser <code>Plexers › Priority Encoder</code> et vérifier la priorité.</li>
+        <li><b>Comparateur :</b> réaliser un comparateur 1 bit (sorties A&gt;B, A=B, A&lt;B), puis utiliser <code>Arithmetic › Comparator</code> sur 4 bits.</li>
+        <li><b>Parité :</b> générateur de parité paire sur 4 bits avec des XOR, puis contrôleur de parité sur 5 bits.</li>
+        <li><b>Afficheur :</b> relier un décodeur BCD → 7 segments à l’afficheur <code>Input/Output › 7-Segment Display</code>.</li>
+      </ol>
+      <p><b>Vérification :</b> comparez chaque table relevée avec les simulateurs du <a href="#combinatoire">chapitre 3</a>.</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag">Manipulation 3</span>Fonctions séquentielles (partie 1) : les bascules</h3>
+      <p><b>Objectifs :</b> comprendre l’effet mémoire, la synchronisation par horloge et le fonctionnement des bascules RS, D, T et JK.</p>
+      <ol>
+        <li>Réaliser un <b>verrou RS</b> avec deux portes NOR rebouclées. Vérifier les états mémoire, mise à 1, mise à 0 et la combinaison interdite S = R = 1.</li>
+        <li>Ajouter une entrée d’horloge (<code>Wiring › Clock</code>) pour obtenir une <b>bascule RS synchrone</b>.</li>
+        <li>Transformer la bascule RS en <b>bascule D</b> (R = D̄, S = D).</li>
+        <li>Utiliser les bascules de la bibliothèque <code>Memory</code> (<code>D Flip-Flop</code>, <code>T Flip-Flop</code>, <code>J-K Flip-Flop</code>, <code>S-R Flip-Flop</code>). Activer l’horloge avec <code>Simulate › Auto-Tick Enabled</code>.</li>
+        <li>Relever les chronogrammes de chaque bascule (fenêtre <code>Timing Diagram</code> ou <code>Chronogram</code> selon la version).</li>
+        <li>Etudier l’effet des entrées asynchrones Preset et Clear.</li>
+      </ol>
+      <p><b>Vérification :</b> reproduisez les mêmes séquences d’entrées dans le simulateur de <a href="#sequentiel">bascules</a> et comparez les chronogrammes.</p>
+    </div>
+    <div class="card">
+      <h3><span class="tag">Manipulation 4</span>Fonctions séquentielles (partie 2) : registres et compteurs</h3>
+      <p><b>Objectifs :</b> réaliser des registres à décalage et des compteurs à partir de bascules.</p>
+      <ol>
+        <li><b>Registre à décalage 4 bits</b> avec 4 bascules D : modes SISO et SIPO. Entrer le mot 1011 en série et relever l’état après chaque front d’horloge.</li>
+        <li>Ajouter des multiplexeurs 2 → 1 devant chaque bascule pour obtenir un registre <b>PISO</b> (commande chargement/décalage), puis <b>PIPO</b>.</li>
+        <li><b>Compteur asynchrone modulo 16</b> avec 4 bascules T (ou JK avec J = K = 1). Observer le décalage des fronts sur le chronogramme.</li>
+        <li><b>Compteur asynchrone modulo 10</b> : remise à zéro par une porte NAND reliée aux entrées Clear.</li>
+        <li><b>Compteur synchrone modulo 16</b> : T0 = 1, T1 = Q0, T2 = Q0·Q1, T3 = Q0·Q1·Q2.</li>
+        <li><b>Compteur en anneau et compteur de Johnson</b> 4 bits : comparer le nombre d’états et étudier les états parasites.</li>
+        <li><b>Compteur à cycle quelconque</b> (exemple : 0, 2, 3, 5, 7) avec des bascules JK : calculer les équations, puis câbler et vérifier.</li>
+      </ol>
+      <p><b>Vérification :</b> utilisez les onglets <a href="#sequentiel">Registres, Compteurs et Conception d’un compteur</a> pour contrôler vos équations et vos chronogrammes.</p>
+    </div>
+  </div>
+</section>
+</main>
+<footer>Electronique numérique – logiciel didactique · Pr. Mounir Hanine · Faculté des Sciences Errachidia · Université Moulay Ismaïl</footer>
+
+<script>
+'use strict';
+/* =========================================================
+   UTILITAIRES
+   ========================================================= */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const DIG='0123456789ABCDEF';
+const bits=(v,n)=>(v>>>0).toString(2).padStart(n,'0').slice(-n);
+const popc=x=>{let c=0;while(x){x&=x-1;c++}return c};
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const o=s=>`<span class="ov">${s}</span>`;
+const g4=s=>s.replace(/\B(?=(.{4})+$)/g,' ');
+const fmtN=x=>String(+(+x).toPrecision(12)).replace('.',',');
+
+/* =========================================================
+   CHAPITRE 1 : NUMERATION
+   ========================================================= */
+function parseBase(str,b){
+  let s=str.trim().toUpperCase().replace(',', '.').replace(/\s/g,'');
+  let neg=false; if(s[0]==='-'){neg=true;s=s.slice(1)} else if(s[0]==='+') s=s.slice(1);
+  if(!s) throw 'Saisissez un nombre.';
+  const parts=s.split('.'); if(parts.length>2) throw 'Une seule virgule est autorisée.';
+  const ip=parts[0]||'0', fp=parts[1]||'';
+  let iv=0; for(const c of ip){const d=DIG.indexOf(c); if(d<0||d>=b) throw `Le chiffre « ${c} » n’existe pas en base ${b}.`; iv=iv*b+d}
+  let fv=0,w=1/b; for(const c of fp){const d=DIG.indexOf(c); if(d<0||d>=b) throw `Le chiffre « ${c} » n’existe pas en base ${b}.`; fv+=d*w; w/=b}
+  if(iv>Number.MAX_SAFE_INTEGER) throw 'Nombre trop grand.';
+  return {neg,iv,fv,ip,fp};
+}
+function toBase(iv,fv,t,maxF=12){
+  let s=iv.toString(t).toUpperCase(), exact=true;
+  if(fv>0){ let f=fv,d=''; for(let k=0;k<maxF&&f>1e-12;k++){ f*=t; const q=Math.floor(f+1e-9); d+=DIG[Math.min(q,t-1)]; f-=q; if(f<1e-9)f=0 } if(f>1e-9) exact=false; s+=','+d }
+  return {s,exact};
+}
+function divTable(n,t){
+  if(n===0) return `<div><table class="tt"><tr><td>0</td></tr></table><p class="hint">0 s’écrit 0 dans toutes les bases.</p></div>`;
+  let rows='',q=n,rs=[];
+  while(q>0){const r=q%t,nq=Math.floor(q/t); rows+=`<tr><td>${q}</td><td>÷ ${t}</td><td>= ${nq}</td><td class="hl">reste ${DIG[r]}</td></tr>`; rs.push(DIG[r]); q=nq}
+  return `<div><table class="tt"><tr><th>Dividende</th><th></th><th>Quotient</th><th>Reste</th></tr>${rows}</table><p>Lecture des restes <b>de bas en haut</b> : <span class="res">${rs.reverse().join('')}</span></p></div>`;
+}
+function mulTable(fv,t){
+  let rows='',f=fv,d='';
+  for(let k=0;k<8&&f>1e-12;k++){const p=f*t, q=Math.floor(p+1e-9); rows+=`<tr><td>${fmtN(f)} × ${t}</td><td>= ${fmtN(p)}</td><td class="hl">${DIG[Math.min(q,t-1)]}</td></tr>`; d+=DIG[Math.min(q,t-1)]; f=p-q; if(f<1e-9)f=0}
+  return `<div><table class="tt"><tr><th>Partie fractionnaire × ${t}</th><th>Produit</th><th>Partie entière</th></tr>${rows}</table><p>Lecture des parties entières <b>de haut en bas</b> : <span class="res">0,${d}${f>0?'…':''}</span></p></div>`;
+}
+function groupTable(b,g){
+  const L=Math.ceil(b.length/g)*g, s=b.padStart(L,'0'), gs=s.match(new RegExp(`.{${g}}`,'g'));
+  return `<table class="tt"><tr><th>${g===3?'Groupes de 3 bits':'Groupes de 4 bits'}</th>${gs.map(x=>`<td>${x}</td>`).join('')}</tr><tr><th>${g===3?'Octal':'Hexadécimal'}</th>${gs.map(x=>`<td class="hl">${parseInt(x,2).toString(16).toUpperCase()}</td>`).join('')}</tr></table>`;
+}
+function renderConv(){
+  const out=$('#cv-out'), b=+$('#cv-base').value, ot=+$('#cv-other').value;
+  let P; try{P=parseBase($('#cv-val').value,b)}catch(e){out.innerHTML=`<p class="err">${e}</p>`;return}
+  const sg=P.neg?'−':'', val=P.iv+P.fv;
+  const targets=[2,8,10,16]; if(!targets.includes(ot)) targets.push(ot);
+  let h='<div class="results">';
+  for(const t of targets){ const r=t===10?{s:fmtN(val),exact:true}:toBase(P.iv,P.fv,t); h+=`<div class="rbox ${t===b?'src':''}"><span>Base ${t}${t===b?' (départ)':''}</span><b class="mono">${sg}${r.s}${r.exact?'':'…'}</b></div>` }
+  h+='</div>';
+  if(b!==10){
+    const terms=[]; [...P.ip].forEach((c,i)=>terms.push(`${c}×${b}<sup>${P.ip.length-1-i}</sup>`)); [...P.fp].forEach((c,i)=>terms.push(`${c}×${b}<sup>−${i+1}</sup>`));
+    h+=`<div class="step"><b>① Base ${b} → décimal : somme pondérée des chiffres</b><p class="mono wrap">${terms.join(' + ')} = <span class="res">${sg}${fmtN(val)}</span></p></div>`;
+  } else h+=`<div class="step"><b>① Le nombre est donné en décimal : (${sg}${fmtN(val)})<sub>10</sub></b></div>`;
+  h+=`<div class="step"><b>② Décimal → base B : divisions successives par B (partie entière)${P.fv?' et multiplications successives par B (partie fractionnaire)':''}</b>`;
+  for(const t of targets.filter(t=>t!==10&&t!==b)) h+=`<details ${t===2||(b===2&&t===8)?'open':''}><summary>Vers la base ${t}</summary><div class="flex">${divTable(P.iv,t)}${P.fv?mulTable(P.fv,t):''}</div></details>`;
+  h+='</div>';
+  if([2,8,16].includes(b)&&P.iv>0){ const bi=P.iv.toString(2); h+=`<div class="step"><b>③ Méthode rapide : regroupement des bits</b><p>Binaire de la partie entière : <span class="res">${bi}</span>. On regroupe par 3 (octal) ou par 4 (hexadécimal) en partant de la droite.</p><div class="flex">${groupTable(bi,3)}${groupTable(bi,4)}</div></div>` }
+  out.innerHTML=h;
+}
+function renderRepr(){
+  const out=$('#rp-out'), n=+$('#rp-n').value, raw=$('#rp-val').value.trim();
+  if(!/^[-+]?\d+$/.test(raw)){out.innerHTML='<p class="err">Saisissez un entier décimal (exemple : -45).</p>';return}
+  const x=parseInt(raw,10), a=Math.abs(x), M=2**(n-1), F=2**n;
+  const inv=s=>[...s].map(c=>c==='0'?'1':'0').join('');
+  const nr='<span class="err">non représentable</span>';
+  const U = x>=0&&x<F ? bits(x,n) : null;
+  const S = a<=M-1 ? (x<0?'1':'0')+bits(a,n-1) : null;
+  const C1= a<=M-1 ? (x>=0?bits(x,n):inv(bits(a,n))) : null;
+  const C2= x>=-M&&x<=M-1 ? bits(x>=0?x:F+x,n) : null;
+  const row=(nm,rg,v)=>`<tr><td class="l">${nm}</td><td>${rg}</td><td>${v?`<b>${g4(v)}</b>`:nr}</td></tr>`;
+  let h=`<table class="tt"><tr><th>Code</th><th>Plage sur ${n} bits</th><th>Représentation de ${x}</th></tr>
+  ${row('Binaire naturel (non signé)',`0 … ${F-1}`,U)}
+  ${row('Signe et valeur absolue',`−${M-1} … +${M-1}`,S)}
+  ${row('Complément à 1 (C1)',`−${M-1} … +${M-1}`,C1)}
+  ${row('Complément à 2 (C2)',`−${M} … +${M-1}`,C2)}</table>`;
+  if(x<0&&C2){ const ab=bits(a,n), c1=inv(ab); h+=`<div class="step"><b>Méthode du complément à 2</b><table class="grid"><tr><th>|${x}| en binaire</th><td></td>${[...ab].map(c=>`<td>${c}</td>`).join('')}</tr><tr><th>Inversion des bits (C1)</th><td></td>${[...c1].map(c=>`<td>${c}</td>`).join('')}</tr><tr><th>Ajout de 1</th><td class="opc">+</td>${[...'1'.padStart(n,' ')].map(c=>`<td>${c.trim()}</td>`).join('')}</tr><tr class="sum"><th>Résultat C2</th><td></td>${[...C2].map(c=>`<td>${c}</td>`).join('')}</tr></table><p class="hint">Astuce : en partant de la droite, on recopie les bits jusqu’au premier 1 inclus, puis on inverse tous les bits suivants.</p></div>` }
+  else if(x>=0) h+=`<p class="hint">Pour un nombre positif, les trois codes signés donnent la même représentation : bit de signe 0 suivi de la valeur en binaire.</p>`;
+  out.innerHTML=h;
+}
+function renderDecode(){
+  const out=$('#rd-out'), s=$('#rd-val').value.replace(/\s/g,'');
+  if(!/^[01]{1,16}$/.test(s)){out.innerHTML='<p class="err">Saisissez de 1 à 16 bits (0 ou 1).</p>';return}
+  const n=s.length, u=parseInt(s,2), neg=s[0]==='1', mag=parseInt(s.slice(1)||'0',2);
+  const c1=neg?-(2**n-1-u):u, c2=neg?u-2**n:u, sv=(neg?'−':'+')+mag;
+  out.innerHTML=`<table class="tt"><tr><th>Interprétation</th><th>Valeur décimale</th></tr>
+  <tr><td class="l">Binaire naturel</td><td><b>${u}</b></td></tr>
+  <tr><td class="l">Signe et valeur absolue</td><td><b>${sv}</b></td></tr>
+  <tr><td class="l">Complément à 1</td><td><b>${c1===0&&neg?'−0':c1}</b></td></tr>
+  <tr><td class="l">Complément à 2</td><td><b>${c2}</b></td></tr></table>
+  <p class="hint">Bit de poids fort = ${s[0]} ⇒ ${neg?'nombre négatif':'nombre positif'} dans les codes signés. ${neg?`En C2 : ${u} − 2<sup>${n}</sup> = ${c2}.`:''}</p>`;
+}
+function renderFloat(){
+  const out=$('#fl-out'), raw=$('#fl-val').value.trim().replace(',','.');
+  const x=Number(raw); if(raw===''||!isFinite(x)){out.innerHTML='<p class="err">Saisissez un nombre réel (exemple : -12,375).</p>';return}
+  const f=new Float32Array(1), u=new Uint32Array(f.buffer); f[0]=x;
+  const w=u[0]>>>0, s=w>>>31, E=(w>>>23)&255, M=w&0x7FFFFF, all=bits(w,32);
+  let h='';
+  if(x===0){ h+=`<p>Le zéro est codé avec E = 0 et M = 0.</p>` }
+  else if(E===0){ h+=`<p class="warnc">Nombre trop petit : représentation dénormalisée.</p>` }
+  else {
+    const e=E-127, mant=bits(M,23).replace(/0+$/,'');
+    h+=`<div class="step"><b>① Signe</b> ${x<0?'négatif':'positif'} ⇒ S = <span class="res">${s}</span></div>
+    <div class="step"><b>② Forme normalisée</b> |x| = ${fmtN(Math.abs(f[0]))} = <span class="mono">1,${mant||'0'} × 2<sup>${e}</sup></span></div>
+    <div class="step"><b>③ Exposant biaisé</b> E = ${e} + 127 = ${E} = <span class="res">${bits(E,8)}</span></div>
+    <div class="step"><b>④ Mantisse</b> (bits après la virgule, complétés à 23 bits) : <span class="res">${bits(M,23)}</span></div>`;
+  }
+  h+=`<table class="grid"><tr><th>Mot de 32 bits</th>${[...all].map((c,i)=>`<td style="color:${i===0?'#b42318':i<9?'#1c4d8f':'#137a3a'}">${c}</td>`).join('')}</tr></table>
+  <p><span style="color:#b42318">■</span> signe (1 bit) <span style="color:#1c4d8f">■</span> exposant (8 bits) <span style="color:#137a3a">■</span> mantisse (23 bits) · Hexadécimal : <span class="res">${w.toString(16).toUpperCase().padStart(8,'0')}</span></p>
+  ${f[0]!==x?`<p class="warnc">Valeur réellement stockée : ${String(f[0]).replace('.',',')} (arrondi, car ${fmtN(x)} n’a pas d’écriture binaire exacte sur 23 bits).</p>`:''}`;
+  out.innerHTML=h;
+}
+function colGrid(rows,W){
+  return '<table class="grid">'+rows.map(r=>{const s=r.s.padStart(W,' '); return `<tr class="${r.cls||''}"><th>${r.lab||''}</th><td class="opc">${r.op||''}</td>${[...s].map(c=>`<td>${c===' '?'':c}</td>`).join('')}</tr>`}).join('')+'</table>';
+}
+function renderOps(){
+  const out=$('#op-out'), a=$('#op-a').value.replace(/\s/g,''), b=$('#op-b').value.replace(/\s/g,''), op=$('#op-op').value;
+  if(!/^[01]{1,24}$/.test(a)||!/^[01]{1,24}$/.test(b)){out.innerHTML='<p class="err">A et B doivent être des nombres binaires (1 à 24 bits).</p>';return}
+  const A=parseInt(a,2), B=parseInt(b,2); let h='';
+  if(op==='add'){
+    const W=Math.max(a.length,b.length)+1, aa=a.padStart(W,'0'), bb=b.padStart(W,'0'); const car=Array(W).fill(' '); let c=0;
+    for(let i=W-1;i>=0;i--){const s=+aa[i]+ +bb[i]+c; c=s>>1; if(c&&i>0) car[i-1]='1'}
+    const R=(A+B).toString(2);
+    h=colGrid([{lab:'retenues',s:car.join(''),cls:'car'},{lab:'A',s:a},{lab:'B',s:b,op:'+'},{lab:'A + B',s:R,cls:'sum'}],W);
+    h+=`<p>Vérification : ${A} + ${B} = <span class="res">${A+B}</span> = (${R})<sub>2</sub></p>`;
+  } else if(op==='sub'){
+    const n=Math.max(a.length,b.length)+1, F=2**n, an=bits(A,n), bn=bits(B,n), c1=bits(F-1-B,n), c2=bits((F-B)%F,n), sum=A+(F-B)%F, res=sum%F, cy=sum>=F;
+    const val=res>=F/2?res-F:res;
+    h=`<p>Méthode : <b>A − B = A + C2(B)</b> sur ${n} bits (un bit de plus que l’opérande le plus long, pour le signe).</p>
+    <table class="tt"><tr><td class="l">B sur ${n} bits</td><td>${bn}</td></tr><tr><td class="l">C1(B) : inversion</td><td>${c1}</td></tr><tr><td class="l">C2(B) = C1(B) + 1</td><td><b>${c2}</b></td></tr></table>`;
+    h+=colGrid([{lab:'A',s:an},{lab:'C2(B)',s:c2,op:'+'},{lab:'somme',s:(cy?'1':' ')+bits(res,n),cls:'sum'}],n+1);
+    h+=`<p>${cy?'La retenue finale (à gauche) est <b>ignorée</b>. ':''}Résultat sur ${n} bits : <span class="res">${bits(res,n)}</span> ⇒ bit de signe ${res>=F/2?'1 : résultat négatif, sa valeur est −C2 = '+val:'0 : résultat positif = '+val}.</p><p>Vérification : ${A} − ${B} = <span class="res">${A-B}</span></p>`;
+  } else if(op==='mul'){
+    const W=a.length+b.length, rows=[{lab:'A',s:a},{lab:'B',s:b,op:'×'}]; let first=true;
+    for(let j=0;j<b.length;j++){const bit=b[b.length-1-j]; rows.push({lab:`A × ${bit}, décalé de ${j}`,s:(bit==='1'?a:'0'.repeat(a.length))+' '.repeat(j),op:first?'':'+',cls:(first?'sum ':'')+(bit==='0'?'dim':'')}); first=false}
+    const R=(A*B).toString(2); rows.push({lab:'Produit',s:R,cls:'sum'});
+    h=colGrid(rows,W)+`<p>La multiplication binaire se ramène à des additions de A décalé. Vérification : ${A} × ${B} = <span class="res">${A*B}</span> = (${R})<sub>2</sub></p>`;
+  } else {
+    if(B===0){out.innerHTML='<p class="err">Division par zéro impossible.</p>';return}
+    let R=0,Q='',rows='';
+    for(const c of a){ R=R*2+ +c; const ok=R>=B; rows+=`<tr><td>${c}</td><td>${R.toString(2)}</td><td>${ok?`≥ ${b} : on soustrait`:`< ${b}`}</td><td class="hl">${ok?1:0}</td><td>${(ok?R-B:R).toString(2)}</td></tr>`; if(ok){R-=B;Q+='1'} else Q+='0' }
+    const q=Math.floor(A/B);
+    h=`<table class="tt"><tr><th>Bit abaissé</th><th>Reste partiel</th><th>Comparaison avec B</th><th>Bit du quotient</th><th>Nouveau reste</th></tr>${rows}</table>
+    <p>Quotient : <span class="res">${q.toString(2)}</span> · Reste : <span class="res">${(A%B).toString(2)}</span></p><p>Vérification : ${A} = ${B} × ${q} + ${A%B}</p>`;
+  }
+  out.innerHTML=h;
+}
+function grayOf(v){return v^(v>>1)}
+function renderCodes(){
+  const out=$('#cd-out'), raw=$('#cd-val').value.trim();
+  if(!/^\d{1,4}$/.test(raw)){out.innerHTML='<p class="err">Saisissez un entier de 0 à 9999.</p>';return}
+  const v=+raw, b=v.toString(2), g=bits(grayOf(v),b.length);
+  const ds=[...raw];
+  let h=`<table class="tt"><tr><th>Code</th><th>Représentation</th></tr>
+  <tr><td class="l">Binaire naturel</td><td><b>${b}</b></td></tr>
+  <tr><td class="l">BCD (8421)</td><td><b>${ds.map(d=>bits(+d,4)).join(' ')}</b></td></tr>
+  <tr><td class="l">Excess-3 (BCD + 3)</td><td><b>${ds.map(d=>bits(+d+3,4)).join(' ')}</b></td></tr>
+  <tr><td class="l">Gray (binaire réfléchi)</td><td><b>${g}</b></td></tr>
+  <tr><td class="l">Bit de parité paire</td><td><b>${popc(v)%2}</b> <span class="hint">(${popc(v)} bit(s) à 1)</span></td></tr></table>`;
+  h+=`<div class="step"><b>Codage BCD : chaque chiffre décimal est codé séparément sur 4 bits</b><table class="tt"><tr>${ds.map(d=>`<th>${d}</th>`).join('')}</tr><tr>${ds.map(d=>`<td>${bits(+d,4)}</td>`).join('')}</tr></table></div>`;
+  const bb=[...b];
+  h+=`<div class="step"><b>Binaire → Gray : g<sub>n−1</sub> = b<sub>n−1</sub>, puis g<sub>i</sub> = b<sub>i+1</sub> ⊕ b<sub>i</sub></b><table class="tt"><tr><th>Binaire</th>${bb.map(c=>`<td>${c}</td>`).join('')}</tr><tr><th>Calcul</th>${bb.map((c,i)=>`<td style="font-size:.75rem">${i===0?'recopie':bb[i-1]+'⊕'+c}</td>`).join('')}</tr><tr><th>Gray</th>${[...g].map(c=>`<td class="hl">${c}</td>`).join('')}</tr></table></div>`;
+  out.innerHTML=h;
+}
+function renderGray(){
+  const out=$('#gb-out'), g=$('#gb-val').value.replace(/\s/g,'');
+  if(!/^[01]{1,16}$/.test(g)){out.innerHTML='<p class="err">Saisissez un mot binaire.</p>';return}
+  let b=''; for(let i=0;i<g.length;i++) b+= i===0?g[0]: String(+b[i-1]^+g[i]);
+  out.innerHTML=`<table class="tt"><tr><th>Gray</th>${[...g].map(c=>`<td>${c}</td>`).join('')}</tr><tr><th>Calcul</th>${[...g].map((c,i)=>`<td style="font-size:.75rem">${i===0?'recopie':b[i-1]+'⊕'+c}</td>`).join('')}</tr><tr><th>Binaire</th>${[...b].map(c=>`<td class="hl">${c}</td>`).join('')}</tr></table><p>b<sub>n−1</sub> = g<sub>n−1</sub>, puis b<sub>i</sub> = b<sub>i+1</sub> ⊕ g<sub>i</sub> ⇒ <span class="res">${b}</span> = ${parseInt(b,2)} en décimal.</p>`;
+}
+function renderAscii(){
+  const t=$('#as-val').value.slice(0,24);
+  $('#as-out').innerHTML=t?`<div style="overflow-x:auto"><table class="tt"><tr><th>Caractère</th>${[...t].map(c=>`<td>${c===' '?'␣':esc(c)}</td>`).join('')}</tr><tr><th>Décimal</th>${[...t].map(c=>`<td>${c.charCodeAt(0)}</td>`).join('')}</tr><tr><th>Hexa</th>${[...t].map(c=>`<td>${c.charCodeAt(0).toString(16).toUpperCase()}</td>`).join('')}</tr><tr><th>Binaire (7 bits)</th>${[...t].map(c=>`<td>${c.charCodeAt(0)<128?bits(c.charCodeAt(0),7):'—'}</td>`).join('')}</tr></table></div><p class="hint">Les caractères accentués ne font pas partie de l’ASCII standard (7 bits).</p>`:'';
+}
+function renderCodeTable(){
+  let r=''; for(let v=0;v<16;v++) r+=`<tr><td>${v}</td><td>${v.toString(16).toUpperCase()}</td><td>${bits(v,4)}</td><td>${bits(grayOf(v),4)}</td><td>${v<10?bits(v,4):bits(1,4)+' '+bits(v-10,4)}</td><td>${v<10?bits(v+3,4):'—'}</td></tr>`;
+  $('#cd-table').innerHTML=`<table class="tt"><tr><th>Décimal</th><th>Hexa</th><th>Binaire</th><th>Gray</th><th>BCD</th><th>Excess-3</th></tr>${r}</table>`;
+}
+
+/* =========================================================
+   CHAPITRE 2 : FONCTIONS BINAIRES
+   ========================================================= */
+function tokenize(s){
+  const t=[]; s=s.replace(/\s+/g,'');
+  for(const c of s){
+    if(/[A-Za-z]/.test(c)) t.push({k:'v',v:c.toUpperCase()});
+    else if(c==='0'||c==='1') t.push({k:'c',v:+c});
+    else if('+|∨'.includes(c)) t.push({k:'or'});
+    else if('.*&·∧×'.includes(c)) t.push({k:'and'});
+    else if('^⊕'.includes(c)) t.push({k:'xor'});
+    else if('!~¬/'.includes(c)) t.push({k:'not'});
+    else if("'’`".includes(c)) t.push({k:'post'});
+    else if(c==='('||c===')') t.push({k:c});
+    else throw `Caractère non reconnu : « ${c} »`;
+  }
+  return t;
+}
+function parse(s){
+  const t=tokenize(s); let p=0; const pk=()=>t[p];
+  if(!t.length) throw 'Expression vide.';
+  const OR=()=>{let a=XOR(); while(pk()&&pk().k==='or'){p++; a={op:'or',a,b:XOR()}} return a};
+  const XOR=()=>{let a=AND(); while(pk()&&pk().k==='xor'){p++; a={op:'xor',a,b:AND()}} return a};
+  const AND=()=>{let a=UN(); while(pk()&&(pk().k==='and'||['v','c','not','('].includes(pk().k))){ if(pk().k==='and')p++; a={op:'and',a,b:UN()} } return a};
+  const UN=()=>{ if(pk()&&pk().k==='not'){p++; return {op:'not',a:UN()}} let x=PR(); while(pk()&&pk().k==='post'){p++; x={op:'not',a:x}} return x };
+  const PR=()=>{ const k=pk(); if(!k) throw 'Expression incomplète.'; p++;
+    if(k.k==='v') return {op:'var',v:k.v}; if(k.k==='c') return {op:'const',v:k.v};
+    if(k.k==='('){const e=OR(); if(!pk()||pk().k!==')') throw 'Parenthèse fermante manquante.'; p++; return e}
+    throw 'Symbole inattendu en position '+p+'.'; };
+  const e=OR(); if(p<t.length) throw 'Symbole inattendu en position '+(p+1)+'.'; return e;
+}
+function vars(e,s=new Set()){ if(e.op==='var')s.add(e.v); if(e.a)vars(e.a,s); if(e.b)vars(e.b,s); return s }
+function ev(e,env){ switch(e.op){case 'var':return env[e.v];case 'const':return e.v;case 'not':return 1-ev(e.a,env);case 'and':return ev(e.a,env)&ev(e.b,env);case 'or':return ev(e.a,env)|ev(e.b,env);case 'xor':return ev(e.a,env)^ev(e.b,env)} }
+function truth(e,vs){ const n=vs.length,out=[]; for(let m=0;m<(1<<n);m++){const env={}; vs.forEach((v,i)=>env[v]=(m>>(n-1-i))&1); out.push(ev(e,env))} return out }
+const countLits=s=>tokenize(s).filter(t=>t.k==='v').length;
+
+/* Quine–McCluskey : renvoie une couverture minimale en impliquants premiers {v,d} */
+function qm(n,ones,dcs=[]){
+  if(!ones.length) return [];
+  let cur=new Map(); for(const m of [...ones,...dcs]) cur.set(m+'|0',{v:m,d:0});
+  const primes=[];
+  while(cur.size){
+    const next=new Map(), used=new Set(), arr=[...cur.values()];
+    for(let i=0;i<arr.length;i++) for(let j=i+1;j<arr.length;j++){
+      const a=arr[i],b=arr[j]; if(a.d!==b.d) continue; const x=a.v^b.v;
+      if(x&&!(x&(x-1))){ const v=a.v&~x,d=a.d|x; next.set(v+'|'+d,{v,d}); used.add(a.v+'|'+a.d); used.add(b.v+'|'+b.d) }
+    }
+    for(const t of arr) if(!used.has(t.v+'|'+t.d)) primes.push(t);
+    cur=next;
+  }
+  const cov=(p,m)=>((m&~p.d)===p.v), lits=p=>n-popc(p.d);
+  const chosen=[]; let rem=new Set(ones);
+  for(const m of ones){const ps=primes.filter(p=>cov(p,m)); if(ps.length===1&&!chosen.includes(ps[0])) chosen.push(ps[0])}
+  chosen.forEach(p=>p.ess=true);
+  for(const p of chosen) for(const m of [...rem]) if(cov(p,m)) rem.delete(m);
+  if(rem.size){
+    const R=[...rem], cand=primes.filter(p=>!chosen.includes(p)&&R.some(m=>cov(p,m)));
+    if(cand.length<=16){
+      let best=null;
+      for(let mask=1;mask<(1<<cand.length);mask++){
+        const sel=cand.filter((_,i)=>(mask>>i)&1);
+        if(best&&sel.length>best.c[0]) continue;
+        if(!R.every(m=>sel.some(p=>cov(p,m)))) continue;
+        const c=[sel.length,sel.reduce((s,p)=>s+lits(p),0)];
+        if(!best||c[0]<best.c[0]||(c[0]===best.c[0]&&c[1]<best.c[1])) best={sel,c};
+      }
+      chosen.push(...best.sel);
+    } else {
+      while(rem.size){ let bp=null,bc=-1; for(const p of cand){const c=[...rem].filter(m=>cov(p,m)).length; if(c>bc||(c===bc&&bp&&lits(p)<lits(bp))){bp=p;bc=c}} chosen.push(bp); for(const m of [...rem]) if(cov(bp,m)) rem.delete(m) }
+    }
+  }
+  return chosen.sort((a,b)=>lits(a)-lits(b)||a.v-b.v);
+}
+const covers=(p,m)=>((m&~p.d)===p.v);
+function termS(p,names,html){
+  const n=names.length, parts=[];
+  names.forEach((nm,i)=>{const b=1<<(n-1-i); if(p.d&b) return; parts.push((p.v&b)?nm:(html?o(nm):nm+"'"))});
+  if(!parts.length) return '1';
+  return parts.join(names.some(x=>x.length>1)?'·':'');
+}
+function sumS(p,names,html){
+  const n=names.length, parts=[];
+  names.forEach((nm,i)=>{const b=1<<(n-1-i); if(p.d&b) return; parts.push((p.v&b)?(html?o(nm):nm+"'"):nm)});
+  if(!parts.length) return '0';
+  return parts.length>1?'('+parts.join(' + ')+')':parts[0];
+}
+const sopS=(ps,names,html)=>ps.length?ps.map(p=>termS(p,names,html)).join(' + '):'0';
+const posS=(ps,names,html)=>ps.length?ps.map(p=>sumS(p,names,html)).join(html?' · ':'.'):'1';
+const litCount=(ps,n)=>ps.reduce((s,p)=>s+n-popc(p.d),0);
+function ttHTML(vs,cols,cur=-1){
+  const n=vs.length; let h=`<div class="ttscroll"><table class="tt"><tr><th>m</th>${vs.map(v=>`<th>${v}</th>`).join('')}${cols.map((c,i)=>`<th class="${i===0?'sep':''}">${c.name}</th>`).join('')}</tr>`;
+  for(let m=0;m<(1<<n);m++) h+=`<tr class="${m===cur?'cur':''}"><td style="color:#9aa3b1">${m}</td>${vs.map((_,i)=>`<td>${(m>>(n-1-i))&1}</td>`).join('')}${cols.map((c,i)=>`<td class="${i===0?'sep ':''}${c.v[m]?'hl':''}">${c.v[m]}</td>`).join('')}</tr>`;
+  return h+'</table></div>';
+}
+function renderExpr(){
+  const out=$('#ex-out'); let e; try{e=parse($('#ex-val').value)}catch(err){out.innerHTML=`<p class="err">${err}</p>`;return}
+  const vs=[...vars(e)].sort(), n=vs.length;
+  if(n>6){out.innerHTML='<p class="err">6 variables au maximum.</p>';return}
+  if(n===0){out.innerHTML=`<p>Expression constante : F = <span class="res">${ev(e,{})}</span></p>`;return}
+  const tt=truth(e,vs), ones=[],zeros=[]; tt.forEach((v,m)=>(v?ones:zeros).push(m));
+  const S=qm(n,ones), P=qm(n,zeros);
+  const mint=m=>vs.map((v,i)=>((m>>(n-1-i))&1)?v:o(v)).join(''), maxt=m=>'('+vs.map((v,i)=>((m>>(n-1-i))&1)?o(v):v).join(' + ')+')';
+  let h=`<div class="flex"><div>${ttHTML(vs,[{name:'F',v:tt}])}</div><div style="flex:1;min-width:280px">
+  <h4 style="margin-top:0">Formes canoniques</h4>
+  <p>F = Σm(${ones.join(', ')||'∅'})${n<=4&&ones.length&&ones.length<=10?`<br><span class="mono">F = ${ones.map(mint).join(' + ')}</span>`:''}</p>
+  <p>F = ΠM(${zeros.join(', ')||'∅'})${n<=4&&zeros.length&&zeros.length<=6?`<br><span class="mono">F = ${zeros.map(maxt).join('·')}</span>`:''}</p>
+  <p class="hint">1<sup>re</sup> forme canonique : somme des mintermes (lignes où F = 1). 2<sup>e</sup> forme : produit des maxtermes (lignes où F = 0).</p>
+  <h4>Forme simplifiée</h4>
+  <p>Somme de produits : <span class="res">F = ${sopS(S,vs,true)}</span> <span class="hint">(${litCount(S,n)} littéraux)</span></p>
+  <p>Produit de sommes : <span class="res">F = ${posS(P,vs,true)}</span> <span class="hint">(${litCount(P,n)} littéraux)</span></p>
+  <p class="hint">Expression saisie : ${countLits($('#ex-val').value)} littéraux.</p>
+  ${n>=2&&n<=4?'<button class="btn ghost" id="ex-tokm">Ouvrir dans le tableau de Karnaugh</button>':''}
+  </div></div>`;
+  out.innerHTML=h;
+  const btn=$('#ex-tokm'); if(btn) btn.onclick=()=>{KM.n=n;KM.names=vs.slice();KM.v=tt.slice();$('#km-n').value=n;showSub('fb','kmap');renderKM()};
+}
+/* ---- Karnaugh ---- */
+const KCOL=['#2563eb','#dc2626','#16a34a','#d97706','#7c3aed','#0891b2','#db2777','#65a30d'];
+const KM={n:4,names:['A','B','C','D'],v:[0,1,0,1, 0,1,0,1, 1,1,0,0, 1,1,0,0],mode:'sop'};
+function kmLayout(n){const r=n>>1,c=n-r,g=k=>k===1?[0,1]:[0,1,3,2]; return {r,c,rows:g(r),cols:g(c)}}
+function kmGrid(n,vals,names,groups,edit){
+  const L=kmLayout(n);
+  let h=`<table class="km ${edit?'edit':''}"><tr><th class="corner">${names.slice(0,L.r).join('')}<br>\\ ${names.slice(L.r).join('')}</th>${L.cols.map(c=>`<th>${bits(c,L.c)}</th>`).join('')}</tr>`;
+  for(const r of L.rows){
+    h+=`<tr><th>${bits(r,L.r)}</th>`;
+    for(const c of L.cols){ const m=(r<<L.c)|c, v=vals[m];
+      h+=`<td class="cell ${v===1?'one':v===2?'dc':'zero'}" data-m="${m}"><small>${m}</small>${v===2?'X':v}<div class="bars">${groups.map((p,i)=>covers(p,m)?`<i style="background:${KCOL[i%8]}"></i>`:'').join('')}</div></td>` }
+    h+='</tr>';
+  }
+  return h+'</table>';
+}
+function renderKM(){
+  const n=KM.n, names=KM.names, ones=[],dcs=[],zeros=[];
+  KM.v.forEach((v,m)=>v===1?ones.push(m):v===2?dcs.push(m):zeros.push(m));
+  const sop=KM.mode==='sop', G=sop?qm(n,ones,dcs):qm(n,zeros,dcs);
+  $('#km-grid').innerHTML=kmGrid(n,KM.v,names,G,true);
+  const expr=sop?sopS(G,names,true):posS(G,names,true);
+  let h=`<p>F = Σm(${ones.join(', ')||'∅'})${dcs.length?` + X(${dcs.join(', ')})`:''}</p>
+  <h4>Expression simplifiée</h4><p><span class="res" style="font-size:1.15rem">F = ${expr}</span></p>`;
+  if(G.length&&!(G.length===1&&G[0].d===(1<<n)-1)){
+    h+=`<h4>Regroupements (${G.length})</h4><div class="legend">${G.map((p,i)=>`<span data-gi="${i}"><i style="background:${KCOL[i%8]}"></i>${sop?termS(p,names,true):sumS(p,names,true)} <span class="hint" style="padding:0">· groupe de ${1<<popc(p.d)} case(s)${p.ess?' · essentiel':''}</span></span>`).join('')}</div>
+    <p class="hint">Règles : regrouper ${sop?'les 1':'les 0'} par 1, 2, 4, 8… cases adjacentes (les bords se touchent), en faisant des groupes les plus grands possibles et le moins nombreux possible. Les X peuvent être inclus s’ils agrandissent un groupe.</p>`;
+  }
+  $('#km-res').innerHTML=h;
+  $$('#km-res .legend>span').forEach(s=>{
+    const p=G[+s.dataset.gi], col=KCOL[+s.dataset.gi%8];
+    s.onmouseenter=()=>$$('#km-grid td.cell').forEach(td=>{ if(covers(p,+td.dataset.m)) td.style.background=col+'2e' });
+    s.onmouseleave=()=>$$('#km-grid td.cell').forEach(td=>td.style.background='');
+  });
+}
+/* ---- Théorèmes ---- */
+const THEO=[
+ ['Elément neutre','A.1','A'],['Elément neutre','A+0','A'],['Elément absorbant','A.0','0'],['Elément absorbant','A+1','1'],
+ ['Idempotence','A.A','A'],['Idempotence','A+A','A'],['Complémentarité',"A.A'",'0'],['Complémentarité',"A+A'",'1'],['Involution',"A''",'A'],
+ ['Commutativité','A.B','B.A'],['Associativité','A.(B.C)','(A.B).C'],['Associativité','A+(B+C)','(A+B)+C'],
+ ['Distributivité','A.(B+C)','A.B+A.C'],['Distributivité','A+B.C','(A+B).(A+C)'],
+ ['Absorption','A+A.B','A'],['Absorption','A.(A+B)','A'],['Absorption (variante)',"A+A'.B",'A+B'],['Absorption (variante)',"A.(A'+B)",'A.B'],
+ ['De Morgan',"(A.B)'","A'+B'"],['De Morgan',"(A+B)'","A'.B'"],['Consensus',"A.B+A'.C+B.C","A.B+A'.C"],
+ ['OU exclusif','A^B',"A'.B+A.B'"],['NON-OU exclusif',"(A^B)'","A.B+A'.B'"],
+ ['NAND universelle : NON',"(A.A)'","A'"],['NAND universelle : ET',"((A.B)'.(A.B)')'",'A.B'],['NAND universelle : OU',"((A.A)'.(B.B)')'",'A+B'],
+ ['NOR universelle : NON',"(A+A)'","A'"],['NOR universelle : OU',"((A+B)'+(A+B)')'",'A+B'],['NOR universelle : ET',"((A+A)'+(B+B)')'",'A.B']
+];
+function pretty(s){ // affichage avec surlignement simple pour A'
+  return esc(s).replace(/([A-Z])'/g,(m,v)=>o(v)).replace(/\./g,'·');
+}
+function verifyEq(s1,s2){
+  const e1=parse(s1), e2=parse(s2), vs=[...new Set([...vars(e1),...vars(e2)])].sort();
+  if(vs.length>6) throw '6 variables au maximum.';
+  const t1=vs.length?truth(e1,vs):[ev(e1,{})], t2=vs.length?truth(e2,vs):[ev(e2,{})];
+  return {ok:t1.every((v,i)=>v===t2[i]), vs, t1, t2};
+}
+function renderTheo(){
+  $('#th-list').innerHTML=`<table class="tt" style="font-family:'IBM Plex Sans'">${THEO.map((t,i)=>{const r=verifyEq(t[1],t[2]); return `<tr data-i="${i}" style="cursor:pointer"><td class="l">${t[0]}</td><td class="mono">${pretty(t[1])} = ${pretty(t[2])}</td><td class="${r.ok?'okc':'err'}">${r.ok?'✓':'✗'}</td></tr>`}).join('')}</table>`;
+  $$('#th-list tr').forEach(tr=>tr.onclick=()=>{ $$('#th-list tr').forEach(x=>x.classList.remove('cur')); tr.classList.add('cur'); const t=THEO[+tr.dataset.i]; $('#th-proof').innerHTML=`<h4 style="margin-top:0">${t[0]}</h4>`+proofHTML(t[1],t[2]) });
+}
+function proofHTML(a,b){
+  const r=verifyEq(a,b);
+  if(!r.vs.length) return `<p>${r.t1[0]} = ${r.t2[0]}</p>`;
+  return ttHTML(r.vs,[{name:'Expr. 1',v:r.t1},{name:'Expr. 2',v:r.t2}])+`<p class="${r.ok?'okc':'err'}">${r.ok?'Les deux colonnes sont identiques : l’égalité est vraie.':'Les colonnes diffèrent : l’égalité est fausse.'}</p>`;
+}
+function renderEq(){ try{$('#eq-out').innerHTML=proofHTML($('#eq-a').value,$('#eq-b').value)}catch(e){$('#eq-out').innerHTML=`<p class="err">${e}</p>`} }
+
+/* =========================================================
+   CHAPITRE 3 : CIRCUITS COMBINATOIRES
+   ========================================================= */
+const rng=(p,a,b)=>{const r=[];for(let i=a;i>=b;i--)r.push(p+i);return r};
+const SEG={0:'1111110',1:'0110000',2:'1101101',3:'1111001',4:'0110011',5:'1011011',6:'1011111',7:'1110000',8:'1111111',9:'1111011'};
+function seg7(y){
+  const R={a:[22,6,36,8],b:[60,14,8,36],c:[60,58,8,36],d:[22,94,36,8],e:[12,58,8,36],f:[12,14,8,36],g:[22,50,36,8]};
+  return `<svg viewBox="0 0 80 108" width="110" height="148" style="background:#1b1f27;border-radius:10px">${Object.entries(R).map(([k,[x,yy,w,h]])=>`<rect x="${x}" y="${yy}" width="${w}" height="${h}" rx="3" fill="${y[k]?'#ff3b30':'#3a2a2a'}"/>`).join('')}</svg>`;
+}
+const val=(x,names)=>names.reduce((s,k)=>s*2+x[k],0);
+const CIRC=[
+ {id:'cod4',g:'Codeurs',name:'Codeur prioritaire 4 → 2',sym:['CODEUR','4 → 2'],ins:['I3','I2','I1','I0'],outs:['A1','A0','V'],
+  f:x=>{const k=x.I3?3:x.I2?2:x.I1?1:x.I0?0:-1; return {A1:k>=2?1:0,A0:(k===3||k===1)?1:0,V:k>=0?1:0}},
+  eq:['A1 = I3 + I2',`A0 = I3 + ${o('I2')}·I1`,'V = I3 + I2 + I1 + I0'],
+  desc:'Le codeur fournit en binaire le numéro de l’entrée active. Version prioritaire : si plusieurs entrées sont actives, c’est celle de plus fort indice qui l’emporte. La sortie V signale qu’au moins une entrée est active.'},
+ {id:'cod8',g:'Codeurs',name:'Codeur prioritaire 8 → 3',sym:['CODEUR','8 → 3'],ins:rng('I',7,0),outs:['A2','A1','A0','V'],
+  f:x=>{let k=-1; for(let i=7;i>=0;i--) if(x['I'+i]){k=i;break} return k<0?{A2:0,A1:0,A0:0,V:0}:{A2:(k>>2)&1,A1:(k>>1)&1,A0:k&1,V:1}},
+  table:(()=>{const rows=[[...Array(8).fill('0'),'0','0','0','0']]; for(let k=7;k>=0;k--){const r=[]; for(let i=7;i>=0;i--) r.push(i>k?'0':i===k?'1':'X'); rows.push([...r,String((k>>2)&1),String((k>>1)&1),String(k&1),'1'])} return {head:[...rng('I',7,0),'A2','A1','A0','V'],nin:8,rows,match:x=>{for(let i=7;i>=0;i--) if(x['I'+i]) return 8-i; return 0}}})(),
+  eq:['A2 = I7 + I6 + I5 + I4',`A1 = I7 + I6 + ${o('I5')}·${o('I4')}·(I3 + I2)`,`A0 = I7 + ${o('I6')}·I5 + ${o('I6')}·${o('I4')}·I3 + ${o('I6')}·${o('I4')}·${o('I2')}·I1`,'V = I7 + I6 + … + I0'],
+  desc:'Equivalent du circuit 74148 (ici en logique positive). Utilisé par exemple pour coder un clavier ou gérer des priorités d’interruption. X = valeur indifférente.'},
+ {id:'dec24',g:'Décodeurs',name:'Décodeur 2 → 4 avec validation',sym:['DECODEUR','2 → 4'],ins:['E','A1','A0'],outs:['Y0','Y1','Y2','Y3'],
+  f:x=>{const k=x.A1*2+x.A0,r={}; for(let i=0;i<4;i++) r['Y'+i]=x.E&&k===i?1:0; return r},
+  eq:[`Y0 = E·${o('A1')}·${o('A0')}`,`Y1 = E·${o('A1')}·A0`,`Y2 = E·A1·${o('A0')}`,'Y3 = E·A1·A0'],
+  desc:'Le décodeur active la seule sortie dont le numéro correspond au code binaire d’entrée. Chaque sortie réalise un minterme des entrées d’adresse. L’entrée de validation E permet d’associer plusieurs décodeurs.'},
+ {id:'dec38',g:'Décodeurs',name:'Décodeur 3 → 8',sym:['DECODEUR','3 → 8'],ins:['A2','A1','A0'],outs:rng('Y',0,0).concat([1,2,3,4,5,6,7].map(i=>'Y'+i)),
+  f:x=>{const k=val(x,['A2','A1','A0']),r={}; for(let i=0;i<8;i++) r['Y'+i]=k===i?1:0; return r},
+  eq:[`Y0 = ${o('A2')}·${o('A1')}·${o('A0')}`,`Y1 = ${o('A2')}·${o('A1')}·A0`,'…','Y7 = A2·A1·A0'],
+  desc:'Equivalent du 74138 (sorties ici actives à 1). Un décodeur 3 → 8 suivi d’une porte OU permet de réaliser n’importe quelle fonction de 3 variables.'},
+ {id:'seg',g:'Décodeurs',name:'Décodeur BCD → 7 segments',sym:['BCD →','7 SEG.'],ins:['D','C','B','A'],outs:['a','b','c','d','e','f','g'],
+  f:x=>{const k=val(x,['D','C','B','A']), s=SEG[k]||'0000000', r={}; 'abcdefg'.split('').forEach((c,i)=>r[c]=+s[i]); return r},
+  extra:(x,y)=>`<div style="text-align:center">${seg7(y)}<p class="hint">Code BCD : ${val(x,['D','C','B','A'])}${val(x,['D','C','B','A'])>9?' (invalide, afficheur éteint)':''}</p></div>`,
+  eq:['a = D + B + C·A + '+o('C')+'·'+o('A'),'b = '+o('C')+' + B·A + '+o('B')+'·'+o('A'),'c = C + '+o('B')+' + A','g = D + B·'+o('A')+' + C·'+o('B')+' + '+o('C')+'·B','(codes 10 à 15 traités comme indifférents pour la simplification)'],
+  desc:'Convertit un chiffre codé en BCD (D C B A, D poids fort) en commandes des 7 segments a à g d’un afficheur (type 7447/7448).'},
+ {id:'mux2',g:'Multiplexeurs',name:'Multiplexeur 2 → 1',sym:['MUX','2 → 1'],ins:['S','I1','I0'],outs:['Y'],
+  f:x=>({Y:x.S?x.I1:x.I0}), eq:[`Y = ${o('S')}·I0 + S·I1`],
+  desc:'Aiguille vers la sortie l’entrée de données choisie par l’entrée de sélection S.'},
+ {id:'mux4',g:'Multiplexeurs',name:'Multiplexeur 4 → 1',sym:['MUX','4 → 1'],ins:['S1','S0','I3','I2','I1','I0'],outs:['Y'],
+  f:x=>({Y:x['I'+(x.S1*2+x.S0)]}),
+  table:{head:['S1','S0','Y'],nin:2,rows:[['0','0','I0'],['0','1','I1'],['1','0','I2'],['1','1','I3']],match:x=>x.S1*2+x.S0},
+  eq:[`Y = ${o('S1')}·${o('S0')}·I0 + ${o('S1')}·S0·I1 + S1·${o('S0')}·I2 + S1·S0·I3`],
+  desc:'Le code de sélection S1 S0 choisit laquelle des 4 entrées de données est recopiée sur la sortie Y (type 74153).'},
+ {id:'demux',g:'Multiplexeurs',name:'Démultiplexeur 1 → 4',sym:['DEMUX','1 → 4'],ins:['S1','S0','E'],outs:['Y0','Y1','Y2','Y3'],
+  f:x=>{const k=x.S1*2+x.S0,r={}; for(let i=0;i<4;i++) r['Y'+i]=k===i?x.E:0; return r},
+  eq:[`Y0 = E·${o('S1')}·${o('S0')}`,`Y1 = E·${o('S1')}·S0`,`Y2 = E·S1·${o('S0')}`,'Y3 = E·S1·S0'],
+  desc:'Fonction inverse du multiplexeur : la donnée E est envoyée vers la sortie désignée par S1 S0 ; les autres sorties restent à 0.'},
+ {id:'ha',g:'Additionneurs',name:'Demi-additionneur',sym:['DEMI-','ADD.'],ins:['A','B'],outs:['S','C'],
+  f:x=>({S:x.A^x.B,C:x.A&x.B}), eq:['S = A ⊕ B','C = A·B'],
+  desc:'Additionne deux bits A et B : S est la somme et C la retenue. Il ne tient pas compte d’une retenue entrante.'},
+ {id:'fa',g:'Additionneurs',name:'Additionneur complet',sym:['ADD.','COMPLET'],ins:['A','B','Cin'],outs:['S','Cout'],
+  f:x=>{const s=x.A+x.B+x.Cin; return {S:s&1,Cout:s>>1}}, eq:['S = A ⊕ B ⊕ Cin','Cout = A·B + Cin·(A ⊕ B)'],
+  desc:'Additionne deux bits et la retenue entrante Cin. On peut le réaliser avec deux demi-additionneurs et une porte OU.'},
+ {id:'add4',g:'Additionneurs',name:'Additionneur 4 bits',sym:['ADD.','4 BITS'],ins:[...rng('A',3,0),...rng('B',3,0),'C0'],outs:[...rng('S',3,0),'C4'],
+  f:x=>{const s=val(x,rng('A',3,0))+val(x,rng('B',3,0))+x.C0,r={}; for(let i=0;i<4;i++) r['S'+i]=(s>>i)&1; r.C4=s>>4; return r},
+  extra:(x,y)=>{const A=val(x,rng('A',3,0)),B=val(x,rng('B',3,0)),S=val(y,['C4',...rng('S',3,0)]); return `<div class="qbox mono" style="margin:0">A = ${bits(A,4)} (${A})<br>B = ${bits(B,4)} (${B})<br>C0 = ${x.C0}<br><b>C4 S = ${y.C4} ${bits(S,4)} (${S})</b></div>`},
+  eq:['Si = Ai ⊕ Bi ⊕ Ci','Ci+1 = Ai·Bi + Ci·(Ai ⊕ Bi)','4 additionneurs complets en cascade (propagation de retenue), type 7483'],
+  desc:'Quatre additionneurs complets chaînés : la retenue de chaque étage est l’entrée de retenue de l’étage suivant.'},
+ {id:'cmp1',g:'Comparateurs',name:'Comparateur 1 bit',sym:['COMP.','1 BIT'],ins:['A','B'],outs:['A>B','A=B','A<B'],
+  f:x=>({'A>B':x.A&(1-x.B),'A=B':1-(x.A^x.B),'A<B':(1-x.A)&x.B}),
+  eq:[`(A>B) = A·${o('B')}`,`(A=B) = ${o('A ⊕ B')} = A·B + ${o('A')}·${o('B')}`,`(A<B) = ${o('A')}·B`],
+  desc:'Compare deux bits et indique lequel est le plus grand, ou leur égalité.'},
+ {id:'cmp4',g:'Comparateurs',name:'Comparateur 4 bits',sym:['COMP.','4 BITS'],ins:[...rng('A',3,0),...rng('B',3,0)],outs:['A>B','A=B','A<B'],
+  f:x=>{const A=val(x,rng('A',3,0)),B=val(x,rng('B',3,0)); return {'A>B':+(A>B),'A=B':+(A===B),'A<B':+(A<B)}},
+  extra:x=>{const A=val(x,rng('A',3,0)),B=val(x,rng('B',3,0)); return `<div class="qbox mono" style="margin:0">A = ${bits(A,4)} (${A})<br>B = ${bits(B,4)} (${B})<br><b>${A>B?'A > B':A<B?'A < B':'A = B'}</b></div>`},
+  eq:['Ei = '+o('Ai ⊕ Bi')+' (égalité du bit i)','(A=B) = E3·E2·E1·E0',`(A>B) = A3·${o('B3')} + E3·A2·${o('B2')} + E3·E2·A1·${o('B1')} + E3·E2·E1·A0·${o('B0')}`,'(A<B) = '+o('(A>B) + (A=B)')],
+  desc:'Comparaison bit à bit en partant du poids fort (type 7485) : le premier bit différent décide.'},
+ {id:'par',g:'Parité',name:'Générateur de parité paire (4 bits)',sym:['GEN.','PARITE'],ins:['D3','D2','D1','D0'],outs:['P'],
+  f:x=>({P:x.D3^x.D2^x.D1^x.D0}), eq:['P = D3 ⊕ D2 ⊕ D1 ⊕ D0'],
+  desc:'Calcule le bit P tel que le mot transmis D3 D2 D1 D0 P contienne un nombre pair de 1. Pour une parité impaire : P′ = '+o('P')+'.'},
+ {id:'chk',g:'Parité',name:'Contrôleur de parité paire (5 bits)',sym:['CONTRÔLE','PARITE'],ins:['D3','D2','D1','D0','P'],outs:['Err'],
+  f:x=>({Err:x.D3^x.D2^x.D1^x.D0^x.P}), eq:['Err = D3 ⊕ D2 ⊕ D1 ⊕ D0 ⊕ P'],
+  desc:'A la réception, Err = 1 signale un nombre impair de 1 : une erreur de transmission (sur un nombre impair de bits) est détectée.'}
+];
+let CUR='fa'; const CST={};
+function blockSVG(c,x,y){
+  const ni=c.ins.length, no=c.outs.length, rows=Math.max(ni,no), sp=32, bh=rows*sp+20, W=380, bx=120, bw=140, H=bh+20;
+  let s=`<svg class="bsvg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><rect x="${bx}" y="10" width="${bw}" height="${bh}" rx="8" fill="#f4f7fb" stroke="#0f2747" stroke-width="2"/>`;
+  s+=`<text x="${bx+bw/2}" y="${10+bh/2-6}" text-anchor="middle" font-weight="700" font-size="15" fill="#0f2747">${esc(c.sym[0])}</text><text x="${bx+bw/2}" y="${10+bh/2+14}" text-anchor="middle" font-size="14" fill="#0f2747">${esc(c.sym[1])}</text>`;
+  c.ins.forEach((k,i)=>{const yy=10+(i+.5)*bh/ni, v=x[k], col=v?'#14a050':'#9aa3b1';
+    s+=`<g class="pin" data-in="${esc(k)}"><rect x="6" y="${yy-12}" width="34" height="24" rx="5" fill="${v?'#14a050':'#e5e9ef'}" stroke="${col}"/><text x="23" y="${yy+5}" text-anchor="middle" font-family="IBM Plex Mono" font-weight="600" font-size="14" fill="${v?'#fff':'#5b6575'}">${v}</text><line x1="40" y1="${yy}" x2="${bx}" y2="${yy}" stroke="${col}" stroke-width="${v?3:2}"/><text x="${bx+6}" y="${yy+4}" font-size="12" font-family="IBM Plex Mono" fill="#17202d">${esc(k)}</text><rect x="0" y="${yy-14}" width="${bx}" height="28" fill="transparent"/></g>`});
+  c.outs.forEach((k,i)=>{const yy=10+(i+.5)*bh/no, v=y[k], col=v?'#14a050':'#9aa3b1';
+    s+=`<line x1="${bx+bw}" y1="${yy}" x2="${W-40}" y2="${yy}" stroke="${col}" stroke-width="${v?3:2}"/><text x="${bx+bw-6}" y="${yy+4}" text-anchor="end" font-size="12" font-family="IBM Plex Mono" fill="#17202d">${esc(k)}</text><circle cx="${W-28}" cy="${yy}" r="10" fill="${v?'#ef4444':'#d5dae2'}" stroke="${v?'#b91c1c':'#9aa3b1'}"/><text x="${W-28}" y="${yy+4}" text-anchor="middle" font-size="11" font-family="IBM Plex Mono" font-weight="600" fill="${v?'#fff':'#5b6575'}">${v}</text>`});
+  return s+'</svg>';
+}
+function circTable(c,x){
+  if(c.table){const T=c.table, cur=T.match(x);
+    return `<div class="ttscroll"><table class="tt"><tr>${T.head.map((h,i)=>`<th class="${i===T.nin?'sep':''}">${esc(h)}</th>`).join('')}</tr>${T.rows.map((r,ri)=>`<tr class="${ri===cur?'cur':''}">${r.map((v,i)=>`<td class="${i===T.nin?'sep':''}">${v}</td>`).join('')}</tr>`).join('')}</table></div><p class="hint">Table abrégée (X = indifférent).</p>`}
+  if(c.ins.length>5) return '<p class="hint">Avec '+c.ins.length+' entrées, la table complète aurait '+(1<<c.ins.length)+' lignes : utilisez les interrupteurs pour explorer le fonctionnement.</p>';
+  const n=c.ins.length, cols=c.outs.map(k=>({name:k,v:[]}));
+  for(let m=0;m<(1<<n);m++){const env={}; c.ins.forEach((k,i)=>env[k]=(m>>(n-1-i))&1); const y=c.f(env); cols.forEach(col=>col.v.push(y[col.name]))}
+  return ttHTML(c.ins.map(esc),cols.map(cc=>({name:esc(cc.name),v:cc.v})),val(x,c.ins));
+}
+function renderCirc(){
+  const c=CIRC.find(z=>z.id===CUR); if(!CST[c.id]) CST[c.id]=Object.fromEntries(c.ins.map(k=>[k,0]));
+  const x=CST[c.id], y=c.f(x);
+  $$('#c-list button').forEach(b=>b.classList.toggle('active',b.dataset.id===CUR));
+  $('#c-title').textContent=c.name; $('#c-desc').innerHTML=c.desc;
+  $('#c-svg').innerHTML=blockSVG(c,x,y); $('#c-extra').innerHTML=c.extra?c.extra(x,y):'';
+  $('#c-eq').innerHTML=c.eq.map(e=>`<p style="margin:4px 0">${e}</p>`).join('');
+  $('#c-table').innerHTML=circTable(c,x);
+}
+
+/* =========================================================
+   CHAPITRE 4 : SEQUENTIEL
+   ========================================================= */
+const CLOCKS={};
+function stopClocks(){ for(const k in CLOCKS){clearInterval(CLOCKS[k]);delete CLOCKS[k]} $$('.autoclk').forEach(b=>{b.classList.remove('on');b.textContent='▶ Horloge automatique'}) }
+function toggleClock(key,btn,fn,ms=650){
+  if(CLOCKS[key]){clearInterval(CLOCKS[key]);delete CLOCKS[key];btn.classList.remove('on');btn.textContent='▶ Horloge automatique'}
+  else {CLOCKS[key]=setInterval(fn,ms);btn.classList.add('on');btn.textContent='⏸ Arrêter l’horloge'}
+}
+function chrono(rows,hist){
+  const cw=22, lh=32, lw=58, cols=Math.max(hist.length,30), W=lw+cols*cw+8, H=rows.length*lh+10;
+  let s=`<svg class="chrono" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`;
+  for(let i=0;i<=cols;i++) s+=`<line x1="${lw+i*cw}" y1="0" x2="${lw+i*cw}" y2="${H}" class="cg"/>`;
+  rows.forEach((r,ri)=>{const top=ri*lh+8, hi=top+4, lo=top+lh-10;
+    s+=`<text x="6" y="${top+lh/2-2}" class="cl">${r.label}</text><line x1="${lw}" y1="${lo}" x2="${W}" y2="${lo}" stroke="#e3e7ed"/>`;
+    let d=''; hist.forEach((h,i)=>{const yy=h[r.k]?hi:lo, x0=lw+i*cw; d+=(i?'L':'M')+x0+','+yy+'L'+(x0+cw)+','+yy});
+    if(d) s+=`<path d="${d}" class="cw ${r.cls||''}"/>`;
+  });
+  return s+'</svg>';
+}
+function showChrono(el,rows,hist){el.innerHTML=chrono(rows,hist); el.scrollLeft=el.scrollWidth}
+const MAXH=60;
+
+/* ---- Bascules ---- */
+const FFDEF={
+ RSL:{ins:['S','R'],clock:false,eq:`Q<sub>n+1</sub> = S + ${o('R')}·Q<sub>n</sub> &nbsp;(avec S·R = 0)`,
+  head:['S','R','Q<sub>n+1</sub>','Fonction'],rows:[['0','0','Q<sub>n</sub>','mémoire'],['0','1','0','mise à 0 (reset)'],['1','0','1','mise à 1 (set)'],['1','1','—','combinaison interdite']],idx:i=>i.S*2+i.R},
+ RS:{ins:['S','R'],clock:true,eq:`Q<sub>n+1</sub> = S + ${o('R')}·Q<sub>n</sub> &nbsp;(avec S·R = 0)`,
+  head:['S','R','Q<sub>n+1</sub>','Fonction'],rows:[['0','0','Q<sub>n</sub>','mémoire'],['0','1','0','mise à 0'],['1','0','1','mise à 1'],['1','1','—','interdit']],idx:i=>i.S*2+i.R},
+ D:{ins:['D'],clock:true,eq:'Q<sub>n+1</sub> = D',head:['D','Q<sub>n+1</sub>','Fonction'],rows:[['0','0','mise à 0'],['1','1','mise à 1']],idx:i=>i.D},
+ T:{ins:['T'],clock:true,eq:'Q<sub>n+1</sub> = T ⊕ Q<sub>n</sub>',head:['T','Q<sub>n+1</sub>','Fonction'],rows:[['0','Q<sub>n</sub>','mémoire'],['1',o('Q<sub>n</sub>'),'basculement']],idx:i=>i.T},
+ JK:{ins:['J','K'],clock:true,eq:`Q<sub>n+1</sub> = J·${o('Q<sub>n</sub>')} + ${o('K')}·Q<sub>n</sub>`,head:['J','K','Q<sub>n+1</sub>','Fonction'],rows:[['0','0','Q<sub>n</sub>','mémoire'],['0','1','0','mise à 0'],['1','0','1','mise à 1'],['1','1',o('Q<sub>n</sub>'),'basculement']],idx:i=>i.J*2+i.K}
+};
+function ffNext(t,Q,i){switch(t){case 'RS':case 'RSL':if(i.S&&i.R)return null;return i.S?1:i.R?0:Q;case 'D':return i.D;case 'T':return i.T?1-Q:Q;case 'JK':return i.J&&i.K?1-Q:i.J?1:i.K?0:Q}}
+const FF={type:'JK',Q:0,Qb:1,H:0,inp:{S:0,R:0,D:0,T:0,J:0,K:0,PRE:0,CLR:0},hist:[],msg:''};
+function ffApplyAsync(){
+  const d=FFDEF[FF.type], A=$('#ff-async').checked&&d.clock;
+  if(A&&FF.inp.PRE&&FF.inp.CLR){FF.Q=1;FF.Qb=1;FF.msg='<span class="warnc">PRE = CLR = 1 : combinaison à éviter.</span>';return true}
+  if(A&&FF.inp.PRE){FF.Q=1;FF.Qb=0;FF.msg='Forçage asynchrone : Q = 1 (PRE), l’horloge est sans effet.';return true}
+  if(A&&FF.inp.CLR){FF.Q=0;FF.Qb=1;FF.msg='Forçage asynchrone : Q = 0 (CLR), l’horloge est sans effet.';return true}
+  if(FF.Qb===FF.Q&&d.clock) FF.Qb=1-FF.Q;
+  return false;
+}
+function ffLatch(){
+  const i=FF.inp;
+  if(i.S&&i.R){FF.Q=0;FF.Qb=0;FF.forb=true;FF.msg='<span class="warnc">S = R = 1 : Q = Q̄ = 0, état interdit.</span>';return}
+  if(FF.forb&&!i.S&&!i.R){FF.forb=false;FF.Q=rnd(0,1);FF.Qb=1-FF.Q;FF.msg='<span class="warnc">Retour simultané à S = R = 0 : l’état final est imprévisible (course critique). Ici Q = '+FF.Q+'.</span>';return}
+  FF.forb=false; const n=ffNext('RSL',FF.Q,i); FF.Q=n; FF.Qb=1-n; FF.msg=i.S?'Mise à 1.':i.R?'Mise à 0.':'Mémoire.';
+}
+function ffSample(){FF.hist.push({H:FF.H,...FF.inp,Q:FF.Q,Qb:FF.Qb}); if(FF.hist.length>MAXH) FF.hist.shift()}
+function ffHalf(){
+  const d=FFDEF[FF.type]; if(!d.clock) return;
+  FF.H^=1;
+  if(!ffApplyAsync()){
+    if(FF.H===1){ const n=ffNext(FF.type,FF.Q,FF.inp);
+      if(n===null) FF.msg='<span class="warnc">Front montant avec S = R = 1 : combinaison interdite, la sortie est indéterminée (on la laisse inchangée ici).</span>';
+      else {const old=FF.Q; FF.Q=n; FF.Qb=1-n; FF.msg=`Front montant : Q passe de ${old} à ${n}.`}
+    } else FF.msg='Front descendant : la bascule ne réagit pas.';
+  }
+  ffSample(); renderFF();
+}
+function ffToggle(k){
+  FF.inp[k]^=1;
+  if(FF.type==='RSL') ffLatch(); else if(!ffApplyAsync()) FF.msg=`${k} = ${FF.inp[k]} : la sortie ne change qu’au prochain front montant.`;
+  ffSample(); renderFF();
+}
+function ffSymbol(){
+  const d=FFDEF[FF.type], A=$('#ff-async').checked&&d.clock;
+  const pins=[...d.ins]; if(d.clock) pins.splice(pins.length===2?1:1,0,'H');
+  const W=250, bx=70, bw=110, by=A?30:16, bh=Math.max(pins.length,2)*40+10, H=by+bh+(A?32:16);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="6" fill="#f4f7fb" stroke="#0f2747" stroke-width="2"/>`;
+  pins.forEach((k,i)=>{const yy=by+(i+.5)*bh/pins.length, v=k==='H'?FF.H:FF.inp[k], col=v?'#14a050':'#9aa3b1';
+    s+=`<line x1="20" y1="${yy}" x2="${bx}" y2="${yy}" stroke="${col}" stroke-width="${v?3:2}"/><text x="14" y="${yy+5}" text-anchor="end" font-family="IBM Plex Mono" font-size="13" fill="${col}" font-weight="700">${v}</text>`;
+    if(k==='H') s+=`<path d="M${bx} ${yy-8} L${bx+12} ${yy} L${bx} ${yy+8}" fill="none" stroke="#0f2747" stroke-width="1.6"/><text x="${bx+16}" y="${yy+5}" font-size="13" font-family="IBM Plex Mono">H</text>`;
+    else s+=`<text x="${bx+8}" y="${yy+5}" font-size="14" font-weight="600" font-family="IBM Plex Mono">${k}</text>`;
+  });
+  [['Q',FF.Q,.25],['Q̄',FF.Qb,.75]].forEach(([k,v,f])=>{const yy=by+bh*f;
+    s+=`<text x="${bx+bw-8}" y="${yy+5}" text-anchor="end" font-size="14" font-weight="600" font-family="IBM Plex Mono">${k}</text><line x1="${bx+bw}" y1="${yy}" x2="${W-34}" y2="${yy}" stroke="${v?'#14a050':'#9aa3b1'}" stroke-width="${v?3:2}"/><circle cx="${W-22}" cy="${yy}" r="11" fill="${v?'#ef4444':'#d5dae2'}" stroke="${v?'#b91c1c':'#9aa3b1'}"/><text x="${W-22}" y="${yy+4}" text-anchor="middle" font-size="12" font-weight="700" font-family="IBM Plex Mono" fill="${v?'#fff':'#5b6575'}">${v}</text>`});
+  if(A){ s+=`<line x1="${bx+bw/2}" y1="6" x2="${bx+bw/2}" y2="${by}" stroke="${FF.inp.PRE?'#14a050':'#9aa3b1'}" stroke-width="2"/><text x="${bx+bw/2+6}" y="16" font-size="12" font-family="IBM Plex Mono">PRE</text><line x1="${bx+bw/2}" y1="${by+bh}" x2="${bx+bw/2}" y2="${H-4}" stroke="${FF.inp.CLR?'#14a050':'#9aa3b1'}" stroke-width="2"/><text x="${bx+bw/2+6}" y="${H-8}" font-size="12" font-family="IBM Plex Mono">CLR</text>` }
+  return s+'</svg>';
+}
+function renderFF(){
+  const d=FFDEF[FF.type], A=$('#ff-async').checked&&d.clock;
+  $('#ff-sym').innerHTML=ffSymbol();
+  const ks=[...d.ins,...(A?['PRE','CLR']:[])];
+  $('#ff-ins').innerHTML=ks.map(k=>`<button class="sw ${FF.inp[k]?'on':''}" data-k="${k}">${k} <b>${FF.inp[k]}</b></button>`).join('');
+  $('#ff-clkrow').classList.toggle('hidden',!d.clock);
+  $('#ff-state').innerHTML=`<p style="margin:4px 0">Etat : <span class="res">Q = ${FF.Q}</span> <span class="res">Q̄ = ${FF.Qb}</span>${d.clock?` &nbsp;H = ${FF.H}`:''}</p><p class="hint" style="min-height:1.4em">${FF.msg}</p>`;
+  const rows=[...(d.clock?[{k:'H',label:'H',cls:'clk'}]:[]),...ks.map(k=>({k,label:k})),{k:'Q',label:'Q',cls:'out'},{k:'Qb',label:'Q̄',cls:'out'}];
+  showChrono($('#ff-chrono'),rows,FF.hist);
+  const cur=FFDEF[FF.type].idx(FF.inp);
+  $('#ff-table').innerHTML=`<h3>Table caractéristique</h3><table class="tt"><tr>${d.head.map(h=>`<th>${h}</th>`).join('')}</tr>${d.rows.map((r,i)=>`<tr class="${i===cur?'cur':''}">${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table><p>Equation caractéristique : <span class="res">${d.eq}</span></p>`;
+}
+const EXC_HTML=`<h3>Tables d’excitation (pour la synthèse des compteurs)</h3>
+<table class="tt"><tr><th>Q<sub>n</sub> → Q<sub>n+1</sub></th><th class="sep">S</th><th>R</th><th class="sep">D</th><th class="sep">T</th><th class="sep">J</th><th>K</th></tr>
+<tr><td>0 → 0</td><td class="sep">0</td><td>X</td><td class="sep">0</td><td class="sep">0</td><td class="sep">0</td><td>X</td></tr>
+<tr><td>0 → 1</td><td class="sep">1</td><td>0</td><td class="sep">1</td><td class="sep">1</td><td class="sep">1</td><td>X</td></tr>
+<tr><td>1 → 0</td><td class="sep">0</td><td>1</td><td class="sep">0</td><td class="sep">1</td><td class="sep">X</td><td>1</td></tr>
+<tr><td>1 → 1</td><td class="sep">X</td><td>0</td><td class="sep">1</td><td class="sep">0</td><td class="sep">X</td><td>0</td></tr></table>
+<p class="hint">Elles donnent les entrées à appliquer pour obtenir une transition voulue de Q. X = indifférent.</p>`;
+
+/* ---- Registres ---- */
+const RG={mode:'SIPO',dir:'R',Q:[0,0,0,0],E:0,D:[1,0,1,1],L:1,H:0,hist:[],queue:[],sending:false};
+const rgS=()=>RG.dir==='R'?RG.Q[3]:RG.Q[0];
+function rgSample(){RG.hist.push({H:RG.H,E:RG.E,L:RG.L,Q0:RG.Q[0],Q1:RG.Q[1],Q2:RG.Q[2],Q3:RG.Q[3],S:rgS()}); if(RG.hist.length>MAXH) RG.hist.shift()}
+function rgHalf(){
+  RG.H^=1;
+  if(RG.H===1){
+    if(RG.mode==='PIPO'||(RG.mode==='PISO'&&RG.L)) RG.Q=RG.D.slice();
+    else if(RG.dir==='R') RG.Q=[RG.E,RG.Q[0],RG.Q[1],RG.Q[2]];
+    else RG.Q=[RG.Q[1],RG.Q[2],RG.Q[3],RG.E];
+  } else if(RG.sending){
+    if(RG.queue.length) RG.E=RG.queue.shift();
+    else {RG.sending=false; clearInterval(CLOCKS.rgsend); delete CLOCKS.rgsend}
+  }
+  rgSample(); renderRG();
+}
+function renderRG(){
+  const m=RG.mode, ser=m==='SISO'||m==='SIPO'||m==='PISO', par=m==='PISO'||m==='PIPO', pout=m==='SIPO'||m==='PIPO';
+  let ins='';
+  if(m!=='PIPO') ins+=`<button class="sw ${RG.E?'on':''}" data-k="E">E (série) <b>${RG.E}</b></button>`;
+  if(m==='PISO') ins+=`<button class="sw ${RG.L?'on':''}" data-k="L">L/D̄ <b>${RG.L}</b></button>`;
+  if(par) ins+=[0,1,2,3].map(i=>`<button class="sw ${RG.D[i]?'on':''}" data-d="${i}">D${i} <b>${RG.D[i]}</b></button>`).join('');
+  $('#rg-ins').innerHTML=ins;
+  const cells=[0,1,2,3].map(i=>`<div class="rcell ${RG.Q[i]?'one':''}"><small>Q${i}</small><b>${RG.Q[i]}</b>${pout?`<div><span class="led ${RG.Q[i]?'on':''}"></span></div>`:''}</div>`);
+  const arr=RG.dir==='R'?'→':'←';
+  const left=RG.dir==='R'?(m!=='PIPO'?`<span class="pin-io">E = ${RG.E}</span><span class="arrow">${arr}</span>`:''):(ser?`<span class="pin-io">S = ${rgS()}</span><span class="arrow">${arr}</span>`:'');
+  const right=RG.dir==='R'?(ser?`<span class="arrow">${arr}</span><span class="pin-io">S = ${rgS()}</span>`:''):(m!=='PIPO'?`<span class="arrow">${arr}</span><span class="pin-io">E = ${RG.E}</span>`:'');
+  const modeTxt = m==='PIPO'?'Chargement parallèle à chaque front':m==='PISO'?(RG.L?'L/D̄ = 1 : chargement parallèle au prochain front':'L/D̄ = 0 : décalage au prochain front'):'Décalage d’un rang à chaque front';
+  $('#rg-view').innerHTML=`<div class="regbox">${left}${cells.join(`<span class="arrow">${m==='PIPO'?'':arr}</span>`)}${right}</div><p class="hint">${modeTxt}. ${pout?'Sorties parallèles Q0 à Q3 disponibles.':'Seule la sortie série S est accessible.'}</p>`;
+  $('#rg-sendbox').classList.toggle('hidden',!(m==='SISO'||m==='SIPO'));
+  const rows=[{k:'H',label:'H',cls:'clk'}]; if(m!=='PIPO') rows.push({k:'E',label:'E'}); if(m==='PISO') rows.push({k:'L',label:'L/D̄'});
+  rows.push(...[0,1,2,3].map(i=>({k:'Q'+i,label:'Q'+i,cls:'out'}))); if(ser) rows.push({k:'S',label:'S',cls:'out'});
+  showChrono($('#rg-chrono'),rows,RG.hist);
+  const N={SISO:'Le mot entre bit par bit et ressort bit par bit, retardé de 4 périodes d’horloge : c’est une ligne à retard.',SIPO:'Conversion série → parallèle : après 4 fronts, les 4 bits entrés en série sont disponibles simultanément sur Q0 à Q3.',PISO:'Conversion parallèle → série : on charge le mot (L/D̄ = 1, un front), puis on le fait sortir bit par bit (L/D̄ = 0). Chaque bascule est précédée d’un multiplexeur 2 → 1 commandé par L/D̄.',PIPO:'Registre de mémorisation (registre tampon) : les 4 bits sont chargés simultanément à chaque front d’horloge.'};
+  $('#rg-notes').innerHTML=`<p><b>${m} :</b> ${N[m]}</p><p class="hint">Structure : 4 bascules D commandées par la même horloge. Décalage à droite : D0 = E, D1 = Q0, D2 = Q1, D3 = Q2, S = Q3.</p>`;
+}
+
+/* ---- Compteurs ---- */
+const CT={type:'sync',N:10,dir:'up',n:4,s:0,H:0,hist:[]};
+function ctBits(){return CT.type==='ring'||CT.type==='johnson'?CT.n:Math.max(1,Math.ceil(Math.log2(CT.N)))}
+function ctInit(){CT.s=CT.type==='ring'?1:CT.type==='johnson'?0:(CT.dir==='down'?CT.N-1:0)}
+function ctNext(s){
+  const n=ctBits(), full=(1<<n)-1;
+  if(CT.type==='ring') return ((s<<1)&full)|((s>>(n-1))&1);
+  if(CT.type==='johnson') return ((s<<1)&full)|(1-((s>>(n-1))&1));
+  if(CT.dir==='up'){const t=s+1; return t>=CT.N||t>full?0:t}
+  return s===0?CT.N-1:s-1;
+}
+function ctSeq(){const n=ctBits(); let s=CT.type==='ring'?1:0; if(CT.type!=='ring'&&CT.type!=='johnson'&&CT.dir==='down') s=CT.N-1; const seq=[]; while(!seq.includes(s)&&seq.length<70){seq.push(s); s=ctNext(s)} return seq}
+function ctSample(){const r={H:CT.H}; for(let i=0;i<ctBits();i++) r['Q'+i]=(CT.s>>i)&1; CT.hist.push(r); if(CT.hist.length>MAXH) CT.hist.shift()}
+function ctHalf(){CT.H^=1; if(CT.H===1) CT.s=ctNext(CT.s); ctSample(); renderCT()}
+function stateDiag(seq,cur,n){
+  const N=seq.length, R=N<=4?62:N<=8?92:N<=12?118:140, nr=N>10?17:21, W=2*R+70, H=2*R+70, cx=W/2, cy=H/2;
+  const P=seq.map((_,i)=>{const a=-Math.PI/2+2*Math.PI*i/N; return [cx+R*Math.cos(a),cy+R*Math.sin(a)]});
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#5b6575"/></marker></defs>`;
+  if(N>1) P.forEach((p,i)=>{const q=P[(i+1)%N], dx=q[0]-p[0], dy=q[1]-p[1], L=Math.hypot(dx,dy)||1, ux=dx/L, uy=dy/L;
+    s+=`<line x1="${p[0]+ux*nr}" y1="${p[1]+uy*nr}" x2="${q[0]-ux*(nr+2)}" y2="${q[1]-uy*(nr+2)}" stroke="#5b6575" stroke-width="1.5" marker-end="url(#ah)"/>`});
+  P.forEach((p,i)=>{const on=seq[i]===cur, lab=n<=4?bits(seq[i],n):String(seq[i]);
+    s+=`<circle cx="${p[0]}" cy="${p[1]}" r="${nr}" fill="${on?'#1c4d8f':'#fff'}" stroke="#1c4d8f" stroke-width="2"/><text x="${p[0]}" y="${p[1]+4}" text-anchor="middle" font-family="IBM Plex Mono" font-size="${n<=3?12:n<=4?11:12}" font-weight="600" fill="${on?'#fff':'#0f2747'}">${lab}</text>`});
+  return s+'</svg>';
+}
+function renderCT(){
+  const t=CT.type, n=ctBits(), bin=t==='sync'||t==='async';
+  $('#ct-Nl').classList.toggle('hidden',!bin); $('#ct-dirl').classList.toggle('hidden',!bin); $('#ct-nl').classList.toggle('hidden',bin);
+  const seq=ctSeq(), inSeq=seq.includes(CT.s);
+  let bh=''; for(let i=n-1;i>=0;i--){const b=(CT.s>>i)&1; bh+=`<span class="b${b}" data-bit="${i}" title="Cliquer pour forcer Q${i}">${b}</span>`}
+  $('#ct-bits').innerHTML=`<div class="hint">Q${n-1} … Q0 (cliquez sur un bit pour forcer un état)</div><div class="bigbits">${bh}</div><p>Valeur décimale : <span class="res">${CT.s}</span> · ${seq.length} états dans le cycle · ${n} bascule(s)${inSeq?'':' · <span class="warnc">état hors cycle (état parasite)</span>'}</p>`;
+  $('#ct-diag').innerHTML=seq.length<=16?stateDiag(seq,CT.s,n):'<p class="hint">Le diagramme d’états est affiché jusqu’à 16 états.</p>';
+  showChrono($('#ct-chrono'),[{k:'H',label:'H',cls:'clk'},...Array.from({length:n},(_,i)=>({k:'Q'+i,label:'Q'+i,cls:'out'}))],CT.hist);
+  let notes='';
+  if(t==='sync') notes=`<ul><li>${n} bascules T (ou JK avec J = K) reçoivent <b>toutes la même horloge</b> : les sorties changent en même temps.</li><li>${CT.dir==='up'?'Comptage : T0 = 1, T1 = Q0, T2 = Q0·Q1, T3 = Q0·Q1·Q2 …':'Décomptage : T0 = 1, T1 = '+o('Q0')+', T2 = '+o('Q0')+'·'+o('Q1')+' …'}</li>${CT.N!==2**n?`<li>Modulo ${CT.N} ≠ 2<sup>${n}</sup> : les équations se calculent avec l’onglet <b>Conception d’un compteur</b>.</li>`:''}</ul>`;
+  else if(t==='async') notes=`<ul><li>Bascules T avec T = 1 : seule la première reçoit l’horloge H ; la sortie de chaque bascule sert d’horloge à la suivante, d’où un <b>décalage des basculements</b> (temps de propagation cumulés).</li><li>${CT.dir==='up'?'Comptage : bascules sensibles au front descendant (ou Q̄ reliée à l’horloge suivante si front montant).':'Décomptage : la bascule suivante est déclenchée par Q̄.'}</li>${CT.N!==2**n?`<li>Modulo ${CT.N} : une porte NAND détecte l’état ${CT.N} = ${bits(CT.N,n)} et force CLR, d’où une remise à zéro immédiate (l’état ${CT.N} n’existe qu’un très court instant).</li>`:''}<li>Ici, les changements sont représentés au front montant de H pour simplifier le chronogramme.</li></ul>`;
+  else if(t==='ring') notes=`<ul><li>Registre à décalage rebouclé : D0 = Q${n-1}, Di = Qi−1.</li><li>On l’initialise avec un seul 1 (ici 0…01) : le 1 circule, donc <b>${n} états</b> pour ${n} bascules, sans décodage nécessaire.</li><li>Cliquez sur les bits pour charger un état non prévu (ex. deux 1) : il circule indéfiniment, c’est un cycle parasite.</li></ul>`;
+  else notes=`<ul><li>Registre à décalage rebouclé par la sortie complémentée : D0 = ${o('Q'+(n-1))}.</li><li><b>${2*n} états</b> pour ${n} bascules (2n), deux fois plus qu’un compteur en anneau.</li><li>Les ${2**n-2*n} autres états forment un cycle parasite : chargez par exemple ${bits(n>=3?2:1,n)} pour l’observer.</li></ul>`;
+  $('#ct-notes').innerHTML=notes;
+}
+
+/* ---- Conception d'un compteur ---- */
+function renderDZ(){
+  const out=$('#dz-out'), type=$('#dz-type').value;
+  const seq=$('#dz-seq').value.split(/[\s,;]+/).filter(Boolean).map(Number);
+  if(seq.length<2||seq.some(v=>!Number.isInteger(v)||v<0||v>31)){out.innerHTML='<p class="err">Saisissez au moins 2 états entiers entre 0 et 31.</p>';return}
+  if(new Set(seq).size!==seq.length){out.innerHTML='<p class="err">Chaque état ne doit apparaître qu’une fois dans le cycle.</p>';return}
+  const n=Math.max(1,Math.ceil(Math.log2(Math.max(...seq)+1))), names=Array.from({length:n},(_,i)=>'Q'+(n-1-i));
+  const nx={}; seq.forEach((s,i)=>nx[s]=seq[(i+1)%seq.length]);
+  const unused=[]; for(let s=0;s<(1<<n);s++) if(!(s in nx)) unused.push(s);
+  const inNames=type==='JK'?['J','K']:type==='RS'?['S','R']:[type];
+  // valeurs des entrées : 0,1 ou 2 (X)
+  const exc=(q,q1)=>{ if(type==='D') return [q1]; if(type==='T') return [q^q1]; if(type==='JK') return q===0?[q1,2]:[2,1-q1]; /*RS*/ return q===0?(q1?[1,0]:[0,2]):(q1?[2,0]:[0,1]) };
+  const F={}; // F['J2'] = array(2^n) values
+  for(let b=n-1;b>=0;b--) inNames.forEach(nm=>F[nm+b]=Array(1<<n).fill(2));
+  seq.forEach(s=>{for(let b=n-1;b>=0;b--){const v=exc((s>>b)&1,(nx[s]>>b)&1); inNames.forEach((nm,k)=>F[nm+b][s]=v[k])}});
+  const cols=[]; for(let b=n-1;b>=0;b--) inNames.forEach(nm=>cols.push(nm+b));
+  let h=`<h4>① Table de transition (${n} bascules ${type} : ${names.join(', ')})</h4><div style="overflow-x:auto"><table class="tt"><tr><th colspan="${n}">Etat présent</th><th colspan="${n}" class="sep">Etat suivant</th><th colspan="${cols.length}" class="sep">Entrées des bascules</th></tr><tr>${names.map(x=>`<th>${x}</th>`).join('')}${names.map((x,i)=>`<th class="${i===0?'sep':''}">${x}<sup>+</sup></th>`).join('')}${cols.map((c,i)=>`<th class="${i===0?'sep':''}">${c.replace(/(\d+)$/,'<sub>$1</sub>')}</th>`).join('')}</tr>`;
+  seq.forEach(s=>{h+=`<tr><td>${bits(s,n).split('').join('</td><td>')}</td>${bits(nx[s],n).split('').map((c,i)=>`<td class="${i===0?'sep':''}">${c}</td>`).join('')}${cols.map((c,i)=>`<td class="${i===0?'sep':''}">${F[c][s]===2?'X':F[c][s]}</td>`).join('')}</tr>`});
+  h+=`</table></div>${unused.length?`<p class="hint">Etats inutilisés (cas indifférents) : ${unused.join(', ')}.</p>`:''}`;
+  h+=`<h4>② Equations simplifiées</h4><div class="flex">`;
+  const EQ={};
+  for(const c of cols){ const v=F[c], ones=[],dcs=[]; v.forEach((x,m)=>x===1?ones.push(m):x===2&&dcs.push(m)); const G=qm(n,ones,dcs); EQ[c]=G;
+    h+=`<div><p style="margin:4px 0"><b>${c.replace(/(\d+)$/,'<sub>$1</sub>')} = ${sopS(G,names,true)}</b></p>${n>=2&&n<=4?kmGrid(n,v,names,G,false):''}</div>` }
+  h+='</div>';
+  // autodémarrage
+  if(unused.length){
+    const evalG=(G,s)=>G.some(p=>covers(p,s))?1:0;
+    const step=s=>{let r=0; for(let b=n-1;b>=0;b--){const q=(s>>b)&1; let q1;
+      if(type==='D') q1=evalG(EQ['D'+b],s); else if(type==='T') q1=q^evalG(EQ['T'+b],s);
+      else if(type==='JK'){const J=evalG(EQ['J'+b],s),K=evalG(EQ['K'+b],s); q1=J&&K?1-q:J?1:K?0:q}
+      else {const S=evalG(EQ['S'+b],s),R=evalG(EQ['R'+b],s); q1=S&&R?q:S?1:R?0:q}
+      r|=q1<<b} return r};
+    let ok=true, rows='';
+    for(const u of unused){ const path=[u]; let s=u; for(let k=0;k<(1<<n)+1&&!(s in nx);k++){s=step(s); path.push(s)} const good=s in nx; if(!good) ok=false; rows+=`<tr><td>${u}</td><td>${path.join(' → ')}</td><td class="${good?'okc':'err'}">${good?'rejoint le cycle':'bloqué hors cycle'}</td></tr>` }
+    h+=`<h4>③ Vérification de l’autodémarrage</h4><table class="tt"><tr><th>Etat de départ</th><th>Evolution</th><th>Résultat</th></tr>${rows}</table><p class="${ok?'okc':'err'}">${ok?'Le compteur est auto-démarrant : depuis n’importe quel état il rejoint le cycle prévu.':'Attention : certains états ne rejoignent pas le cycle. Il faut imposer leur état suivant (au lieu de X) ou prévoir une initialisation.'}</p>`;
+  }
+  out.innerHTML=h;
+}
+
+/* =========================================================
+   EXERCICES
+   ========================================================= */
+const nz=x=>x.toUpperCase().replace(/\s/g,'').replace(/^0+(?=.)/,'');
+const nb=x=>x.replace(/\s/g,'');
+const EXS={
+ conv:{name:'Conversions de bases',gen(){const [s,t]=pick([[10,2],[2,10],[2,16],[16,2],[10,16],[16,10],[8,2],[2,8],[10,8]]); const v=rnd(20,255), src=v.toString(s).toUpperCase(), ans=v.toString(t).toUpperCase();
+   return {q:`Convertir (${src})<sub>${s}</sub> en base ${t}.`,ans,norm:nz,sol:`(${src})<sub>${s}</sub> = (${v})<sub>10</sub> = <b>(${ans})<sub>${t}</sub></b>${t===2?`<br>Divisions successives par 2 de ${v}, restes lus de bas en haut.`:''}`}}},
+ c2:{name:'Complément à 2',gen(){const v=-rnd(1,128), a=-v, ans=bits(256+v,8);
+   return {q:`Représenter ${v} en complément à 2 sur 8 bits.`,ans,norm:nb,sol:`|${v}| = ${bits(a,8)} → inversion : ${bits(255-a,8)} → +1 : <b>${ans}</b>`}}},
+ c2d:{name:'Décoder un mot en C2',gen(){const w=rnd(128,255), ans=String(w-256);
+   return {q:`Quelle est la valeur décimale du mot ${bits(w,8)} interprété en complément à 2 sur 8 bits ?`,ans,norm:x=>x.replace(/\s/g,'').replace('−','-'),sol:`Bit de signe = 1 : nombre négatif. ${w} − 256 = <b>${ans}</b>`}}},
+ add:{name:'Addition binaire',gen(){const A=rnd(10,120),B=rnd(10,120), ans=(A+B).toString(2);
+   return {q:`Calculer en binaire : ${A.toString(2)} + ${B.toString(2)}`,ans,norm:nz,sol:`${A} + ${B} = ${A+B} = <b>${ans}</b>`}}},
+ gray:{name:'Code Gray',gen(){const v=rnd(1,31), b=bits(v,5), ans=bits(grayOf(v),5);
+   return {q:`Donner le code Gray (5 bits) du nombre binaire ${b}.`,ans,norm:nb,sol:`On recopie le premier bit, puis chaque bit de Gray est le OU exclusif de deux bits binaires voisins : <b>${ans}</b>`}}},
+ bcd:{name:'Code BCD',gen(){const v=rnd(10,999), ans=[...String(v)].map(d=>bits(+d,4)).join(' ');
+   return {q:`Coder le nombre ${v} en BCD (séparez les groupes de 4 bits par des espaces si vous voulez).`,ans,norm:nb,sol:`Chaque chiffre est codé sur 4 bits : <b>${ans}</b>`}}},
+ simp:{name:'Simplification (Karnaugh)',gen(){const n=pick([3,4]), names=['A','B','C','D'].slice(0,n); let ones=[]; for(let m=0;m<(1<<n);m++) if(Math.random()<.45) ones.push(m);
+   if(ones.length<2) ones=[0,(1<<n)-1]; if(ones.length===(1<<n)) ones.pop();
+   const G=qm(n,ones), best=litCount(G,n), tt=Array.from({length:1<<n},(_,m)=>ones.includes(m)?1:0);
+   return {q:`Simplifier F(${names.join(', ')}) = Σm(${ones.join(', ')}). Donnez une somme de produits minimale (exemple de saisie : <code>A'B + CD</code>).`,
+    check(u){let e; try{e=parse(u)}catch(err){return {ok:false,msg:'Expression invalide : '+err}} const vs=[...vars(e)]; if(vs.some(v=>!names.includes(v))) return {ok:false,msg:'Variables autorisées : '+names.join(', ')};
+      const t=truth(e,names); if(!t.every((v,m)=>v===tt[m])) return {ok:false,msg:'Votre expression n’est pas équivalente à F.'};
+      const ul=countLits(u); if(ul>best) return {ok:false,part:true,msg:`Expression équivalente à F, mais pas minimale (${ul} littéraux au lieu de ${best}).`};
+      return {ok:true,msg:'Expression minimale correcte.'}},
+    sol:`F = <b>${sopS(G,names,true)}</b><div style="margin-top:6px">${kmGrid(n,tt,names,G,false)}</div>`}}},
+ ff:{name:'Bascules',gen(){const t=pick(['JK','D','T','RS']), Q=rnd(0,1); let i;
+   if(t==='JK') i={J:rnd(0,1),K:rnd(0,1)}; else if(t==='D') i={D:rnd(0,1)}; else if(t==='T') i={T:rnd(0,1)}; else do{i={S:rnd(0,1),R:rnd(0,1)}}while(i.S&&i.R);
+   const ans=String(ffNext(t,Q,i));
+   return {q:`Bascule ${t} synchrone : Q<sub>n</sub> = ${Q}, ${Object.entries(i).map(([k,v])=>k+' = '+v).join(', ')}. Quelle est la valeur de Q<sub>n+1</sub> après le front actif d’horloge ?`,ans,norm:x=>x.trim(),sol:`Q<sub>n+1</sub> = <b>${ans}</b> · Equation : ${FFDEF[t].eq}`}}},
+ cnt:{name:'Compteurs',gen(){const k=rnd(0,3);
+   if(k===0){const N=rnd(5,60), a=Math.ceil(Math.log2(N)); return {q:`Combien de bascules faut-il au minimum pour réaliser un compteur modulo ${N} ?`,ans:String(a),norm:x=>x.trim(),sol:`2<sup>${a-1}</sup> = ${2**(a-1)} &lt; ${N} ≤ 2<sup>${a}</sup> = ${2**a} ⇒ <b>${a}</b> bascules.`}}
+   if(k===1){const n=rnd(3,6); return {q:`Combien d’états distincts parcourt un compteur de Johnson à ${n} bascules ?`,ans:String(2*n),norm:x=>x.trim(),sol:`Un compteur de Johnson à n bascules a 2n états : <b>${2*n}</b>.`}}
+   if(k===2){const seq=[0,1,3,7,15,14,12,8], s=pick(seq), nxt=((s<<1)&15)|(1-((s>>3)&1)); return {q:`Compteur de Johnson 4 bits (D0 = ${o('Q3')}, décalage Q0 → Q1 → Q2 → Q3). L’état actuel Q3Q2Q1Q0 vaut ${bits(s,4)}. Quel est l’état suivant ?`,ans:bits(nxt,4),norm:nb,sol:`Chaque bit se décale d’un rang vers Q3 et Q0 reçoit ${o('Q3')} = ${1-((s>>3)&1)} : <b>${bits(nxt,4)}</b>`}}
+   const s=pick([1,2,4,8]), nxt=((s<<1)&15)|((s>>3)&1); return {q:`Compteur en anneau 4 bits (D0 = Q3, décalage Q0 → Q1 → Q2 → Q3). L’état actuel Q3Q2Q1Q0 vaut ${bits(s,4)}. Quel est l’état suivant ?`,ans:bits(nxt,4),norm:nb,sol:`Le 1 se décale d’un rang (Q3 revient en Q0) : <b>${bits(nxt,4)}</b>`}}}
+};
+let XG=null, XS={ok:0,tot:0,done:false};
+function newEx(){const t=$('#xg-type').value, k=t==='all'?pick(Object.keys(EXS)):t; XG=EXS[k].gen(); XG.theme=EXS[k].name; XS.done=false;
+  $('#xg-q').innerHTML=`<div class="hint" style="margin:0 0 4px">${XG.theme}</div>${XG.q}`; $('#xg-ans').value=''; $('#xg-fb').innerHTML=''; $('#xg-ans').focus()}
+function checkEx(){ if(!XG) return; const u=$('#xg-ans').value; if(!u.trim()) return;
+  let r; if(XG.check) r=XG.check(u); else {const ok=XG.norm(u)===XG.norm(XG.ans); r={ok,msg:ok?'Bonne réponse.':'Réponse incorrecte.'}}
+  if(!XS.done){XS.tot++; if(r.ok) XS.ok++; XS.done=true}
+  $('#xg-score').textContent=`Score : ${XS.ok} / ${XS.tot}`;
+  $('#xg-fb').innerHTML=`<div class="fb ${r.ok?'ok':r.part?'part':'ko'}"><b>${r.ok?'✓ ':'✗ '}${r.msg}</b>${r.ok?'':'<div class="hint">Réessayez, ou cliquez sur « Voir la solution ».</div>'}</div>`; }
+function solEx(){ if(!XG) return; if(!XS.done){XS.tot++;XS.done=true; $('#xg-score').textContent=`Score : ${XS.ok} / ${XS.tot}`} $('#xg-fb').innerHTML=`<div class="fb part"><b>Solution :</b> ${XG.sol}</div>` }
+
+const QCM=[
+ ['Combien de bits faut-il au minimum pour écrire 100 en binaire naturel ?',['6','7','8','10'],1,'2⁶ = 64 ≤ 100 < 2⁷ = 128 : il faut 7 bits (100 = 1100100).'],
+ ['Le complément à 2 de 0101 sur 4 bits est :',['1010','1011','0110','1101'],1,'Inversion : 1010, puis +1 : 1011 (c’est −5).'],
+ ['Sur 8 bits en complément à 2, la plage des valeurs est :',['−127 à +127','−128 à +127','0 à 255','−128 à +128'],1,'Plage de −2ⁿ⁻¹ à 2ⁿ⁻¹ − 1, soit −128 à +127.'],
+ ['En code Gray, deux nombres consécutifs diffèrent de :',['un seul bit','deux bits','tous les bits','un nombre variable de bits'],0,'C’est la propriété du code binaire réfléchi : il évite les états transitoires erronés.'],
+ ['D’après le théorème de De Morgan, le complément de (A + B) vaut :',["A' + B'","A'·B'",'A·B',"(A·B)'"],1,'(A + B)\' = A\'·B\' : le complément d’une somme est le produit des compléments.'],
+ ['L’expression A + A·B se simplifie en :',['A·B','A + B','A','B'],2,'Absorption : A + A·B = A·(1 + B) = A.'],
+ ['Dans un tableau de Karnaugh, un groupe de 4 cases d’une fonction de 4 variables donne un terme de :',['1 variable','2 variables','3 variables','4 variables'],1,'Un groupe de 2ᵏ cases élimine k variables : 4 − 2 = 2 variables restent.'],
+ ['Un multiplexeur 8 → 1 possède combien d’entrées de sélection ?',['2','3','4','8'],1,'2³ = 8 entrées de données : il faut 3 bits de sélection.'],
+ ['Un décodeur 3 → 8 (sorties actives à 1) active :',['une seule sortie à la fois','trois sorties','toutes les sorties','deux sorties'],0,'Chaque sortie correspond à un minterme : une seule est vraie pour un code donné.'],
+ ['Pour un additionneur complet, la retenue sortante vaut :',['A ⊕ B ⊕ Cin','A·B + Cin·(A ⊕ B)','A + B + Cin','A·B'],1,'Cout = A·B + Cin·(A ⊕ B), équivalente à la fonction majorité A·B + A·Cin + B·Cin.'],
+ ['Le bit de parité paire associé au mot 1011 est :',['0','1'],1,'1011 contient trois 1 : il faut P = 1 pour obtenir un nombre pair de 1.'],
+ ['Une bascule JK avec J = K = 1 :',['se met à 1','se met à 0','garde son état','bascule (change d’état)'],3,'J = K = 1 : Qn+1 = Q̄n, c’est le mode basculement.'],
+ ['Pour une bascule D, l’état suivant Qn+1 est égal à :',['Qn','D','D̄','D ⊕ Qn'],1,'La bascule D recopie son entrée D au front actif de l’horloge.'],
+ ['Un registre PISO est un registre :',['à entrée série et sorties parallèles','à entrées parallèles et sortie série','à entrées et sorties parallèles','à entrée et sortie série'],1,'PISO = Parallel In, Serial Out : conversion parallèle → série.'],
+ ['Un compteur de Johnson à 4 bascules possède combien d’états ?',['4','8','16','5'],1,'Compteur de Johnson : 2n états, soit 8 pour n = 4 (un compteur en anneau en a n = 4).'],
+ ['Combien de bascules au minimum pour un compteur modulo 10 ?',['3','4','5','10'],1,'2³ = 8 < 10 ≤ 16 = 2⁴ : 4 bascules.']
+];
+function renderQCM(){
+  $('#qcm-list').innerHTML=QCM.map((q,i)=>`<div class="q" data-i="${i}"><b>${i+1}. ${esc(q[0])}</b>${q[1].map((c,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${esc(c)}</label>`).join('')}<div class="ex"></div></div>`).join('');
+  $('#qcm-score').textContent='';
+}
+function corrQCM(){
+  let s=0; QCM.forEach((q,i)=>{const r=$(`input[name="q${i}"]:checked`), ok=r&&+r.value===q[2]; if(ok)s++;
+    $(`.q[data-i="${i}"] .ex`).innerHTML=`<span class="${ok?'okc':'err'}">${ok?'✓ Correct.':'✗ '+(r?'Incorrect.':'Sans réponse.')+' Réponse : '+esc(q[1][q[2]])+'.'}</span> <span class="hint">${esc(q[3])}</span>`});
+  $('#qcm-score').textContent=`Note : ${s} / ${QCM.length}  (${(20*s/QCM.length).toFixed(1).replace('.',',')} / 20)`;
+}
+
+/* =========================================================
+   NAVIGATION ET INITIALISATION
+   ========================================================= */
+const SECTIONS=['accueil','numeration','fonctions','combinatoire','sequentiel','exercices','tp'];
+function route(){
+  const id=(location.hash||'#accueil').slice(1), ok=SECTIONS.includes(id)?id:'accueil';
+  $$('main>section').forEach(s=>s.classList.toggle('active',s.id==='s-'+ok));
+  $$('#nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+ok));
+  stopClocks(); window.scrollTo(0,0);
+}
+function showSub(g,p){
+  $$(`.subtabs[data-g="${g}"] button`).forEach(b=>b.classList.toggle('active',b.dataset.p===p));
+  $$(`.sp[data-g="${g}"]`).forEach(x=>x.classList.toggle('hidden',x.dataset.p!==p));
+  stopClocks();
+}
+function init(){
+  // sous-onglets
+  $$('.subtabs').forEach(st=>showSub(st.dataset.g,st.querySelector('button').dataset.p));
+  document.addEventListener('click',e=>{const b=e.target.closest('.subtabs button'); if(b) showSub(b.parentElement.dataset.g,b.dataset.p)});
+  window.addEventListener('hashchange',route); route();
+  $('#bigBtn').onclick=()=>{const on=document.documentElement.classList.toggle('big'); $('#bigBtn').classList.toggle('on',on)};
+
+  // Chapitre 1
+  let opts=''; for(let b=2;b<=16;b++) opts+=`<option value="${b}">${b}${b===2?' (binaire)':b===8?' (octal)':b===10?' (décimal)':b===16?' (hexadécimal)':''}</option>`;
+  $('#cv-base').innerHTML=opts; $('#cv-base').value='10';
+  let o2=''; for(let b=3;b<=16;b++) if(![8,10,16].includes(b)) o2+=`<option value="${b}">${b}</option>`; $('#cv-other').innerHTML=o2; $('#cv-other').value='5';
+  ['#cv-val','#cv-base','#cv-other'].forEach(s=>$(s).addEventListener('input',renderConv)); renderConv();
+  ['#rp-val','#rp-n'].forEach(s=>$(s).addEventListener('input',renderRepr)); renderRepr();
+  $('#rd-val').addEventListener('input',renderDecode); renderDecode();
+  $('#fl-val').addEventListener('input',renderFloat); renderFloat();
+  ['#op-a','#op-b','#op-op'].forEach(s=>$(s).addEventListener('input',renderOps)); renderOps();
+  $('#cd-val').addEventListener('input',renderCodes); renderCodes();
+  $('#gb-val').addEventListener('input',renderGray); renderGray();
+  $('#as-val').addEventListener('input',renderAscii); renderAscii();
+  renderCodeTable();
+
+  // Chapitre 2
+  $('#ex-val').addEventListener('input',renderExpr); renderExpr();
+  $('#km-n').onchange=()=>{KM.n=+$('#km-n').value; KM.names=['A','B','C','D'].slice(0,KM.n); KM.v=Array(1<<KM.n).fill(0); renderKM()};
+  $('#km-mode').onchange=()=>{KM.mode=$('#km-mode').value; renderKM()};
+  $('#km-clear').onclick=()=>{KM.v=Array(1<<KM.n).fill(0); renderKM()};
+  $('#km-rand').onclick=()=>{KM.v=Array.from({length:1<<KM.n},()=>Math.random()<.45?1:Math.random()<.1?2:0); renderKM()};
+  $('#km-fill').onclick=()=>{const L=s=>s.split(/[\s,;]+/).filter(Boolean).map(Number).filter(m=>Number.isInteger(m)&&m>=0&&m<(1<<KM.n)); KM.v=Array(1<<KM.n).fill(0); L($('#km-m').value).forEach(m=>KM.v[m]=1); L($('#km-x').value).forEach(m=>KM.v[m]=2); renderKM()};
+  $('#km-grid').addEventListener('click',e=>{const td=e.target.closest('td.cell'); if(!td) return; const m=+td.dataset.m; KM.v[m]=(KM.v[m]+1)%3; renderKM()});
+  KM.names=['A','B','C','D']; KM.v=[1,0,0,1, 0,1,1,0, 0,1,1,0, 1,0,0,1].map((v,i)=>[0,2,5,7,8,10,13,15].includes(i)?1:0); renderKM();
+  renderTheo(); ['#eq-a','#eq-b'].forEach(s=>$(s).addEventListener('input',renderEq)); renderEq();
+
+  // Chapitre 3
+  const groups=[...new Set(CIRC.map(c=>c.g))];
+  $('#c-list').innerHTML=groups.map(g=>`<h5>${g}</h5>`+CIRC.filter(c=>c.g===g).map(c=>`<button data-id="${c.id}">${c.name}</button>`).join('')).join('');
+  $('#c-list').addEventListener('click',e=>{const b=e.target.closest('button'); if(b){CUR=b.dataset.id; renderCirc()}});
+  $('#c-svg').addEventListener('click',e=>{const p=e.target.closest('[data-in]'); if(!p) return; const x=CST[CUR]; x[p.dataset.in]^=1; renderCirc()});
+  renderCirc();
+
+  // Chapitre 4 : bascules
+  $('#ff-exc').innerHTML=EXC_HTML;
+  const ffReset=()=>{FF.Q=0;FF.Qb=1;FF.H=0;FF.forb=false;Object.keys(FF.inp).forEach(k=>FF.inp[k]=0);FF.hist=[];FF.msg='';ffSample();renderFF()};
+  $('#ff-type').onchange=()=>{stopClocks();FF.type=$('#ff-type').value;ffReset()};
+  $('#ff-async').onchange=()=>{FF.inp.PRE=0;FF.inp.CLR=0;renderFF()};
+  $('#ff-ins').addEventListener('click',e=>{const b=e.target.closest('[data-k]'); if(b) ffToggle(b.dataset.k)});
+  $('#ff-pulse').onclick=()=>{ if(FF.H===1) ffHalf(); ffHalf(); setTimeout(()=>{ if(FF.H===1) ffHalf() },350) };
+  $('#ff-half').onclick=ffHalf;
+  $('#ff-auto').onclick=e=>toggleClock('ff',e.currentTarget,ffHalf);
+  $('#ff-clear').onclick=()=>{FF.hist=[];ffSample();renderFF()};
+  ffReset();
+
+  // registres
+  const rgReset=()=>{RG.Q=[0,0,0,0];RG.H=0;RG.hist=[];RG.sending=false;RG.queue=[];if(CLOCKS.rgsend){clearInterval(CLOCKS.rgsend);delete CLOCKS.rgsend}rgSample();renderRG()};
+  $('#rg-mode').onchange=()=>{stopClocks();RG.mode=$('#rg-mode').value;rgReset()};
+  $('#rg-dir').onchange=()=>{RG.dir=$('#rg-dir').value;rgReset()};
+  $('#rg-ins').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b) return; if(b.dataset.k) RG[b.dataset.k]^=1; else RG.D[+b.dataset.d]^=1; rgSample(); renderRG()});
+  $('#rg-pulse').onclick=()=>{ if(RG.H===1) rgHalf(); rgHalf(); setTimeout(()=>{ if(RG.H===1) rgHalf() },350) };
+  $('#rg-auto').onclick=e=>toggleClock('rg',e.currentTarget,rgHalf);
+  $('#rg-reset').onclick=rgReset;
+  $('#rg-send').onclick=()=>{const w=$('#rg-word').value.replace(/\s/g,''); if(!/^[01]{1,8}$/.test(w)) return; stopClocks(); if(RG.H===1) rgHalf(); RG.queue=[...w].map(Number); RG.E=RG.queue.shift(); RG.sending=true; rgSample(); renderRG(); CLOCKS.rgsend=setInterval(rgHalf,450)};
+  rgReset();
+
+  // compteurs
+  const ctReset=()=>{CT.H=0;CT.hist=[];ctInit();ctSample();renderCT()};
+  $('#ct-type').onchange=()=>{stopClocks();CT.type=$('#ct-type').value;ctReset()};
+  $('#ct-N').oninput=()=>{const v=+$('#ct-N').value; if(Number.isInteger(v)&&v>=2&&v<=64){CT.N=v;ctReset()}};
+  $('#ct-dir').onchange=()=>{CT.dir=$('#ct-dir').value;ctReset()};
+  $('#ct-n').onchange=()=>{CT.n=+$('#ct-n').value;ctReset()};
+  $('#ct-bits').addEventListener('click',e=>{const b=e.target.closest('[data-bit]'); if(!b) return; CT.s^=1<<+b.dataset.bit; ctSample(); renderCT()});
+  $('#ct-pulse').onclick=()=>{ if(CT.H===1) ctHalf(); ctHalf(); setTimeout(()=>{ if(CT.H===1) ctHalf() },350) };
+  $('#ct-auto').onclick=e=>toggleClock('ct',e.currentTarget,ctHalf);
+  $('#ct-reset').onclick=ctReset;
+  ctReset();
+
+  // conception
+  $('#dz-go').onclick=renderDZ; $('#dz-type').onchange=renderDZ; $('#dz-seq').addEventListener('keydown',e=>{if(e.key==='Enter')renderDZ()}); renderDZ();
+
+  // exercices
+  $('#xg-type').innerHTML='<option value="all">Tous les thèmes (aléatoire)</option>'+Object.entries(EXS).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('');
+  $('#xg-new').onclick=newEx; $('#xg-type').onchange=newEx; $('#xg-check').onclick=checkEx; $('#xg-sol').onclick=solEx;
+  $('#xg-ans').addEventListener('keydown',e=>{if(e.key==='Enter')checkEx()});
+  newEx();
+  renderQCM(); $('#qcm-go').onclick=corrQCM; $('#qcm-reset').onclick=renderQCM;
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
