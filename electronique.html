@@ -164,6 +164,7 @@ svg.chrono .cw.out{stroke:#e89000}
 .tp ol,.tp ul{padding-left:22px}
 .tp li{margin:4px 0}
 .tag{display:inline-block;font-size:.75rem;background:#fdf0dc;color:#a86500;border-radius:999px;padding:2px 9px;margin-right:6px;font-weight:600}
+@media(min-width:900px){#th-proof{position:sticky;top:230px;align-self:flex-start;scroll-margin-top:230px}}
 footer{text-align:center;color:var(--muted);font-size:.82rem;padding:20px}
 </style>
 </head>
@@ -947,14 +948,23 @@ function verifyEq(s1,s2){
   const t1=vs.length?truth(e1,vs):[ev(e1,{})], t2=vs.length?truth(e2,vs):[ev(e2,{})];
   return {ok:t1.every((v,i)=>v===t2[i]), vs, t1, t2};
 }
+const FAUX=[
+ ['De Morgan mal appliqué',"(A.B)'","A'.B'"],['De Morgan mal appliqué',"(A+B)'","A'+B'"],
+ ['Distributivité mal appliquée','A+B.C','(A+B).C'],['Absorption mal appliquée',"A+A'.B",'B'],
+ ['Complément du OU exclusif',"(A^B)'","A'^B'"],['Simplification abusive',"A.B+A'.C",'B+C']
+];
 function renderTheo(){
-  $('#th-list').innerHTML=`<table class="tt" style="font-family:'IBM Plex Sans'">${THEO.map((t,i)=>{const r=verifyEq(t[1],t[2]); return `<tr data-i="${i}" style="cursor:pointer"><td class="l">${t[0]}</td><td class="mono">${pretty(t[1])} = ${pretty(t[2])}</td><td class="${r.ok?'okc':'err'}">${r.ok?'✓':'✗'}</td></tr>`}).join('')}</table>`;
-  $$('#th-list tr').forEach(tr=>tr.onclick=()=>{ $$('#th-list tr').forEach(x=>x.classList.remove('cur')); tr.classList.add('cur'); const t=THEO[+tr.dataset.i]; $('#th-proof').innerHTML=`<h4 style="margin-top:0">${t[0]}</h4>`+proofHTML(t[1],t[2]) });
+  const rows=(L,k)=>L.map((t,i)=>{const r=verifyEq(t[1],t[2]); return `<tr data-k="${k}" data-i="${i}" style="cursor:pointer"><td class="l">${t[0]}</td><td class="mono">${pretty(t[1])} = ${pretty(t[2])}</td><td class="${r.ok?'okc':'err'}">${r.ok?'✓':'✗'}</td></tr>`}).join('');
+  $('#th-list').innerHTML=`<table class="tt" style="font-family:'IBM Plex Sans'">${rows(THEO,'v')}</table>
+  <h4>Erreurs fréquentes des étudiants (égalités fausses)</h4><table class="tt" style="font-family:'IBM Plex Sans'">${rows(FAUX,'f')}</table>`;
+  $$('#th-list tr').forEach(tr=>tr.onclick=()=>{ $$('#th-list tr').forEach(x=>x.classList.remove('cur')); tr.classList.add('cur'); const t=(tr.dataset.k==='f'?FAUX:THEO)[+tr.dataset.i]; $('#th-proof').innerHTML=`<h4 style="margin-top:0">${t[0]}</h4><p class="mono">${pretty(t[1])} = ${pretty(t[2])} ?</p>`+proofHTML(t[1],t[2]); $('#th-proof').scrollIntoView({block:'nearest',behavior:'smooth'}) });
 }
 function proofHTML(a,b){
   const r=verifyEq(a,b);
   if(!r.vs.length) return `<p>${r.t1[0]} = ${r.t2[0]}</p>`;
-  return ttHTML(r.vs,[{name:'Expr. 1',v:r.t1},{name:'Expr. 2',v:r.t2}])+`<p class="${r.ok?'okc':'err'}">${r.ok?'Les deux colonnes sont identiques : l’égalité est vraie.':'Les colonnes diffèrent : l’égalité est fausse.'}</p>`;
+  const diff=r.t1.map((v,i)=>v!==r.t2[i]?i:-1).filter(i=>i>=0), n=r.vs.length;
+  const cex=diff.length?r.vs.map((v,j)=>v+' = '+((diff[0]>>(n-1-j))&1)).join(', '):'';
+  return ttHTML(r.vs,[{name:'Expr. 1',v:r.t1},{name:'Expr. 2',v:r.t2}],diff.length?diff[0]:-1)+`<p class="${r.ok?'okc':'err'}">${r.ok?'Les deux colonnes sont identiques : l’égalité est vraie.':`Les colonnes diffèrent sur ${diff.length} ligne(s) : l’égalité est fausse.`}</p>${r.ok?'':`<p>Contre-exemple (ligne surlignée) : pour ${cex}, l’expression 1 vaut ${r.t1[diff[0]]} et l’expression 2 vaut ${r.t2[diff[0]]}.</p>`}`;
 }
 function renderEq(){ try{$('#eq-out').innerHTML=proofHTML($('#eq-a').value,$('#eq-b').value)}catch(e){$('#eq-out').innerHTML=`<p class="err">${e}</p>`} }
 
