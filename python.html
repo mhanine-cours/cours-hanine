@@ -8,8 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bleu:#306998;--bleu-f:#1d3f5e;--bleu-ff:#14293d;--bleu-c:#e9f1f8;--bleu-m:#c6d9ea;
-  --jaune:#ffd43b;--jaune-c:#fff6d1;
+  --bleu:#297fa8;--bleu-f:#1c5f80;--bleu-ff:#123f56;--bleu-c:#e7f2f8;--bleu-m:#bcd9e8;
+  --jaune:#f09300;--jaune-c:#fdf1de;
   --fond:#f5f7fa;--carte:#fff;--texte:#1b2430;--gris:#5c6877;--ligne:#dfe5ec;
   --vert:#18794e;--vert-c:#e2f5ea;--rouge:#b42318;--rouge-c:#fdecea;--ambre:#8a5a00;--ambre-c:#fff4d6;
   --ed-fond:#1b2230;--ed-gut:#141a25;--ed-txt:#e3e8f0;
@@ -24,7 +24,9 @@ code,kbd{font-family:var(--mono);font-size:.86em}
 code{background:#edf1f6;border-radius:4px;padding:1px 5px;color:#1d3f5e}
 kbd{background:#fff;border:1px solid #c5ccd6;border-bottom-width:2px;border-radius:5px;padding:0 5px;white-space:nowrap}
 .app{display:grid;grid-template-columns:268px 1fr;min-height:100vh}
-.side{background:linear-gradient(180deg,var(--bleu-ff),#1a3550);color:#dfe8f2;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column}
+.side{background:linear-gradient(180deg,var(--bleu-ff),#1c5f80);color:#dfe8f2;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column}
+.umi{background:#fff;border-radius:12px;padding:8px 10px;margin:0 4px 16px;text-align:center}
+.umi img{width:100%;max-width:200px;height:auto;display:block;margin:0 auto}
 .logo{display:flex;gap:11px;align-items:center;margin:2px 6px 16px;text-decoration:none;color:inherit}
 .logo svg{flex:0 0 40px}
 .logo b{display:block;font-size:16.5px;color:#fff;line-height:1.2}
@@ -37,9 +39,9 @@ kbd{background:#fff;border:1px solid #c5ccd6;border-bottom-width:2px;border-radi
 .nav-t{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#8fa7c1;margin:14px 8px 6px;font-weight:700}
 .nav a{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;color:#e3ebf4;text-decoration:none;font-size:14.5px;font-weight:500}
 .nav a:hover{background:rgba(255,255,255,.08)}
-.nav a.on{background:var(--jaune);color:var(--bleu-ff);font-weight:700}
+.nav a.on{background:var(--jaune);color:#fff;font-weight:700}
 .num{flex:0 0 24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:12px;font-weight:700;background:rgba(255,255,255,.12)}
-.nav a.on .num{background:var(--bleu-ff);color:var(--jaune)}
+.nav a.on .num{background:#fff;color:var(--jaune)}
 .nav a.ok .num{background:#2f9e62;color:#fff}
 .side-foot{margin-top:auto;padding:16px 8px 0;font-size:12px;color:#8fa7c1;line-height:1.5}
 .btn.menu-btn{display:none}
@@ -48,7 +50,7 @@ h1{font-size:30px;line-height:1.2;margin:8px 0 8px;color:var(--bleu-ff);letter-s
 h2{font-size:21px;margin:34px 0 12px;color:var(--bleu-ff)}
 h3{font-size:18px;margin:28px 0 8px;color:var(--bleu-f)}
 .sous{color:var(--gris);margin:0 0 18px}
-.pill{display:inline-block;background:var(--jaune-c);color:#6b5000;border:1px solid #f3dc85;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:20px}
+.pill{display:inline-block;background:var(--jaune-c);color:#8a5300;border:1px solid #f5cf8f;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:20px}
 .carte{background:var(--carte);border:1px solid var(--ligne);border-radius:var(--r);padding:16px 18px;margin:12px 0}
 .carte p{margin:6px 0 0;color:var(--gris);font-size:15px}
 .btn{display:inline-flex;align-items:center;gap:6px;background:var(--bleu);color:#fff;border:0;border-radius:9px;padding:9px 16px;font-weight:600;text-decoration:none;font-size:15px}
@@ -57,8 +59,8 @@ h3{font-size:18px;margin:28px 0 8px;color:var(--bleu-f)}
 .btn.sec:hover{background:var(--bleu-c)}
 .btn.petit{padding:6px 12px;font-size:14px;border-radius:8px}
 .btn:disabled{opacity:.5;cursor:default}
-.btn.run,.btn#run{background:#18794e}.btn.run:hover,.btn#run:hover{background:#11603d}
-.btn.verif{background:var(--jaune);color:var(--bleu-ff)}.btn.verif:hover{background:#f5c518}
+.btn.run,.btn#run{background:var(--bleu)}.btn.run:hover,.btn#run:hover{background:var(--bleu-f)}
+.btn.verif{background:var(--jaune);color:#fff}.btn.verif:hover{background:#d98500}
 .barre{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
 .lien{background:none;border:0;color:var(--bleu);font-size:13px;padding:0}
 /* accueil */
@@ -71,9 +73,10 @@ h3{font-size:18px;margin:28px 0 8px;color:var(--bleu-f)}
 .stats b{font-size:22px;color:var(--bleu-ff);display:block}
 .stats span{font-size:13px;color:var(--gris)}
 .prog{height:9px;background:#e4e9ef;border-radius:9px;overflow:hidden;margin-top:8px}
-.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--bleu),#4b8bbe)}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--bleu),var(--jaune))}
 .grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
 .mod{background:#fff;border:1px solid var(--ligne);border-radius:var(--r);padding:16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:6px;transition:.15s;border-top:4px solid var(--bleu)}
+.mod:nth-child(even){border-top-color:var(--jaune)}
 .mod:hover{box-shadow:0 6px 18px rgba(20,41,61,.1);transform:translateY(-2px)}
 .mod .nm{font-size:11.5px;font-weight:800;color:var(--bleu);text-transform:uppercase;letter-spacing:.06em}
 .mod b{font-size:16px;line-height:1.3}
@@ -91,7 +94,7 @@ h3{font-size:18px;margin:28px 0 8px;color:var(--bleu-f)}
 .astuce,.attention,.retenir{border-radius:10px;padding:11px 15px;margin:14px 0;font-size:15px}
 .astuce{background:var(--vert-c);border-left:4px solid var(--vert)}
 .attention{background:var(--ambre-c);border-left:4px solid #d99a00}
-.retenir{background:var(--jaune-c);border:1px solid #f3dc85}
+.retenir{background:var(--jaune-c);border:1px solid #f5cf8f}
 .retenir ul{margin:6px 0 0;padding-left:20px}
 table.t{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0;background:#fff}
 table.t th,table.t td{border:1px solid var(--ligne);padding:7px 10px;text-align:left;vertical-align:top}
@@ -118,12 +121,46 @@ table.idx td{text-align:center;font-family:var(--mono);font-size:14px}table.idx 
 .entrees textarea{flex:1;min-width:180px;background:#1b2230;color:#ffe08a;border:1px solid #3b4760;border-radius:6px;font-family:var(--mono);font-size:13.5px;padding:5px 8px;resize:vertical}
 .console{background:#0f141d;color:#e3e8f0;font-family:var(--mono);font-size:13.5px;line-height:1.55;margin:6px 0 0;padding:12px 14px;border-radius:10px;max-height:340px;overflow:auto;white-space:pre-wrap;word-break:break-word}
 .c-err{color:#ff8a80}.c-info{color:#8a97ad;font-style:italic}.c-fin{color:#5e6a80;font-size:12px}
+/* cours détaillé */
+.sommaire{background:#fff;border:1px solid var(--ligne);border-radius:12px;padding:14px 18px;margin:0 0 10px}
+.sommaire small{color:var(--gris)}
+.sommaire ol{columns:2;column-gap:24px;margin:8px 0 0;padding-left:22px}
+.sommaire li{margin:3px 0;break-inside:avoid}
+.sommaire button{background:none;border:0;padding:0;color:var(--bleu-f);text-align:left;font-size:15px}
+.sommaire button:hover{color:var(--jaune);text-decoration:underline}
+.h-num{display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:7px;background:var(--bleu);color:#fff;font-size:13px;margin-right:9px;vertical-align:2px}
+.schema{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0;padding:14px;background:#fff;border:1px solid var(--ligne);border-radius:12px}
+.schema .boite{border:2px solid var(--bleu);border-radius:10px;padding:8px 14px;text-align:center;font-weight:600;min-width:90px;background:var(--bleu-c)}
+.schema .boite.accent{border-color:var(--jaune);background:var(--jaune-c)}
+.schema .fleche{font-size:22px;color:var(--gris)}
+.schema .etiq{background:var(--jaune);color:#fff;font-family:var(--mono);font-weight:700;padding:4px 12px;border-radius:6px}
+.sep-schema{color:var(--gris);font-size:14px;margin:0 8px}
+.schema.liste{gap:0}
+.schema .case{border:2px solid var(--bleu);margin-left:-2px;width:74px;text-align:center;padding:8px 0 4px;background:#fff}
+.schema .case b{display:block;font-family:var(--mono)}
+.schema .case small{display:block;color:var(--jaune);font-weight:700;font-family:var(--mono)}
+.schema.dico{flex-direction:column;align-items:flex-start}
+.schema .paire{display:flex;align-items:center;gap:10px;font-family:var(--mono)}
+.schema .cle{background:var(--bleu);color:#fff;padding:3px 10px;border-radius:6px}
+.schema .val{background:var(--jaune-c);border:1px solid #f5cf8f;padding:3px 10px;border-radius:6px}
+svg.orga{display:block;width:100%;max-width:560px;margin:14px auto;background:#fff;border:1px solid var(--ligne);border-radius:12px;font-family:var(--mono);font-size:12.5px}
+svg.orga text{text-anchor:middle;fill:#1b2430}
+svg.orga line,svg.orga path{stroke:#5c6877;stroke-width:1.6}
+svg.orga .o-term{fill:var(--bleu);stroke:none}svg.orga .o-term+text{fill:#fff;font-weight:700}
+svg.orga .o-test{fill:var(--jaune-c);stroke:var(--jaune);stroke-width:2}
+svg.orga .o-bloc{fill:var(--bleu-c);stroke:var(--bleu);stroke-width:1.6}
+svg.orga .o-bloc.accent{fill:var(--jaune-c);stroke:var(--jaune)}
+svg.orga .o-pt{fill:var(--gris);font-family:"Plus Jakarta Sans",sans-serif;font-size:12px}
+svg.orga .o-titre{font-weight:700;fill:var(--bleu-f)}
+table.trace td,table.verite td{font-family:var(--mono);font-size:14px;text-align:center}
+table.trace td:first-child{text-align:left}
+p.mots code{display:inline-block;margin:2px 0}
 /* exercices */
 .exo{background:#fff;border:1px solid var(--ligne);border-radius:14px;padding:18px 18px 16px;margin:18px 0}
 .exo-tete{display:flex;align-items:center;gap:10px}
 .exo-tete b{font-size:17px}
 .exo-tete .etat{margin-left:auto}
-.exo-num{width:30px;height:30px;border-radius:9px;background:var(--jaune);color:var(--bleu-ff);font-weight:800;display:grid;place-items:center}
+.exo-num{width:30px;height:30px;border-radius:9px;background:var(--jaune);color:#fff;font-weight:800;display:grid;place-items:center}
 .exemple-io{background:#f3f6fa;border:1px dashed #c6d3e1;border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:13.5px;margin:8px 0 12px;white-space:pre-wrap}
 .exo .ed{margin-top:4px}
 .indice{background:var(--jaune-c);border-radius:8px;padding:9px 13px;margin:10px 0;font-size:15px}
@@ -185,8 +222,9 @@ table.tests tr.faux td:nth-child(4){background:#fff6f5}
 <body>
 <div class="app">
   <aside class="side" id="side">
+    <div class="umi"><img src="images/logo-fs-errachidia.png" alt="Université Moulay Ismail – Faculté des Sciences Errachidia"></div>
     <a class="logo" href="#accueil">
-      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#ffd43b"/><path d="M20 7c-6 0-6 2.6-6 4.5V15h6.2v1.3H11c-3 0-5 2-5 6.2s1.8 6.3 4.5 6.3H13v-3.6c0-2.8 2.2-4.7 4.8-4.7h6.3c2.3 0 4-1.8 4-4v-5c0-2.3-2-4.5-8.1-4.5z" fill="#306998"/><circle cx="17" cy="10.8" r="1.3" fill="#ffd43b"/><path d="M20 33c6 0 6-2.6 6-4.5V25h-6.2v-1.3H29c3 0 5-2 5-6.2s-1.8-6.3-4.5-6.3H27v3.6c0 2.8-2.2 4.7-4.8 4.7h-6.3c-2.3 0-4 1.8-4 4v5c0 2.3 2 4.5 8.1 4.5z" fill="#1d3f5e"/><circle cx="23" cy="29.2" r="1.3" fill="#ffd43b"/></svg>
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#f09300"/><path d="M20 7c-6 0-6 2.6-6 4.5V15h6.2v1.3H11c-3 0-5 2-5 6.2s1.8 6.3 4.5 6.3H13v-3.6c0-2.8 2.2-4.7 4.8-4.7h6.3c2.3 0 4-1.8 4-4v-5c0-2.3-2-4.5-8.1-4.5z" fill="#fff"/><circle cx="17" cy="10.8" r="1.3" fill="#f09300"/><path d="M20 33c6 0 6-2.6 6-4.5V25h-6.2v-1.3H29c3 0 5-2 5-6.2s-1.8-6.3-4.5-6.3H27v3.6c0 2.8-2.2 4.7-4.8 4.7h-6.3c-2.3 0-4 1.8-4 4v5c0 2.3 2 4.5 8.1 4.5z" fill="#123f56"/><circle cx="23" cy="29.2" r="1.3" fill="#fff"/></svg>
       <div><b>Programmation<br>Python 1</b><small>Tronc Commun Informatique Appliquée – S1 – Licence Digitalisation</small></div>
     </a>
     <div class="etat-py chargement" id="etat"><i></i>Chargement de Python…</div>
@@ -1253,6 +1291,778 @@ const AIDE=[
  ['Exceptions et fichiers',[['try:\n    ...\nexcept ValueError:\n    ...\nfinally:\n    ...','Gestion d\'erreurs'],['raise ValueError("msg")','Lever une erreur'],['with open("f.txt", "w") as f:\n    f.write("texte\\n")','Ecrire'],['with open("f.txt") as f:\n    for ligne in f: ...','Lire ligne par ligne']]]
 ];
 
+/* ===== COURS DETAILLE : compléments insérés dans chaque chapitre =====
+   debut : inséré après l'introduction du chapitre
+   fin   : inséré avant l'encadré « A retenir »                      */
+const SVG_FLECHE='<defs><marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5c6877"/></marker></defs>';
+
+const COMPLEMENTS={
+/* ======================================================= CH1 */
+ch1:{debut:[
+`<h3>Comment Python exécute un programme</h3>
+<p>Un <b>programme</b> est une suite d'<b>instructions</b> écrites dans un fichier (extension <code>.py</code>). L'<b>interpréteur</b> Python lit ce fichier et exécute les instructions <b>dans l'ordre</b>, de la première à la dernière ligne : c'est la <b>séquence</b>. Si une instruction provoque une erreur, l'exécution s'arrête et Python affiche un message indiquant la ligne et la nature de l'erreur.</p>
+<div class="schema"><div class="boite">Code source<br><code>programme.py</code></div><span class="fleche">→</span><div class="boite accent">Interpréteur<br>Python</div><span class="fleche">→</span><div class="boite">Résultat<br>affiché</div></div>
+<p>On peut utiliser Python de deux façons :</p>
+<ul><li><b>Mode interactif</b> (invite <code>&gt;&gt;&gt;</code>) : chaque instruction tapée est exécutée immédiatement ; pratique pour tester une idée.</li>
+<li><b>Mode script</b> : on écrit tout le programme dans un fichier, puis on l'exécute en entier. C'est ce que vous faites dans ce logiciel.</li></ul>
+<p>Sur votre propre ordinateur, vous pouvez installer Python depuis <i>python.org</i> et utiliser l'éditeur IDLE fourni, ou un environnement comme Thonny ou VS Code.</p>`],
+fin:[
+`<h3>Afficher du texte : guillemets et caractères spéciaux</h3>
+<p>Une chaîne s'écrit entre guillemets doubles <code>"…"</code> ou simples <code>'…'</code>. On choisit l'un ou l'autre pour pouvoir inclure l'autre dans le texte. Certains caractères s'écrivent avec une <b>barre oblique inverse</b> (séquence d'échappement) :</p>
+<table class="t"><tr><th>Ecriture</th><th>Signification</th></tr>
+<tr><td><code>\\n</code></td><td>Retour à la ligne</td></tr>
+<tr><td><code>\\t</code></td><td>Tabulation</td></tr>
+<tr><td><code>\\"</code> et <code>\\'</code></td><td>Guillemet ou apostrophe dans la chaîne</td></tr>
+<tr><td><code>\\\\</code></td><td>Barre oblique inverse elle-même</td></tr></table>`,
+{code:R`print("L'informatique")              # apostrophe dans des guillemets doubles
+print('Il a dit "bonjour"')          # guillemets dans des apostrophes
+print("Ligne 1\nLigne 2")            # \n : retour à la ligne
+print("Nom\tNote")                   # \t : tabulation
+print("Sara\t15")
+print("""Une chaîne
+sur plusieurs
+lignes""")                            # triples guillemets`},
+`<h3>Variables et mémoire</h3>
+<p>Il est utile de voir une variable comme une <b>étiquette</b> collée sur une valeur rangée en mémoire. L'affectation <code>x = 5</code> crée la valeur 5 et lui colle l'étiquette <code>x</code>. Une nouvelle affectation <code>x = 8</code> déplace l'étiquette sur la valeur 8 : l'ancienne valeur est perdue.</p>
+<div class="schema"><div class="etiq">x</div><span class="fleche">→</span><div class="boite">5</div><span class="sep-schema">puis</span><div class="etiq">x</div><span class="fleche">→</span><div class="boite">8</div></div>
+<p>L'affectation n'est <b>pas</b> une égalité mathématique : <code>x = x + 1</code> signifie « calculer <code>x + 1</code>, puis ranger le résultat dans <code>x</code> ». Le <b>tableau de suivi</b> (ou trace) ci-dessous montre l'état des variables après chaque ligne :</p>
+<table class="t trace"><tr><th>Instruction</th><th>a</th><th>b</th></tr>
+<tr><td><code>a = 3</code></td><td>3</td><td>—</td></tr>
+<tr><td><code>b = a * 2</code></td><td>3</td><td>6</td></tr>
+<tr><td><code>a = a + b</code></td><td>9</td><td>6</td></tr>
+<tr><td><code>b = a - b</code></td><td>9</td><td>3</td></tr></table>`,
+{code:R`a = 3
+b = a * 2
+a = a + b
+b = a - b
+print("a =", a, "b =", b)     # vérifiez avec le tableau de suivi`},
+`<h3>Mots réservés</h3>
+<p>Ces mots ont un sens particulier en Python et ne peuvent pas servir de nom de variable :</p>
+<p class="mots">${'False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield'.split(' ').map(m=>'<code>'+m+'</code>').join(' ')}</p>
+<p>Evitez aussi de nommer une variable comme une fonction intégrée (<code>print</code>, <code>input</code>, <code>list</code>, <code>sum</code>…) : la fonction ne serait plus utilisable.</p>
+<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Exemple</th><th>Correction</th></tr>
+<tr><td><code>NameError</code></td><td><code>print(Nom)</code> alors que la variable s'appelle <code>nom</code></td><td>Respecter exactement le nom (majuscules comprises)</td></tr>
+<tr><td><code>TypeError</code></td><td><code>age = input()</code> puis <code>age + 1</code></td><td>Convertir : <code>age = int(input())</code></td></tr>
+<tr><td><code>SyntaxError</code></td><td><code>print("Bonjour)</code></td><td>Fermer les guillemets et les parenthèses</td></tr>
+<tr><td><code>ValueError</code></td><td><code>int("12.5")</code></td><td>Utiliser <code>float()</code> pour un nombre décimal</td></tr></table>
+<h3>Exemple complet : fiche d'inscription</h3>
+<p>Ce programme combine tout le chapitre : lecture de données, conversions, calcul et affichage mis en forme.</p>`,
+{code:R`# Fiche d'inscription d'un étudiant
+nom = input("Nom : ")
+prenom = input("Prénom : ")
+annee_naissance = int(input("Année de naissance : "))
+frais = float(input("Frais d'inscription (DH) : "))
+
+age = 2026 - annee_naissance
+print()
+print("===== FICHE D'INSCRIPTION =====")
+print("Etudiant :", prenom, nom.upper())
+print("Age      :", age, "ans")
+print("Frais    :", frais, "DH")
+print("Majeur   :", age >= 18)`, entree:'Alami\nSara\n2006\n150'}
+]},
+/* ======================================================= CH2 */
+ch2:{debut:[
+`<h3>Expressions et évaluation</h3>
+<p>Une <b>expression</b> est une combinaison de valeurs, de variables et d'opérateurs que Python <b>évalue</b> pour obtenir une valeur : <code>2 * x + 1</code>, <code>prix * 1.2</code>, <code>note &gt;= 10</code>. Une <b>instruction</b>, elle, réalise une action : affecter, afficher, tester… Partout où Python attend une valeur, on peut écrire une expression.</p>`],
+fin:[
+`<h3>La division euclidienne en pratique</h3>
+<p>Pour deux entiers <code>a</code> et <code>b</code>, on a toujours : <code>a == b * (a // b) + a % b</code>. Les opérateurs <code>//</code> et <code>%</code> servent dans de nombreux algorithmes :</p>
+<ul><li>tester la divisibilité : <code>n % d == 0</code> ;</li>
+<li>extraire les chiffres d'un nombre : <code>n % 10</code> (unités), <code>n // 10 % 10</code> (dizaines) ;</li>
+<li>convertir des unités : secondes → heures, minutes, secondes.</li></ul>`,
+{code:R`n = 4729
+print("Unités   :", n % 10)
+print("Dizaines :", n // 10 % 10)
+print("Centaines:", n // 100 % 10)
+
+secondes = 7384
+h = secondes // 3600
+reste = secondes % 3600
+m = reste // 60
+s = reste % 60
+print(secondes, "s =", h, "h", m, "min", s, "s")
+
+print(divmod(17, 5))     # (quotient, reste) en une seule fois`},
+`<h3>Entiers, réels et conversions automatiques</h3>
+<ul><li>Si une opération mélange un <code>int</code> et un <code>float</code>, le résultat est un <code>float</code> : <code>3 + 2.0</code> vaut <code>5.0</code>.</li>
+<li>La division <code>/</code> donne <b>toujours</b> un <code>float</code>, même si elle « tombe juste » : <code>6 / 3</code> vaut <code>2.0</code>.</li>
+<li>Les entiers Python n'ont pas de limite de taille : <code>2 ** 100</code> est calculé exactement.</li>
+<li>Les réels sont approchés (environ 15 chiffres significatifs) : ne comparez jamais deux réels avec <code>==</code>, mais testez si leur écart est très petit.</li></ul>`,
+{code:R`print(3 + 2.0, 6 / 3, type(6 // 3))
+print(2 ** 100)
+print(0.1 + 0.2 == 0.3)                  # False !
+print(abs((0.1 + 0.2) - 0.3) < 1e-9)     # bonne méthode : True
+print(round(2.5), round(3.5))            # arrondi « au pair le plus proche »
+print(int(7.9), int(-7.9))               # int() tronque vers zéro`},
+`<h3>Principales fonctions du module math</h3>
+<table class="t"><tr><th>Fonction</th><th>Rôle</th><th>Exemple</th></tr>
+<tr><td><code>math.sqrt(x)</code></td><td>Racine carrée</td><td><code>math.sqrt(25)</code> → 5.0</td></tr>
+<tr><td><code>math.pow(x, y)</code></td><td>Puissance (réel)</td><td><code>math.pow(2, 3)</code> → 8.0</td></tr>
+<tr><td><code>math.floor(x)</code> / <code>math.ceil(x)</code></td><td>Arrondi inférieur / supérieur</td><td><code>math.ceil(4.1)</code> → 5</td></tr>
+<tr><td><code>math.pi</code>, <code>math.e</code></td><td>Constantes</td><td>3.14159…, 2.71828…</td></tr>
+<tr><td><code>math.sin</code>, <code>math.cos</code></td><td>Trigonométrie (angles en radians)</td><td><code>math.cos(0)</code> → 1.0</td></tr>
+<tr><td><code>math.log(x)</code>, <code>math.log10(x)</code></td><td>Logarithmes</td><td><code>math.log10(1000)</code> → 3.0</td></tr>
+<tr><td><code>math.factorial(n)</code>, <code>math.gcd(a, b)</code></td><td>Factorielle, PGCD</td><td><code>math.gcd(12, 18)</code> → 6</td></tr></table>
+<p>Variante d'importation : <code>from math import sqrt, pi</code> permet d'écrire directement <code>sqrt(2)</code> sans le préfixe <code>math.</code>.</p>
+<h3>Tables de vérité</h3>
+<table class="t verite"><tr><th>A</th><th>B</th><th>A and B</th><th>A or B</th><th>not A</th></tr>
+<tr><td>True</td><td>True</td><td>True</td><td>True</td><td>False</td></tr>
+<tr><td>True</td><td>False</td><td>False</td><td>True</td><td>False</td></tr>
+<tr><td>False</td><td>True</td><td>False</td><td>True</td><td>True</td></tr>
+<tr><td>False</td><td>False</td><td>False</td><td>False</td><td>True</td></tr></table>
+<p><b>Evaluation paresseuse</b> : dans <code>A and B</code>, si <code>A</code> est faux, Python n'évalue même pas <code>B</code> (le résultat est forcément faux). Cela permet d'écrire <code>b != 0 and a / b &gt; 2</code> sans risque de division par zéro.</p>
+<p><b>Priorité</b> : les opérateurs arithmétiques passent avant les comparaisons, qui passent avant <code>not</code>, puis <code>and</code>, puis <code>or</code>.</p>
+<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Correction</th></tr>
+<tr><td><code>moyenne = a + b / 2</code></td><td><code>moyenne = (a + b) / 2</code> : la division est prioritaire</td></tr>
+<tr><td><code>x² </code> écrit <code>x^2</code></td><td><code>x ** 2</code> (en Python, <code>^</code> est un autre opérateur)</td></tr>
+<tr><td><code>3,5</code> pour un réel</td><td><code>3.5</code> (avec une virgule, Python crée un tuple)</td></tr>
+<tr><td><code>sqrt(2)</code> sans import</td><td><code>import math</code> puis <code>math.sqrt(2)</code></td></tr></table>
+<h3>Exemple complet : facture d'un achat</h3>`,
+{code:R`import math
+
+prix_unitaire = float(input("Prix unitaire HT (DH) : "))
+quantite = int(input("Quantité : "))
+taux_tva = 20
+
+total_ht = prix_unitaire * quantite
+tva = total_ht * taux_tva / 100
+total_ttc = total_ht + tva
+cartons = math.ceil(quantite / 12)      # 12 articles par carton
+
+print("Total HT  :", round(total_ht, 2), "DH")
+print("TVA 20 %  :", round(tva, 2), "DH")
+print("Total TTC :", round(total_ttc, 2), "DH")
+print("Cartons nécessaires :", cartons)
+print("Remise accordée :", total_ttc > 1000)`, entree:'35.5\n40'}
+]},
+/* ======================================================= CH3 */
+ch3:{debut:[
+`<h3>Le principe : choisir entre plusieurs chemins</h3>
+<p>Jusqu'ici, toutes les instructions s'exécutaient dans l'ordre. Une <b>structure conditionnelle</b> permet au programme de <b>prendre une décision</b> : selon la valeur d'une condition (vraie ou fausse), il exécute un bloc ou un autre. On la représente par un <b>organigramme</b> :</p>
+<svg class="orga" viewBox="0 0 520 250" role="img" aria-label="Organigramme d'une structure if else">${SVG_FLECHE}
+<rect x="190" y="8" width="140" height="34" rx="17" class="o-term"/><text x="260" y="30">Début</text>
+<line x1="260" y1="42" x2="260" y2="62" marker-end="url(#fl)"/>
+<polygon points="260,64 345,100 260,136 175,100" class="o-test"/><text x="260" y="104">note &gt;= 10 ?</text>
+<line x1="175" y1="100" x2="105" y2="100"/><line x1="105" y1="100" x2="105" y2="152" marker-end="url(#fl)"/><text x="135" y="92" class="o-pt">Vrai</text>
+<line x1="345" y1="100" x2="415" y2="100"/><line x1="415" y1="100" x2="415" y2="152" marker-end="url(#fl)"/><text x="385" y="92" class="o-pt">Faux</text>
+<rect x="40" y="154" width="130" height="34" class="o-bloc"/><text x="105" y="176">print("Admis")</text>
+<rect x="345" y="154" width="140" height="34" class="o-bloc"/><text x="415" y="176">print("Ajourné")</text>
+<line x1="105" y1="188" x2="105" y2="212"/><line x1="415" y1="188" x2="415" y2="212"/><line x1="105" y1="212" x2="415" y2="212"/>
+<line x1="260" y1="212" x2="260" y2="228" marker-end="url(#fl)"/><text x="260" y="246">Suite du programme</text></svg>`],
+fin:[
+`<h3>if seul, if / else, if / elif / else</h3>
+<table class="t"><tr><th>Forme</th><th>Comportement</th></tr>
+<tr><td><code>if c:</code></td><td>Le bloc est exécuté si <code>c</code> est vraie, sinon rien.</td></tr>
+<tr><td><code>if c: … else: …</code></td><td>Exactement un des deux blocs est exécuté.</td></tr>
+<tr><td><code>if … elif … elif … else</code></td><td>Le premier bloc dont la condition est vraie est exécuté ; <code>else</code> s'il n'y en a aucun.</td></tr></table>
+<p><b>Attention</b> : plusieurs <code>if</code> successifs ne sont pas équivalents à <code>if / elif</code>. Avec des <code>if</code> indépendants, <b>chaque</b> condition est testée et plusieurs blocs peuvent s'exécuter :</p>`,
+{code:R`note = 17
+print("--- Avec des if indépendants ---")
+if note >= 10:
+    print("Admis")
+if note >= 14:
+    print("Mention Bien")
+if note >= 16:
+    print("Mention Très bien")
+
+print("--- Avec if / elif ---")
+if note >= 16:
+    print("Très bien")
+elif note >= 14:
+    print("Bien")
+elif note >= 10:
+    print("Admis")`},
+`<h3>Tester des chaînes</h3>
+<p>Les chaînes se comparent avec <code>==</code> et <code>!=</code> (majuscules et minuscules sont différentes), et l'opérateur <code>in</code> teste la présence d'un texte ou d'un élément. Les comparaisons <code>&lt;</code> et <code>&gt;</code> suivent l'ordre alphabétique (en fait l'ordre des codes des caractères).</p>`,
+{code:R`reponse = input("Voulez-vous continuer (oui/non) ? ")
+if reponse.lower() in ["oui", "o", "yes"]:
+    print("On continue")
+else:
+    print("Arrêt")
+
+print("abricot" < "banane", "Zèbre" < "avion")   # les majuscules passent avant`, entree:'OUI'},
+`<h3>Le choix multiple : match / case</h3>
+<p>Depuis Python 3.10, <code>match</code> compare une valeur à plusieurs cas, comme un « selon » en algorithmique. Le motif <code>_</code> correspond à tous les autres cas.</p>`,
+{code:R`jour = int(input("Numéro du jour (1 à 7) : "))
+match jour:
+    case 1 | 2 | 3 | 4 | 5:
+        print("Jour de cours")
+    case 6:
+        print("Samedi : TP de rattrapage")
+    case 7:
+        print("Dimanche : repos")
+    case _:
+        print("Numéro invalide")`, entree:'6'},
+`<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Pourquoi</th><th>Correction</th></tr>
+<tr><td><code>if x = 5:</code></td><td><code>=</code> est l'affectation</td><td><code>if x == 5:</code></td></tr>
+<tr><td><code>if x == 1 or 2:</code></td><td><code>2</code> seul est toujours « vrai »</td><td><code>if x == 1 or x == 2:</code> ou <code>if x in (1, 2):</code></td></tr>
+<tr><td>Oubli des <code>:</code></td><td>Syntaxe obligatoire</td><td><code>if note &gt;= 10:</code></td></tr>
+<tr><td><code>else</code> suivi d'une condition</td><td><code>else</code> ne prend pas de condition</td><td>Utiliser <code>elif condition:</code></td></tr>
+<tr><td>Conditions dans le mauvais ordre</td><td><code>if n &gt;= 10</code> avant <code>if n &gt;= 16</code> capte tout</td><td>Tester du plus restrictif au moins restrictif</td></tr></table>
+<h3>Exemple complet : équation du second degré</h3>
+<p>Résoudre <code>ax² + bx + c = 0</code> en étudiant le signe du discriminant Δ = b² − 4ac.</p>`,
+{code:R`import math
+
+a = float(input("a = "))
+b = float(input("b = "))
+c = float(input("c = "))
+
+if a == 0:
+    print("Ce n'est pas une équation du second degré.")
+else:
+    delta = b ** 2 - 4 * a * c
+    print("Discriminant :", delta)
+    if delta > 0:
+        x1 = (-b - math.sqrt(delta)) / (2 * a)
+        x2 = (-b + math.sqrt(delta)) / (2 * a)
+        print("Deux solutions :", round(x1, 3), "et", round(x2, 3))
+    elif delta == 0:
+        print("Une solution double :", -b / (2 * a))
+    else:
+        print("Pas de solution réelle.")`, entree:'1\n-3\n2'}
+]},
+/* ======================================================= CH4 */
+ch4:{debut:[
+`<h3>Pourquoi des boucles ?</h3>
+<p>Une <b>boucle</b> (ou itération) répète un bloc d'instructions. Sans boucle, afficher les nombres de 1 à 1000 demanderait 1000 lignes de code. Chaque répétition s'appelle un <b>tour</b> ou une <b>itération</b>. Python propose deux boucles :</p>
+<table class="t"><tr><th></th><th><code>while</code></th><th><code>for</code></th></tr>
+<tr><td>Principe</td><td>Répéter <b>tant qu'</b>une condition est vraie</td><td>Répéter <b>pour chaque</b> élément d'une séquence</td></tr>
+<tr><td>Nombre de tours</td><td>Inconnu à l'avance</td><td>Connu (longueur de la séquence)</td></tr>
+<tr><td>Exemples</td><td>Contrôle de saisie, jeu, lecture jusqu'à une valeur d'arrêt</td><td>Table de multiplication, parcours d'une liste ou d'une chaîne</td></tr></table>
+<svg class="orga" viewBox="0 0 520 210" role="img" aria-label="Organigramme d'une boucle while">${SVG_FLECHE}
+<rect x="40" y="10" width="170" height="34" class="o-bloc"/><text x="125" y="32">compteur = 1</text>
+<line x1="125" y1="44" x2="125" y2="62" marker-end="url(#fl)"/>
+<polygon points="125,64 215,100 125,136 35,100" class="o-test"/><text x="125" y="104">compteur &lt;= 5 ?</text>
+<line x1="215" y1="100" x2="290" y2="100" marker-end="url(#fl)"/><text x="250" y="92" class="o-pt">Vrai</text>
+<rect x="292" y="70" width="190" height="60" class="o-bloc"/><text x="387" y="96">print(compteur)</text><text x="387" y="116">compteur += 1</text>
+<line x1="387" y1="70" x2="387" y2="52"/><line x1="387" y1="52" x2="125" y2="52"/>
+<line x1="125" y1="136" x2="125" y2="176" marker-end="url(#fl)"/><text x="148" y="160" class="o-pt">Faux</text>
+<text x="125" y="196">Suite du programme</text></svg>`],
+fin:[
+`<h3>Suivre l'exécution d'une boucle</h3>
+<p>Pour comprendre (ou corriger) une boucle, on construit un <b>tableau de suivi</b> : une ligne par tour, une colonne par variable. Exemple avec le calcul de la somme 1 + 2 + 3 + 4 :</p>
+<table class="t trace"><tr><th>Tour</th><th>i</th><th>somme avant</th><th>somme après</th></tr>
+<tr><td>1</td><td>1</td><td>0</td><td>1</td></tr><tr><td>2</td><td>2</td><td>1</td><td>3</td></tr>
+<tr><td>3</td><td>3</td><td>3</td><td>6</td></tr><tr><td>4</td><td>4</td><td>6</td><td>10</td></tr></table>`,
+{code:R`somme = 0
+for i in range(1, 5):
+    somme = somme + i
+    print("tour", i, ": somme =", somme)    # affichage de suivi
+print("Résultat :", somme)`},
+`<h3>Boucle avec valeur sentinelle</h3>
+<p>Lorsqu'on ne sait pas combien de valeurs l'utilisateur va saisir, on lit jusqu'à une <b>valeur d'arrêt</b> (sentinelle) convenue, par exemple 0 ou -1.</p>`,
+{code:R`somme = 0
+nb = 0
+note = float(input("Note (-1 pour terminer) : "))
+while note != -1:
+    somme += note
+    nb += 1
+    note = float(input("Note (-1 pour terminer) : "))
+if nb > 0:
+    print(nb, "notes, moyenne =", round(somme / nb, 2))
+else:
+    print("Aucune note saisie")`, entree:'12\n15.5\n9\n-1'},
+`<h3>Algorithmes classiques avec une boucle</h3>
+<p>Ces schémas reviennent sans cesse ; il faut savoir les écrire sans hésiter.</p>`,
+{code:R`# 1. Maximum d'une suite de valeurs saisies
+n = int(input("Combien de valeurs ? "))
+maximum = None
+for i in range(n):
+    v = int(input())
+    if maximum is None or v > maximum:
+        maximum = v
+print("Maximum :", maximum)
+
+# 2. Somme des chiffres d'un entier
+x = 90517
+s = 0
+while x > 0:
+    s += x % 10       # dernier chiffre
+    x //= 10          # on le supprime
+print("Somme des chiffres de 90517 :", s)
+
+# 3. Recherche : premier multiple de 13 supérieur à 100
+k = 101
+while k % 13 != 0:
+    k += 1
+print("Premier multiple de 13 après 100 :", k)`, entree:'5\n14\n-2\n37\n8\n21'},
+`<h3>La clause else d'une boucle</h3>
+<p>Une boucle peut avoir un bloc <code>else</code>, exécuté seulement si la boucle s'est terminée <b>sans</b> <code>break</code>. C'est pratique pour les recherches :</p>`,
+{code:R`n = 91
+for d in range(2, n):
+    if n % d == 0:
+        print(n, "n'est pas premier : divisible par", d)
+        break
+else:
+    print(n, "est premier")`},
+`<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Conséquence</th><th>Correction</th></tr>
+<tr><td>Oublier de modifier la variable de la condition dans un <code>while</code></td><td>Boucle infinie</td><td>Mettre à jour la variable à chaque tour</td></tr>
+<tr><td><code>range(1, n)</code> au lieu de <code>range(1, n + 1)</code></td><td>Il manque le dernier tour</td><td>La borne de fin est exclue</td></tr>
+<tr><td>Initialiser l'accumulateur <b>dans</b> la boucle</td><td>Remis à zéro à chaque tour</td><td>Initialiser <b>avant</b> la boucle</td></tr>
+<tr><td>Afficher le résultat <b>dans</b> la boucle (mauvaise indentation)</td><td>Affiché à chaque tour</td><td>Désindenter le <code>print</code> final</td></tr></table>
+<h3>Exemple complet : jeu « devine le nombre »</h3>
+<p>Le programme choisit un nombre secret ; le joueur propose des valeurs jusqu'à trouver, avec un nombre d'essais limité. (Ici le nombre secret est fixé pour que les entrées préparées fonctionnent ; remplacez-le par <code>random.randint(1, 100)</code> pour jouer vraiment.)</p>`,
+{code:R`import random
+
+secret = 42                     # ou : secret = random.randint(1, 100)
+essais_max = 7
+essai = 0
+trouve = False
+
+while essai < essais_max and not trouve:
+    proposition = int(input("Votre proposition : "))
+    essai += 1
+    if proposition < secret:
+        print("Trop petit")
+    elif proposition > secret:
+        print("Trop grand")
+    else:
+        trouve = True
+
+if trouve:
+    print("Bravo, trouvé en", essai, "essais !")
+else:
+    print("Perdu, le nombre était", secret)`, entree:'50\n25\n40\n45\n42'}
+]},
+/* ======================================================= CH5 */
+ch5:{debut:[
+`<h3>Une chaîne est une séquence</h3>
+<p>Une <b>chaîne de caractères</b> (<code>str</code>) est une <b>suite ordonnée</b> de caractères : lettres, chiffres, espaces, ponctuation, caractères accentués ou arabes (Python utilise l'Unicode). Comme toute séquence, elle possède une longueur (<code>len</code>), ses éléments sont numérotés, on peut la parcourir avec <code>for</code> et tester l'appartenance avec <code>in</code>. Ces mêmes opérations serviront pour les listes au chapitre suivant.</p>`],
+fin:[
+`<h3>Opérations sur les chaînes</h3>
+<table class="t"><tr><th>Opération</th><th>Résultat</th><th>Exemple</th></tr>
+<tr><td><code>s1 + s2</code></td><td>Concaténation</td><td><code>"Py" + "thon"</code> → <code>"Python"</code></td></tr>
+<tr><td><code>s * n</code></td><td>Répétition</td><td><code>"-" * 10</code> → <code>"----------"</code></td></tr>
+<tr><td><code>x in s</code></td><td>Appartenance</td><td><code>"th" in "Python"</code> → <code>True</code></td></tr>
+<tr><td><code>len(s)</code></td><td>Longueur</td><td><code>len("Errachidia")</code> → 10</td></tr>
+<tr><td><code>s == t</code>, <code>s &lt; t</code></td><td>Comparaison (ordre des codes)</td><td><code>"a" &lt; "b"</code> → <code>True</code></td></tr></table>
+<h3>Méthodes de test et de transformation</h3>
+<table class="t"><tr><th>Méthode</th><th>Rôle</th></tr>
+<tr><td><code>s.isdigit()</code>, <code>s.isalpha()</code>, <code>s.isalnum()</code></td><td>Uniquement des chiffres / des lettres / des lettres et chiffres ?</td></tr>
+<tr><td><code>s.isupper()</code>, <code>s.islower()</code></td><td>Tout en majuscules / minuscules ?</td></tr>
+<tr><td><code>s.startswith(x)</code>, <code>s.endswith(x)</code></td><td>Commence / se termine par x ?</td></tr>
+<tr><td><code>s.center(n)</code>, <code>s.ljust(n)</code>, <code>s.rjust(n)</code>, <code>s.zfill(n)</code></td><td>Aligner sur n caractères</td></tr>
+<tr><td><code>s.split(sep)</code>, <code>sep.join(liste)</code></td><td>Découper / assembler</td></tr></table>`,
+{code:R`saisie = "2026"
+print(saisie.isdigit(), "abc".isalpha(), "abc123".isalnum())
+fichier = "rapport_final.pdf"
+print(fichier.endswith(".pdf"), fichier.startswith("rap"))
+print("=" * 30)
+print("RELEVE DE NOTES".center(30))
+print("=" * 30)
+print("Matricule :", "57".zfill(6))`},
+`<h3>Construire une chaîne avec une boucle</h3>
+<p>Une chaîne ne se modifie pas, mais on peut en <b>construire</b> une nouvelle caractère par caractère avec un accumulateur initialisé à la chaîne vide <code>""</code>.</p>`,
+{code:R`mot = "Programmation"
+sans_voyelles = ""
+for c in mot:
+    if c.lower() not in "aeiouy":
+        sans_voyelles += c
+print(sans_voyelles)
+
+# Inverser sans [::-1]
+inverse = ""
+for c in mot:
+    inverse = c + inverse      # on ajoute devant
+print(inverse)`},
+`<h3>Codes des caractères</h3>
+<p>Chaque caractère a un code numérique : <code>ord(c)</code> donne le code, <code>chr(n)</code> le caractère. Les lettres <code>A</code> à <code>Z</code> ont les codes 65 à 90, <code>a</code> à <code>z</code> les codes 97 à 122. C'est la base du chiffrement de César ci-dessous.</p>
+<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Correction</th></tr>
+<tr><td><code>s[len(s)]</code> → <code>IndexError</code></td><td>Le dernier indice est <code>len(s) - 1</code> (ou <code>-1</code>)</td></tr>
+<tr><td><code>s.upper()</code> sans affectation : s ne change pas</td><td><code>s = s.upper()</code></td></tr>
+<tr><td><code>"Note : " + 15</code> → <code>TypeError</code></td><td><code>"Note : " + str(15)</code> ou une f-string</td></tr>
+<tr><td>Comparer sans tenir compte de la casse</td><td>Comparer <code>a.lower() == b.lower()</code></td></tr></table>
+<h3>Exemple complet : chiffrement de César</h3>
+<p>Chaque lettre est décalée de <code>k</code> positions dans l'alphabet (avec retour au début après Z). Les autres caractères ne changent pas.</p>`,
+{code:R`message = input("Message : ")
+k = int(input("Décalage : "))
+
+chiffre = ""
+for c in message:
+    if "a" <= c <= "z":
+        chiffre += chr((ord(c) - ord("a") + k) % 26 + ord("a"))
+    elif "A" <= c <= "Z":
+        chiffre += chr((ord(c) - ord("A") + k) % 26 + ord("A"))
+    else:
+        chiffre += c
+print("Message chiffré :", chiffre)
+
+# Déchiffrer = décaler de -k
+clair = ""
+for c in chiffre:
+    if "a" <= c <= "z":
+        clair += chr((ord(c) - ord("a") - k) % 26 + ord("a"))
+    elif "A" <= c <= "Z":
+        clair += chr((ord(c) - ord("A") - k) % 26 + ord("A"))
+    else:
+        clair += c
+print("Message déchiffré :", clair)`, entree:'Rendez-vous a Errachidia\n3'}
+]},
+/* ======================================================= CH6 */
+ch6:{debut:[
+`<h3>Pourquoi des listes ?</h3>
+<p>Pour stocker les notes de 40 étudiants, créer 40 variables <code>n1</code>, <code>n2</code>… serait ingérable. Une <b>liste</b> regroupe toutes ces valeurs sous un <b>seul nom</b> ; chaque valeur est repérée par son <b>indice</b> (sa position, à partir de 0). Une liste peut contenir des valeurs de types différents, et même d'autres listes.</p>
+<div class="schema liste"><div class="case"><b>12</b><small>0</small></div><div class="case"><b>15.5</b><small>1</small></div><div class="case"><b>9</b><small>2</small></div><div class="case"><b>17</b><small>3</small></div><span class="sep-schema">notes = [12, 15.5, 9, 17] — len(notes) vaut 4</span></div>`],
+fin:[
+`<h3>Récapitulatif des méthodes de liste</h3>
+<table class="t"><tr><th>Méthode</th><th>Effet</th><th>Renvoie</th></tr>
+<tr><td><code>L.append(x)</code></td><td>Ajoute x à la fin</td><td>None</td></tr>
+<tr><td><code>L.insert(i, x)</code></td><td>Insère x à l'indice i</td><td>None</td></tr>
+<tr><td><code>L.extend(L2)</code></td><td>Ajoute tous les éléments de L2</td><td>None</td></tr>
+<tr><td><code>L.remove(x)</code></td><td>Supprime la première occurrence de x (erreur si absent)</td><td>None</td></tr>
+<tr><td><code>L.pop()</code> / <code>L.pop(i)</code></td><td>Retire le dernier élément / celui d'indice i</td><td>L'élément retiré</td></tr>
+<tr><td><code>L.index(x)</code>, <code>L.count(x)</code></td><td>Position de x, nombre d'occurrences</td><td>Un entier</td></tr>
+<tr><td><code>L.sort()</code>, <code>L.reverse()</code></td><td>Trie, inverse sur place</td><td>None</td></tr>
+<tr><td><code>del L[i]</code>, <code>L.clear()</code></td><td>Supprime l'élément i / vide la liste</td><td>—</td></tr></table>
+<h3>Algorithmes fondamentaux sur les listes</h3>
+<p>Les fonctions <code>max</code>, <code>sum</code> ou <code>sorted</code> existent, mais il faut savoir programmer ces traitements soi-même : c'est la base de l'algorithmique.</p>`,
+{code:R`notes = [12, 8, 15, 10, 17, 9, 14]
+
+# Maximum et sa position, sans max()
+pos_max = 0
+for i in range(1, len(notes)):
+    if notes[i] > notes[pos_max]:
+        pos_max = i
+print("Meilleure note :", notes[pos_max], "à l'indice", pos_max)
+
+# Recherche séquentielle
+cherche = 10
+trouve = -1
+i = 0
+while i < len(notes) and trouve == -1:
+    if notes[i] == cherche:
+        trouve = i
+    i += 1
+print("Position de", cherche, ":", trouve)
+
+# Filtrer : les notes >= 10
+admis = []
+for n in notes:
+    if n >= 10:
+        admis.append(n)
+print("Notes >= 10 :", admis, "soit", len(admis), "notes")`},
+`<p>Le <b>tri à bulles</b> compare les éléments voisins et les échange s'ils sont dans le mauvais ordre ; après chaque passage, le plus grand élément restant est arrivé à sa place.</p>`,
+{code:R`L = [29, 10, 14, 37, 13]
+n = len(L)
+for passage in range(n - 1):
+    for i in range(n - 1 - passage):
+        if L[i] > L[i + 1]:
+            L[i], L[i + 1] = L[i + 1], L[i]     # échange
+    print("Après le passage", passage + 1, ":", L)
+print("Liste triée :", L)`},
+`<h3>Parcourir plusieurs listes ensemble : zip</h3>`,
+{code:R`noms = ["Sara", "Anas", "Hind"]
+notes = [15, 12, 17]
+for nom, note in zip(noms, notes):
+    print(f"{nom:<6} {note:>5}")`},
+`<h3>Tableaux à deux dimensions</h3>
+<p>Une liste de listes représente un tableau : <code>T[i][j]</code> est l'élément de la ligne <code>i</code>, colonne <code>j</code>. Exemple : les notes de 3 étudiants dans 3 matières.</p>`,
+{code:R`matieres = ["Algo", "Python", "Maths"]
+notes = [[14, 16, 11],     # Sara
+         [10, 12, 9],      # Anas
+         [17, 18, 15]]     # Hind
+etudiants = ["Sara", "Anas", "Hind"]
+
+for i in range(len(notes)):
+    moyenne = sum(notes[i]) / len(notes[i])
+    print(f"{etudiants[i]:<6} moyenne : {moyenne:.2f}")
+
+for j in range(len(matieres)):
+    colonne = [notes[i][j] for i in range(len(notes))]
+    print(f"{matieres[j]:<7} moyenne de la classe : {sum(colonne) / len(colonne):.2f}")`},
+`<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Correction</th></tr>
+<tr><td><code>L[len(L)]</code> → <code>IndexError</code></td><td>Le dernier élément est <code>L[-1]</code></td></tr>
+<tr><td><code>L = L.sort()</code> : L devient <code>None</code></td><td><code>L.sort()</code> seul, ou <code>L = sorted(L)</code></td></tr>
+<tr><td><code>L.append(4, 5)</code></td><td><code>append</code> prend un seul élément ; <code>L.extend([4, 5])</code></td></tr>
+<tr><td>Supprimer des éléments en parcourant la même liste</td><td>Construire une nouvelle liste filtrée</td></tr>
+<tr><td><code>b = a</code> en croyant copier</td><td><code>b = a.copy()</code></td></tr></table>`
+]},
+/* ======================================================= CH7 */
+ch7:{debut:[
+`<h3>Accès par clé plutôt que par position</h3>
+<p>Dans une liste, on retrouve une valeur par sa <b>position</b>. Dans un <b>dictionnaire</b>, on la retrouve par une <b>clé</b> significative, comme dans un vrai dictionnaire où l'on cherche un mot pour obtenir sa définition. Les clés sont souvent des chaînes ou des nombres ; elles doivent être <b>uniques</b> et non modifiables. Les valeurs peuvent être de n'importe quel type.</p>
+<div class="schema dico"><div class="paire"><span class="cle">"nom"</span><span class="fleche">→</span><span class="val">"Sara"</span></div><div class="paire"><span class="cle">"age"</span><span class="fleche">→</span><span class="val">19</span></div><div class="paire"><span class="cle">"filiere"</span><span class="fleche">→</span><span class="val">"Informatique"</span></div></div>`],
+fin:[
+`<h3>Récapitulatif des méthodes</h3>
+<table class="t"><tr><th>Opération</th><th>Rôle</th></tr>
+<tr><td><code>d[k]</code> / <code>d[k] = v</code></td><td>Lire (erreur si absente) / créer ou modifier</td></tr>
+<tr><td><code>d.get(k, defaut)</code></td><td>Lire sans erreur</td></tr>
+<tr><td><code>k in d</code></td><td>La clé existe-t-elle ?</td></tr>
+<tr><td><code>d.keys()</code>, <code>d.values()</code>, <code>d.items()</code></td><td>Clés, valeurs, paires (clé, valeur)</td></tr>
+<tr><td><code>d.pop(k)</code>, <code>del d[k]</code></td><td>Supprimer une entrée</td></tr>
+<tr><td><code>d.update(d2)</code></td><td>Ajouter/remplacer les entrées de d2</td></tr>
+<tr><td><code>len(d)</code>, <code>d.clear()</code></td><td>Nombre d'entrées, vider</td></tr></table>
+<h3>Liste de dictionnaires : des enregistrements</h3>
+<p>Une liste de dictionnaires représente un tableau de données (comme une feuille Excel) : chaque dictionnaire est une ligne, chaque clé une colonne.</p>`,
+{code:R`etudiants = [
+    {"nom": "Sara", "filiere": "Info", "moyenne": 15.2},
+    {"nom": "Anas", "filiere": "Physique", "moyenne": 11.8},
+    {"nom": "Hind", "filiere": "Info", "moyenne": 16.5},
+    {"nom": "Omar", "filiere": "Physique", "moyenne": 9.4},
+]
+
+print("Classement :")
+for e in sorted(etudiants, key=lambda e: e["moyenne"], reverse=True):
+    print(f"  {e['nom']:<6} {e['moyenne']:>5}")
+
+# Regrouper par filière
+par_filiere = {}
+for e in etudiants:
+    par_filiere.setdefault(e["filiere"], []).append(e["nom"])
+print(par_filiere)
+
+admis = [e["nom"] for e in etudiants if e["moyenne"] >= 10]
+print("Admis :", admis)`},
+`<h3>Dictionnaire en compréhension</h3>`,
+{code:R`noms = ["Sara", "Anas", "Hind"]
+longueurs = {n: len(n) for n in noms}
+print(longueurs)
+carres = {x: x ** 2 for x in range(1, 6)}
+print(carres)`},
+`<h3>Méthodes des ensembles</h3>
+<p>Un ensemble se crée avec <code>{1, 2}</code> ou <code>set()</code> (attention : <code>{}</code> crée un dictionnaire vide). On ajoute avec <code>add</code>, on retire avec <code>remove</code> ou <code>discard</code>. Le test <code>x in s</code> est très rapide, même pour un grand ensemble.</p>`,
+{code:R`inscrits_algo = {"Sara", "Anas", "Hind", "Omar"}
+inscrits_python = {"Hind", "Omar", "Yassine"}
+inscrits_python.add("Sara")
+print("Les deux modules :", sorted(inscrits_algo & inscrits_python))
+print("Au moins un      :", sorted(inscrits_algo | inscrits_python))
+print("Algo seulement   :", sorted(inscrits_algo - inscrits_python))
+print("Un seul module   :", sorted(inscrits_algo ^ inscrits_python))`},
+`<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Correction</th></tr>
+<tr><td><code>d["cle"]</code> sur une clé absente → <code>KeyError</code></td><td><code>d.get("cle")</code> ou test <code>if "cle" in d</code></td></tr>
+<tr><td><code>d[0]</code> pour avoir la « première » entrée</td><td>Un dictionnaire n'a pas d'indices : <code>list(d)[0]</code></td></tr>
+<tr><td>Une liste comme clé → <code>TypeError</code></td><td>Utiliser un tuple : <code>d[(1, 2)]</code></td></tr>
+<tr><td><code>s = {}</code> pour un ensemble vide</td><td><code>s = set()</code></td></tr></table>
+<h3>Exemple complet : gestion d'un stock</h3>`,
+{code:R`stock = {"stylo": 120, "cahier": 45, "classeur": 8}
+
+nb = int(input("Nombre de mouvements : "))
+for i in range(nb):
+    article, quantite = input("article quantité : ").split()
+    quantite = int(quantite)
+    if quantite < 0 and stock.get(article, 0) < -quantite:
+        print("  Stock insuffisant pour", article)
+    else:
+        stock[article] = stock.get(article, 0) + quantite
+
+print("\nEtat du stock :")
+for article, q in sorted(stock.items()):
+    alerte = "  <- à commander" if q < 10 else ""
+    print(f"  {article:<10} {q:>5}{alerte}")`, entree:'4\nstylo -30\nclasseur -12\ngomme 50\ncahier -40'}
+]},
+/* ======================================================= CH8 */
+ch8:{debut:[
+`<h3>Pourquoi écrire des fonctions ?</h3>
+<ul><li><b>Eviter les répétitions</b> : un traitement écrit une seule fois, utilisé autant de fois que nécessaire.</li>
+<li><b>Découper un problème</b> en sous-problèmes plus simples (principe « diviser pour régner »).</li>
+<li><b>Lisibilité et tests</b> : une fonction bien nommée (<code>calculer_moyenne</code>) se comprend et se vérifie séparément.</li></ul>
+<p>Vous utilisez déjà des fonctions : <code>print</code>, <code>len</code>, <code>input</code>, <code>math.sqrt</code>… Vous allez maintenant créer les vôtres.</p>
+<h3>Vocabulaire</h3>
+<svg class="orga" viewBox="0 0 560 150" role="img" aria-label="Appel d'une fonction">${SVG_FLECHE}
+<rect x="10" y="20" width="230" height="110" rx="8" class="o-bloc"/><text x="125" y="44" class="o-titre">Programme principal</text><text x="125" y="78">r = carre(7)</text><text x="125" y="104">print(r)</text>
+<rect x="320" y="20" width="230" height="110" rx="8" class="o-bloc accent"/><text x="435" y="44" class="o-titre">def carre(x):</text><text x="435" y="78">x reçoit 7</text><text x="435" y="104">return x * x</text>
+<path d="M200 70 C 260 40, 280 40, 318 55" fill="none" marker-end="url(#fl)"/><text x="262" y="34" class="o-pt">appel avec 7</text>
+<path d="M318 100 C 280 120, 260 120, 200 94" fill="none" marker-end="url(#fl)"/><text x="262" y="138" class="o-pt">renvoie 49</text></svg>
+<table class="t"><tr><th>Terme</th><th>Signification</th></tr>
+<tr><td>Définition</td><td>Le bloc <code>def nom(...):</code> ; il n'exécute rien tant que la fonction n'est pas appelée.</td></tr>
+<tr><td>Paramètre</td><td>Variable de la définition (<code>x</code>) qui reçoit une valeur à chaque appel.</td></tr>
+<tr><td>Argument</td><td>Valeur transmise lors de l'appel (<code>7</code>).</td></tr>
+<tr><td>Valeur de retour</td><td>Résultat renvoyé par <code>return</code> au programme appelant.</td></tr></table>`],
+fin:[
+`<h3>La pile d'appels et la récursivité</h3>
+<p>Quand une fonction en appelle une autre, Python mémorise où reprendre dans une <b>pile d'appels</b>. Pour <code>factorielle(4)</code> :</p>
+<table class="t trace"><tr><th>Appel</th><th>Calcul en attente</th><th>Valeur renvoyée</th></tr>
+<tr><td>factorielle(4)</td><td>4 × factorielle(3)</td><td>24</td></tr>
+<tr><td>factorielle(3)</td><td>3 × factorielle(2)</td><td>6</td></tr>
+<tr><td>factorielle(2)</td><td>2 × factorielle(1)</td><td>2</td></tr>
+<tr><td>factorielle(1)</td><td>1 × factorielle(0)</td><td>1</td></tr>
+<tr><td>factorielle(0)</td><td>cas de base</td><td>1</td></tr></table>`,
+{code:R`def factorielle(n, niveau=0):
+    print("  " * niveau + f"factorielle({n})")
+    if n == 0:
+        resultat = 1
+    else:
+        resultat = n * factorielle(n - 1, niveau + 1)
+    print("  " * niveau + f"-> renvoie {resultat}")
+    return resultat
+
+factorielle(4)`},
+`<h3>Variables globales</h3>
+<p>Une fonction peut <b>lire</b> une variable globale, mais pour la <b>modifier</b> il faut la déclarer avec <code>global</code>. Cette pratique rend le code difficile à suivre : préférez passer les valeurs en paramètres et récupérer les résultats avec <code>return</code>.</p>`,
+{code:R`TAUX_TVA = 20            # constante globale : lecture seule, en MAJUSCULES par convention
+
+def prix_ttc(ht):
+    return ht * (1 + TAUX_TVA / 100)
+
+compteur = 0
+def incrementer():
+    global compteur      # nécessaire pour modifier la variable globale
+    compteur += 1
+
+print(prix_ttc(100))
+incrementer()
+incrementer()
+print("compteur =", compteur)`},
+`<h3>Structurer un programme</h3>
+<p>Un programme bien organisé regroupe les <code>import</code> en tête, puis les définitions de fonctions, puis le programme principal, souvent placé dans une fonction <code>main()</code>. Chaque fonction a une <b>docstring</b> qui explique ce qu'elle fait ; <code>help(nom_fonction)</code> l'affiche.</p>
+<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Correction</th></tr>
+<tr><td>Appeler la fonction avant sa définition</td><td>Définir les fonctions en haut du programme</td></tr>
+<tr><td>Oublier les parenthèses : <code>saluer</code> au lieu de <code>saluer()</code></td><td>Sans parenthèses, la fonction n'est pas appelée</td></tr>
+<tr><td>Utiliser <code>print</code> au lieu de <code>return</code></td><td>Le résultat n'est pas récupérable (<code>None</code>)</td></tr>
+<tr><td>Code placé après <code>return</code></td><td>Il n'est jamais exécuté</td></tr>
+<tr><td>Mauvais nombre d'arguments → <code>TypeError</code></td><td>Respecter le nombre de paramètres (ou valeurs par défaut)</td></tr></table>
+<h3>Exemple complet : calculatrice à menu</h3>`,
+{code:R`def addition(a, b):
+    return a + b
+
+def division(a, b):
+    """Renvoie a / b, ou None si b vaut 0."""
+    if b == 0:
+        return None
+    return a / b
+
+def lire_nombre(message):
+    return float(input(message))
+
+def afficher_menu():
+    print("1. Addition   2. Division   0. Quitter")
+
+def main():
+    choix = -1
+    while choix != 0:
+        afficher_menu()
+        choix = int(input("Choix : "))
+        if choix in (1, 2):
+            a = lire_nombre("a = ")
+            b = lire_nombre("b = ")
+            if choix == 1:
+                print("Résultat :", addition(a, b))
+            else:
+                r = division(a, b)
+                print("Résultat :", r if r is not None else "division par zéro")
+        elif choix != 0:
+            print("Choix invalide")
+    print("Au revoir")
+
+main()`, entree:'1\n12\n30\n2\n7\n0\n0'}
+]},
+/* ======================================================= CH9 */
+ch9:{debut:[
+`<h3>Erreurs de syntaxe et exceptions</h3>
+<p>Il existe deux grandes familles d'erreurs :</p>
+<ul><li>les <b>erreurs de syntaxe</b> (<code>SyntaxError</code>, <code>IndentationError</code>) : le code est mal écrit, Python refuse de l'exécuter ; il faut corriger le code ;</li>
+<li>les <b>exceptions</b> : le code est correct mais une situation anormale survient <b>pendant l'exécution</b> (saisie non numérique, division par zéro, fichier absent…). Un programme robuste doit les <b>prévoir et les gérer</b>.</li></ul>
+<svg class="orga" viewBox="0 0 520 190" role="img" aria-label="Déroulement de try except">${SVG_FLECHE}
+<rect x="170" y="8" width="180" height="34" class="o-bloc"/><text x="260" y="30">bloc try</text>
+<line x1="260" y1="42" x2="260" y2="60" marker-end="url(#fl)"/>
+<polygon points="260,62 345,92 260,122 175,92" class="o-test"/><text x="260" y="96">erreur ?</text>
+<line x1="175" y1="92" x2="95" y2="92"/><line x1="95" y1="92" x2="95" y2="130" marker-end="url(#fl)"/><text x="128" y="84" class="o-pt">Oui</text>
+<line x1="345" y1="92" x2="425" y2="92"/><line x1="425" y1="92" x2="425" y2="130" marker-end="url(#fl)"/><text x="392" y="84" class="o-pt">Non</text>
+<rect x="30" y="132" width="130" height="32" class="o-bloc accent"/><text x="95" y="153">bloc except</text>
+<rect x="360" y="132" width="130" height="32" class="o-bloc"/><text x="425" y="153">bloc else</text>
+<line x1="95" y1="164" x2="95" y2="176"/><line x1="425" y1="164" x2="425" y2="176"/><line x1="95" y1="176" x2="425" y2="176"/>
+<text x="260" y="188" class="o-pt">puis toujours : bloc finally</text></svg>`],
+fin:[
+`<h3>Récapitulatif : lire et écrire</h3>
+<table class="t"><tr><th>Mode</th><th>Signification</th><th>Si le fichier n'existe pas</th></tr>
+<tr><td><code>"r"</code></td><td>Lecture (par défaut)</td><td><code>FileNotFoundError</code></td></tr>
+<tr><td><code>"w"</code></td><td>Ecriture : le contenu est <b>effacé</b></td><td>Il est créé</td></tr>
+<tr><td><code>"a"</code></td><td>Ajout à la fin</td><td>Il est créé</td></tr>
+<tr><td><code>"x"</code></td><td>Création exclusive</td><td>Créé ; erreur s'il existe déjà</td></tr></table>
+<table class="t"><tr><th>Méthode</th><th>Rôle</th></tr>
+<tr><td><code>f.read()</code></td><td>Tout le contenu dans une seule chaîne</td></tr>
+<tr><td><code>f.readline()</code></td><td>La ligne suivante (avec son <code>\\n</code>)</td></tr>
+<tr><td><code>f.readlines()</code></td><td>Liste de toutes les lignes</td></tr>
+<tr><td><code>for ligne in f:</code></td><td>Parcours ligne par ligne (recommandé)</td></tr>
+<tr><td><code>f.write(chaine)</code></td><td>Ecrit une chaîne (ajouter <code>\\n</code> soi-même)</td></tr>
+<tr><td><code>f.writelines(liste)</code></td><td>Ecrit une liste de chaînes</td></tr></table>
+<p>Pour les textes accentués ou en arabe, précisez l'encodage : <code>open("f.txt", "w", encoding="utf-8")</code>.</p>
+<h3>Fichiers CSV</h3>
+<p>Un fichier <b>CSV</b> (valeurs séparées par des virgules ou des points-virgules) s'échange facilement avec Excel. Le module <code>csv</code> gère les détails (guillemets, séparateurs).</p>`,
+{code:R`import csv
+
+donnees = [["Nom", "Module", "Note"],
+           ["Sara", "Python", 15],
+           ["Anas", "Python", 11],
+           ["Hind", "Python", 17]]
+
+with open("notes.csv", "w", newline="", encoding="utf-8") as f:
+    ecrivain = csv.writer(f, delimiter=";")
+    ecrivain.writerows(donnees)
+
+with open("notes.csv", encoding="utf-8") as f:
+    print(f.read())
+
+with open("notes.csv", encoding="utf-8") as f:
+    lecteur = csv.DictReader(f, delimiter=";")
+    for ligne in lecteur:
+        print(ligne["Nom"], "->", ligne["Note"])`},
+`<h3>Hiérarchie des exceptions</h3>
+<p>Les exceptions sont organisées en familles : <code>except Exception</code> intercepte presque toutes les erreurs, mais c'est une mauvaise habitude car cela cache les erreurs de programmation. Interceptez toujours l'exception <b>précise</b> que vous attendez, et placez les <code>except</code> du plus précis au plus général.</p>`,
+{code:R`valeurs = ["12", "abc", "0", "4"]
+for v in valeurs:
+    try:
+        print(f"100 / {v} =", 100 / int(v))
+    except ValueError:
+        print(f"'{v}' n'est pas un entier")
+    except ZeroDivisionError:
+        print("Division par zéro")
+    except Exception as e:                 # filet de sécurité, en dernier
+        print("Erreur inattendue :", type(e).__name__, e)`},
+`<h3>Erreurs fréquentes</h3>
+<table class="t"><tr><th>Erreur</th><th>Correction</th></tr>
+<tr><td><code>except:</code> sans type, qui cache tout</td><td>Préciser l'exception : <code>except ValueError:</code></td></tr>
+<tr><td>Bloc <code>try</code> trop long</td><td>N'y mettre que les instructions qui peuvent échouer</td></tr>
+<tr><td>Ouvrir en <code>"w"</code> un fichier à compléter</td><td>Utiliser le mode <code>"a"</code></td></tr>
+<tr><td>Oublier <code>\\n</code> avec <code>write</code></td><td><code>f.write(texte + "\\n")</code></td></tr>
+<tr><td>Oublier <code>strip()</code> en lisant une ligne</td><td>Sinon le <code>\\n</code> final reste dans la donnée</td></tr></table>
+<h3>Exemple complet : carnet de notes sur fichier</h3>
+<p>Le programme enregistre des notes dans un fichier, puis le relit pour calculer des statistiques, en gérant les lignes mal formées.</p>`,
+{code:R`# 1. Enregistrement (une ligne volontairement erronée)
+with open("carnet.txt", "w", encoding="utf-8") as f:
+    f.write("Sara;15.5\n")
+    f.write("Anas;12\n")
+    f.write("Hind;dix-sept\n")
+    f.write("Omar;8.75\n")
+
+# 2. Lecture et statistiques
+notes = {}
+erreurs = 0
+with open("carnet.txt", encoding="utf-8") as f:
+    for numero, ligne in enumerate(f, start=1):
+        try:
+            nom, note = ligne.strip().split(";")
+            notes[nom] = float(note)
+        except ValueError:
+            erreurs += 1
+            print(f"Ligne {numero} ignorée : {ligne.strip()}")
+
+if notes:
+    moyenne = sum(notes.values()) / len(notes)
+    print(f"{len(notes)} notes valides, moyenne {moyenne:.2f}")
+    print("Meilleur(e) :", max(notes, key=notes.get))
+print("Lignes en erreur :", erreurs)`}
+]}
+};
+
+/* insertion des compléments dans le cours */
+CHAPITRES.forEach(c=>{const x=COMPLEMENTS[c.id];if(!x)return;
+  const n=c.cours.length;            /* le dernier bloc est « A retenir » */
+  c.cours.splice(n-1,0,...(x.fin||[]));
+  let pos=0;
+  if(c.id==='ch1'){const t=c.cours[0],k=t.indexOf('<div class="astuce">');c.cours.splice(0,1,t.slice(0,k),t.slice(k));pos=1;}
+  c.cours.splice(pos,0,...(x.debut||[]));
+});
+
 /* =====================================================================
    Programmation Python 1 — moteur, éditeur et interface
    ===================================================================== */
@@ -1578,6 +2388,12 @@ function pageChapitre(c){
   <div class="pied-nav">${prec?`<a class="btn sec" href="#${prec.id}">← ${prec.court}</a>`:'<span></span>'}${suiv?`<a class="btn sec" href="#${suiv.id}">${suiv.court} →</a>`:`<a class="btn sec" href="#mon-programme">Mon programme →</a>`}</div>`;
   const cours=$('#cours');
   c.cours.forEach(b=>{if(typeof b==='string'){const d=document.createElement('div');d.innerHTML=b;cours.appendChild(d)}else cours.appendChild(blocExemple(b))});
+  const h3=[...cours.querySelectorAll('h3')];
+  if(h3.length){const som=document.createElement('div');som.className='sommaire';
+    som.innerHTML=`<b>Plan du cours</b> <small>(${h3.length} parties)</small><ol>${h3.map((h,k)=>`<li><button data-k="${k}">${h.textContent}</button></li>`).join('')}</ol>`;
+    cours.parentNode.insertBefore(som,cours);
+    som.querySelectorAll('button').forEach(b=>b.onclick=()=>{const h=h3[+b.dataset.k];window.scrollTo({top:h.getBoundingClientRect().top+window.scrollY-70,behavior:'smooth'})});
+    h3.forEach((h,k)=>h.insertAdjacentHTML('afterbegin',`<span class="h-num">${k+1}</span>`));}
   const montrer=o=>{document.querySelectorAll('#ong button').forEach(b=>b.classList.toggle('on',b.dataset.o===o));
     ['cours','exercices','quiz'].forEach(x=>$('#o-'+x).hidden=x!==o);
     if(o==='exercices'&&!$('#o-exercices').dataset.ok){pageExercices(c,$('#o-exercices'));$('#o-exercices').dataset.ok=1}
