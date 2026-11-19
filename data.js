@@ -17,6 +17,7 @@ const RUBRIQUES = ["Cours", "Diapositives", "Travaux pratiques corrigés", "Etud
 /* Les annonces : la plus récente en premier.
    lien (facultatif) : page ouverte quand on clique sur l'annonce. */
 const ANNONCES = [
+  { jour:"19", mois:"nov", lien:"python.html", titre:"Nouveau : Programmation Python 1", texte:"Apprenez Python chapitre par chapitre : cours, exemples à exécuter, exercices corrigés automatiquement, quiz et espace « Mon programme », directement dans le navigateur (Licence Digitalisation, S1)." },
   { jour:"17", mois:"nov", lien:"electronique.html", titre:"Nouveau : Electronique numérique", texte:"Le logiciel du module pour la Licence Digitalisation (S1) : numération, Karnaugh, circuits combinatoires, bascules, registres et compteurs, avec exercices corrigés et guides de TP." },
   { jour:"14", mois:"nov", lien:"c-pas-a-pas.html", titre:"Nouveau : Programmation C 1", texte:"Apprenez le langage C chapitre par chapitre : cours, exemples à exécuter, exercices corrigés automatiquement et quiz, directement dans le navigateur." },
   { jour:"13", mois:"nov", lien:"module.html?m=c", titre:"Programmation C 1 : diaporamas", texte:"Les diaporamas du cours pour la Licence Digitalisation (S1) et la Licence d'Excellence IAG (S5) sont en ligne." },

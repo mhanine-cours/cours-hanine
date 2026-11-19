@@ -43,3 +43,4 @@ scratch.js, langues.js, tourisme.js, droit.js). Une question = une ligne :
 - tourisme.html : Riad digital, simulateur de gestion touristique (module Culture digitale et tourisme).
 - audit.html : Audit SI Lab, mission d audit des SI simulée (contrôles Excel, rapport).
 - electronique.html : Electronique numérique, logiciel du module (Licence Digitalisation S1) : numération, fonctions binaires, Karnaugh, circuits combinatoires et séquentiels, exercices, TP Logisim.
+- python.html : Programmation Python 1, logiciel du module (Tronc Commun Informatique Appliquée – S1 – Licence Digitalisation) : 9 chapitres, exemples exécutables, 27 exercices corrigés automatiquement, quiz, espace Mon programme.

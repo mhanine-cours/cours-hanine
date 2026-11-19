@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Programmation Python 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bleu:#306998;--bleu-f:#1d3f5e;--bleu-ff:#14293d;--bleu-c:#e9f1f8;--bleu-m:#c6d9ea;
+  --jaune:#ffd43b;--jaune-c:#fff6d1;
+  --fond:#f5f7fa;--carte:#fff;--texte:#1b2430;--gris:#5c6877;--ligne:#dfe5ec;
+  --vert:#18794e;--vert-c:#e2f5ea;--rouge:#b42318;--rouge-c:#fdecea;--ambre:#8a5a00;--ambre-c:#fff4d6;
+  --ed-fond:#1b2230;--ed-gut:#141a25;--ed-txt:#e3e8f0;
+  --r:12px;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--texte);background:var(--fond);font-size:16px;line-height:1.6}
+button{font:inherit;cursor:pointer}
+code,kbd{font-family:var(--mono);font-size:.86em}
+code{background:#edf1f6;border-radius:4px;padding:1px 5px;color:#1d3f5e}
+kbd{background:#fff;border:1px solid #c5ccd6;border-bottom-width:2px;border-radius:5px;padding:0 5px;white-space:nowrap}
+.app{display:grid;grid-template-columns:268px 1fr;min-height:100vh}
+.side{background:linear-gradient(180deg,var(--bleu-ff),#1a3550);color:#dfe8f2;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column}
+.logo{display:flex;gap:11px;align-items:center;margin:2px 6px 16px;text-decoration:none;color:inherit}
+.logo svg{flex:0 0 40px}
+.logo b{display:block;font-size:16.5px;color:#fff;line-height:1.2}
+.logo small{color:#a9bdd3;font-size:12px}
+.etat-py{display:flex;align-items:center;gap:8px;font-size:12.5px;margin:0 8px 12px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.07);color:#cfdbe8}
+.etat-py i{width:8px;height:8px;border-radius:50%;background:#f0b429;flex:0 0 8px}
+.etat-py.pret i{background:#3ddc84}.etat-py.execution i{background:#5ab0ff;animation:pulse 1s infinite}.etat-py.echec i{background:#ff6b6b}
+.etat-py.chargement i{animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.nav-t{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#8fa7c1;margin:14px 8px 6px;font-weight:700}
+.nav a{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:9px;color:#e3ebf4;text-decoration:none;font-size:14.5px;font-weight:500}
+.nav a:hover{background:rgba(255,255,255,.08)}
+.nav a.on{background:var(--jaune);color:var(--bleu-ff);font-weight:700}
+.num{flex:0 0 24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:12px;font-weight:700;background:rgba(255,255,255,.12)}
+.nav a.on .num{background:var(--bleu-ff);color:var(--jaune)}
+.nav a.ok .num{background:#2f9e62;color:#fff}
+.side-foot{margin-top:auto;padding:16px 8px 0;font-size:12px;color:#8fa7c1;line-height:1.5}
+.btn.menu-btn{display:none}
+main{padding:30px 40px 70px;max-width:1100px;width:100%}
+h1{font-size:30px;line-height:1.2;margin:8px 0 8px;color:var(--bleu-ff);letter-spacing:-.01em}
+h2{font-size:21px;margin:34px 0 12px;color:var(--bleu-ff)}
+h3{font-size:18px;margin:28px 0 8px;color:var(--bleu-f)}
+.sous{color:var(--gris);margin:0 0 18px}
+.pill{display:inline-block;background:var(--jaune-c);color:#6b5000;border:1px solid #f3dc85;font-size:12.5px;font-weight:700;padding:3px 10px;border-radius:20px}
+.carte{background:var(--carte);border:1px solid var(--ligne);border-radius:var(--r);padding:16px 18px;margin:12px 0}
+.carte p{margin:6px 0 0;color:var(--gris);font-size:15px}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--bleu);color:#fff;border:0;border-radius:9px;padding:9px 16px;font-weight:600;text-decoration:none;font-size:15px}
+.btn:hover{background:var(--bleu-f)}
+.btn.sec{background:#fff;color:var(--bleu-f);border:1px solid var(--bleu-m)}
+.btn.sec:hover{background:var(--bleu-c)}
+.btn.petit{padding:6px 12px;font-size:14px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.run,.btn#run{background:#18794e}.btn.run:hover,.btn#run:hover{background:#11603d}
+.btn.verif{background:var(--jaune);color:var(--bleu-ff)}.btn.verif:hover{background:#f5c518}
+.barre{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.lien{background:none;border:0;color:var(--bleu);font-size:13px;padding:0}
+/* accueil */
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:26px;align-items:center;background:#fff;border:1px solid var(--ligne);border-radius:18px;padding:26px 28px;margin-bottom:16px}
+.hero h1{font-size:36px;margin-top:12px}
+.hero p{color:var(--gris)}
+.hero-code{background:var(--ed-fond);color:var(--ed-txt);border-radius:12px;padding:18px;font-family:var(--mono);font-size:13.5px;line-height:1.7;margin:0;overflow:auto;border-top:4px solid var(--jaune)}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stats>div{flex:1;min-width:150px;background:#fff;border:1px solid var(--ligne);border-radius:var(--r);padding:12px 16px}
+.stats b{font-size:22px;color:var(--bleu-ff);display:block}
+.stats span{font-size:13px;color:var(--gris)}
+.prog{height:9px;background:#e4e9ef;border-radius:9px;overflow:hidden;margin-top:8px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--bleu),#4b8bbe)}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.mod{background:#fff;border:1px solid var(--ligne);border-radius:var(--r);padding:16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:6px;transition:.15s;border-top:4px solid var(--bleu)}
+.mod:hover{box-shadow:0 6px 18px rgba(20,41,61,.1);transform:translateY(-2px)}
+.mod .nm{font-size:11.5px;font-weight:800;color:var(--bleu);text-transform:uppercase;letter-spacing:.06em}
+.mod b{font-size:16px;line-height:1.3}
+.mod small{color:var(--gris);font-size:13.5px}
+.mod-pied{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.trois{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--bleu-c);color:var(--bleu-f)}
+.badge.vert{background:var(--vert-c);color:var(--vert)}.badge.ambre{background:var(--ambre-c);color:var(--ambre)}
+/* chapitre */
+.onglets{display:flex;gap:4px;border-bottom:2px solid var(--ligne);margin:18px 0 0;flex-wrap:wrap;position:sticky;top:0;background:var(--fond);z-index:5}
+.onglets button{background:none;border:0;padding:11px 16px;font-weight:700;color:var(--gris);border-bottom:3px solid transparent;margin-bottom:-2px;display:flex;gap:6px;align-items:center}
+.onglets button.on{color:var(--bleu-f);border-color:var(--jaune)}
+.objectifs{background:var(--bleu-c);border-left:4px solid var(--bleu);border-radius:10px;padding:12px 16px;margin:18px 0}
+.objectifs ul{margin:6px 0 0;padding-left:20px}
+.astuce,.attention,.retenir{border-radius:10px;padding:11px 15px;margin:14px 0;font-size:15px}
+.astuce{background:var(--vert-c);border-left:4px solid var(--vert)}
+.attention{background:var(--ambre-c);border-left:4px solid #d99a00}
+.retenir{background:var(--jaune-c);border:1px solid #f3dc85}
+.retenir ul{margin:6px 0 0;padding-left:20px}
+table.t{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0;background:#fff}
+table.t th,table.t td{border:1px solid var(--ligne);padding:7px 10px;text-align:left;vertical-align:top}
+table.t th{background:#eef2f7;font-weight:700}
+table.idx td{text-align:center;font-family:var(--mono);font-size:14px}table.idx td:first-child{font-family:inherit;text-align:left;background:#eef2f7;font-weight:600}
+/* éditeur */
+.ed{display:flex;background:var(--ed-fond);border-radius:10px 10px 0 0;overflow:hidden;height:360px;font-family:var(--mono);font-size:14px;line-height:21px}
+.ed-gut{background:var(--ed-gut);color:#566175;text-align:right;padding:11px 10px 11px 8px;min-width:44px;overflow:hidden;user-select:none}
+.ed-zone{position:relative;flex:1;overflow:hidden}
+.ed-hl,.ed textarea{position:absolute;inset:0;margin:0;padding:11px 14px;font:inherit;line-height:inherit;white-space:pre;tab-size:4;border:0;overflow:auto;letter-spacing:0;word-wrap:normal}
+.ed-hl{color:var(--ed-txt);overflow:hidden;pointer-events:none}
+.ed textarea{background:transparent;color:transparent;caret-color:#fff;resize:none;outline:none;-webkit-text-fill-color:transparent}
+.ed textarea::selection{background:rgba(120,170,255,.35);-webkit-text-fill-color:transparent}
+.tk-k{color:#c792ea}.tk-s{color:#c3e88d}.tk-n{color:#f78c6c}.tk-c{color:#6f7a93;font-style:italic}.tk-b{color:#82aaff}.tk-f{color:#ffcb6b}
+.exemple{margin:12px 0 20px;border-radius:12px;box-shadow:0 1px 0 var(--ligne),0 4px 14px rgba(20,41,61,.07)}
+.ex-barre{display:flex;gap:6px;flex-wrap:wrap;align-items:center;background:#252e3f;padding:8px 10px;border-radius:0 0 10px 10px}
+.ex-barre .btn.sec{background:transparent;color:#d6deea;border-color:#46536b}
+.ex-barre .btn.sec:hover{background:#2f3a50}
+.kbd-aide{margin-left:auto;font-size:12px;color:#8a97ad}
+.kbd-aide kbd{background:#2f3a50;color:#d6deea;border-color:#46536b}
+.entrees{background:#222a3a;padding:8px 12px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.entrees label{color:#aebbd0;font-size:13px;font-weight:600;padding-top:4px}
+.entrees label small{font-weight:400;color:#7f8ca3}
+.entrees textarea{flex:1;min-width:180px;background:#1b2230;color:#ffe08a;border:1px solid #3b4760;border-radius:6px;font-family:var(--mono);font-size:13.5px;padding:5px 8px;resize:vertical}
+.console{background:#0f141d;color:#e3e8f0;font-family:var(--mono);font-size:13.5px;line-height:1.55;margin:6px 0 0;padding:12px 14px;border-radius:10px;max-height:340px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.c-err{color:#ff8a80}.c-info{color:#8a97ad;font-style:italic}.c-fin{color:#5e6a80;font-size:12px}
+/* exercices */
+.exo{background:#fff;border:1px solid var(--ligne);border-radius:14px;padding:18px 18px 16px;margin:18px 0}
+.exo-tete{display:flex;align-items:center;gap:10px}
+.exo-tete b{font-size:17px}
+.exo-tete .etat{margin-left:auto}
+.exo-num{width:30px;height:30px;border-radius:9px;background:var(--jaune);color:var(--bleu-ff);font-weight:800;display:grid;place-items:center}
+.exemple-io{background:#f3f6fa;border:1px dashed #c6d3e1;border-radius:8px;padding:9px 12px;font-family:var(--mono);font-size:13.5px;margin:8px 0 12px;white-space:pre-wrap}
+.exo .ed{margin-top:4px}
+.indice{background:var(--jaune-c);border-radius:8px;padding:9px 13px;margin:10px 0;font-size:15px}
+.solution{margin-top:12px}
+.code-lu{background:var(--ed-fond);color:var(--ed-txt);font-family:var(--mono);font-size:13.5px;line-height:1.6;padding:12px 14px;border-radius:10px;margin:0;overflow:auto}
+.code-lu.mini{padding:6px 10px;font-size:12.5px;cursor:pointer}
+.code-lu.mini:hover{outline:2px solid var(--jaune)}
+.retour{padding:10px 14px;border-radius:10px;margin:10px 0;font-size:15px}
+.retour.ok{background:var(--vert-c);color:#0d4f31}.retour.ko{background:var(--rouge-c);color:#7a1610}.retour.info{background:var(--bleu-c);color:var(--bleu-f)}
+table.tests pre{margin:0;font-family:var(--mono);font-size:12.5px;white-space:pre-wrap}
+table.tests tr.bon td:last-child{color:var(--vert);font-weight:800}
+table.tests tr.faux td:last-child{color:var(--rouge);font-weight:800}
+table.tests tr.faux td:nth-child(4){background:#fff6f5}
+/* quiz */
+.q{margin:14px 0;padding:14px 16px;background:#fff;border:1px solid var(--ligne);border-radius:12px}
+.q>p{margin:0 0 8px;font-weight:700}
+.q label{display:flex;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;margin:2px 0}
+.q label:hover{background:#f2f5f9}
+.q label.bon{background:var(--vert-c)}.q label.faux{background:var(--rouge-c)}
+.q .expl{font-size:14.5px;color:var(--gris);margin-top:6px;display:none}
+.q.corrige .expl{display:block}
+/* mon programme */
+.ide{background:var(--ed-fond);border-radius:14px;overflow:hidden;box-shadow:0 6px 22px rgba(20,41,61,.14)}
+.ide-barre{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:10px;background:#252e3f}
+.ide-barre .btn.sec{background:transparent;color:#d6deea;border-color:#46536b}
+.ide-barre .btn.sec:hover{background:#2f3a50}
+.ide-barre input,.ide-barre select{background:#1b2230;color:#e3e8f0;border:1px solid #46536b;border-radius:8px;padding:6px 8px;font:inherit;font-size:14px}
+.ide-barre input{width:190px;font-family:var(--mono);font-size:13px}
+.ide-barre select{max-width:210px}
+.sep{width:1px;height:24px;background:#46536b;margin:0 4px}
+.fichier{cursor:pointer}
+.ide-corps{display:grid;grid-template-columns:1.35fr 1fr;min-height:500px}
+.ide-corps .ed{height:540px;border-radius:0}
+.ide-droite{display:flex;flex-direction:column;padding:10px 12px 12px;background:#20283a;gap:6px;border-left:1px solid #2f3a50}
+.ide-droite label{color:#aebbd0;font-size:13px;font-weight:600}
+.ide-droite label small{font-weight:400;color:#7f8ca3}
+.ide-droite textarea{background:#1b2230;color:#ffe08a;border:1px solid #3b4760;border-radius:8px;font-family:var(--mono);font-size:13.5px;padding:7px 9px;resize:vertical}
+.cons-tete{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.cons-tete .lien{color:#8fb8e8}
+.console.grande{flex:1;max-height:none;min-height:240px;margin:0}
+.aide{columns:2;column-gap:14px}
+.aide .carte{break-inside:avoid;margin:0 0 14px}
+.aide td:first-child{width:58%}
+.pied-nav{display:flex;justify-content:space-between;margin-top:34px;gap:10px}
+.mono{font-family:var(--mono)}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:276px;z-index:30;transform:translateX(-100%);transition:.2s}
+  .side.ouvert{transform:none;box-shadow:0 0 40px rgba(0,0,0,.4)}
+  .btn.menu-btn{display:inline-flex;margin:12px 0 0 14px}
+  main{padding:16px 14px 60px}
+  .hero,.ide-corps,.trois{grid-template-columns:1fr}
+  .hero h1{font-size:28px}
+  .aide{columns:1}
+  .ide-corps .ed{height:380px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <a class="logo" href="#accueil">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#ffd43b"/><path d="M20 7c-6 0-6 2.6-6 4.5V15h6.2v1.3H11c-3 0-5 2-5 6.2s1.8 6.3 4.5 6.3H13v-3.6c0-2.8 2.2-4.7 4.8-4.7h6.3c2.3 0 4-1.8 4-4v-5c0-2.3-2-4.5-8.1-4.5z" fill="#306998"/><circle cx="17" cy="10.8" r="1.3" fill="#ffd43b"/><path d="M20 33c6 0 6-2.6 6-4.5V25h-6.2v-1.3H29c3 0 5-2 5-6.2s-1.8-6.3-4.5-6.3H27v3.6c0 2.8-2.2 4.7-4.8 4.7h-6.3c-2.3 0-4 1.8-4 4v5c0 2.3 2 4.5 8.1 4.5z" fill="#1d3f5e"/><circle cx="23" cy="29.2" r="1.3" fill="#ffd43b"/></svg>
+      <div><b>Programmation<br>Python 1</b><small>Tronc Commun Informatique Appliquée – S1 – Licence Digitalisation</small></div>
+    </a>
+    <div class="etat-py chargement" id="etat"><i></i>Chargement de Python…</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="nav-t">Site de cours</div><nav class="nav"><a href="index.html"><span class="num">←</span>Accueil du site</a><a href="logiciels.html"><span class="num">⚙</span>Tous les logiciels</a></nav>
+    <div class="side-foot">Pr. Mounir Hanine<br>Faculté des Sciences d'Errachidia<br>Université Moulay Ismail</div>
+  </aside>
+  <div>
+    <button class="btn menu-btn" id="menuBtn">☰ Menu</button>
+    <main id="main"></main>
+  </div>
+</div>
+<script>
+/* ===== CONTENU PEDAGOGIQUE : Programmation Python 1 ===== */
+const R = String.raw;
+
+const CHAPITRES = [
+/* ------------------------------------------------------------------ */
+{
+ id:'ch1', titre:'Premiers pas : variables, types, entrées / sorties', court:'Premiers pas',
+ resume:'print(), commentaires, variables, types de base, input() et conversions.',
+ objectifs:['Ecrire et exécuter un premier programme','Utiliser des variables et connaître les types de base','Lire des données au clavier avec input()','Convertir entre chaînes et nombres'],
+ cours:[
+`<h3>Qu'est-ce que Python ?</h3>
+<p>Python est un langage de programmation créé par Guido van Rossum en 1991. C'est un langage <b>interprété</b> : l'interpréteur lit le programme et exécute les instructions <b>une par une, de haut en bas</b>. Sa syntaxe est claire et c'est l'<b>indentation</b> (le décalage des lignes) qui structure le code. Il est très utilisé en science des données, intelligence artificielle, développement web, automatisation et enseignement.</p>
+<div class="astuce">Chaque exemple de ce cours est <b>modifiable</b> : changez le code puis cliquez sur <b>Exécuter</b> (ou <kbd>Ctrl</kbd>+<kbd>Entrée</kbd>). Le bouton <b>↺</b> restaure l'exemple d'origine.</div>
+<h3>Afficher avec print()</h3>
+<p>La fonction <code>print()</code> affiche une ou plusieurs valeurs, séparées par un espace, puis passe à la ligne.</p>`,
+{code:R`print("Bonjour tout le monde !")
+print("Python", "est", "simple")        # plusieurs valeurs : séparées par un espace
+print("2 + 3 =", 2 + 3)                 # Python calcule l'expression
+print("A", "B", "C", sep="-")           # séparateur personnalisé
+print("Sans retour à la ligne", end=" ")
+print("... suite sur la même ligne")`},
+`<h3>Commentaires</h3>
+<p>Tout ce qui suit le caractère <code>#</code> sur une ligne est un <b>commentaire</b> : il est ignoré par Python et sert à expliquer le code au lecteur.</p>
+<h3>Variables et affectation</h3>
+<p>Une <b>variable</b> est un nom qui désigne une valeur stockée en mémoire. L'<b>affectation</b> se fait avec <code>=</code> : la valeur de droite est rangée dans la variable de gauche.</p>
+<ul><li>Un nom contient des lettres, des chiffres et <code>_</code>, et ne commence pas par un chiffre.</li>
+<li>Python distingue majuscules et minuscules : <code>Note</code> et <code>note</code> sont deux variables différentes.</li>
+<li>On ne peut pas utiliser un mot réservé (<code>if</code>, <code>for</code>, <code>class</code>…). Choisissez des noms parlants : <code>moyenne</code> plutôt que <code>m</code>.</li></ul>`,
+{code:R`nom = "Sara"
+age = 19
+taille = 1.68
+inscrite = True
+print(nom, "a", age, "ans")
+
+age = age + 1            # on calcule à droite, puis on range à gauche
+print("L'an prochain :", age)
+
+a, b = 5, 8              # affectation multiple
+a, b = b, a              # échange des valeurs
+print("a =", a, "et b =", b)`},
+`<h3>Les types de base</h3>
+<table class="t"><tr><th>Type</th><th>Signification</th><th>Exemples</th></tr>
+<tr><td><code>int</code></td><td>Nombre entier</td><td><code>42</code>, <code>-7</code>, <code>0</code></td></tr>
+<tr><td><code>float</code></td><td>Nombre réel (à virgule)</td><td><code>3.14</code>, <code>-0.5</code>, <code>2.0</code></td></tr>
+<tr><td><code>str</code></td><td>Chaîne de caractères (texte)</td><td><code>"Bonjour"</code>, <code>'A'</code></td></tr>
+<tr><td><code>bool</code></td><td>Booléen (vrai ou faux)</td><td><code>True</code>, <code>False</code></td></tr></table>
+<p>La fonction <code>type()</code> donne le type d'une valeur. Attention : en Python, le séparateur décimal est le <b>point</b>.</p>`,
+{code:R`print(type(42))
+print(type(3.14))
+print(type("Python"))
+print(type(True))
+print(7 / 2, type(7 / 2))     # la division / donne toujours un float`},
+`<h3>Lire au clavier avec input()</h3>
+<p><code>input("message")</code> affiche le message, attend une saisie et la renvoie <b>toujours sous forme de chaîne</b> (<code>str</code>). Pour obtenir un nombre, il faut <b>convertir</b> le résultat.</p>
+<div class="attention">Dans ce logiciel, les valeurs saisies sont écrites à l'avance dans la zone <b>Entrées</b>, <b>une valeur par ligne</b>, dans l'ordre où le programme les demande. Modifiez-les pour tester d'autres cas.</div>`,
+{code:R`prenom = input("Votre prénom : ")
+age = int(input("Votre âge : "))      # conversion str -> int
+print("Bonjour", prenom + " !")
+print("Dans 5 ans, vous aurez", age + 5, "ans.")`, entree:'Hind\n20'},
+`<h3>Conversions de types</h3>
+<p><code>int()</code>, <code>float()</code> et <code>str()</code> convertissent une valeur. L'opérateur <code>+</code> <b>additionne</b> des nombres mais <b>colle</b> (concatène) des chaînes.</p>`,
+{code:R`x = "12"
+y = "3.5"
+print(x + x)               # concaténation de chaînes : 1212
+print(int(x) + int(x))     # addition d'entiers : 24
+print(float(y) * 2)        # 7.0
+print("Note : " + str(15)) # on ne peut coller qu'une chaîne à une chaîne
+print(int("abc"))          # provoque une erreur ValueError : lisez le message !`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li><code>print()</code> affiche ; <code>input()</code> lit une chaîne.</li>
+<li>Toujours convertir une saisie numérique : <code>int(input())</code> ou <code>float(input())</code>.</li>
+<li>Les types de base : <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>.</li>
+<li>Lisez les messages d'erreur : ils indiquent la ligne et la nature du problème.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Salutation', enonce:`Ecrire un programme qui lit un prénom puis affiche <code>Bonjour</code>, le prénom et un point d'exclamation.`,
+   exemple:'Entrée : Sara\nSortie : Bonjour Sara !',
+   depart:R`# Ecrivez votre programme ici
+`, indice:`Utilisez <code>print("Bonjour", prenom, "!")</code> : print sépare les valeurs par un espace.`,
+   solution:R`prenom = input("Prénom : ")
+print("Bonjour", prenom, "!")`,
+   tests:[{e:'Sara',s:'Bonjour Sara !'},{e:'Youssef',s:'Bonjour Youssef !'}]},
+  {titre:'Somme de deux entiers', enonce:`Lire deux entiers et afficher leur somme sous la forme <code>Somme = …</code>.`,
+   exemple:'Entrées : 5 puis 7\nSortie : Somme = 12',
+   depart:R`a = input("a = ")
+b = input("b = ")
+# Attention : a et b sont des chaînes !
+`, indice:`Convertissez avec <code>int()</code> avant d'additionner, sinon "5" + "7" donne "57".`,
+   solution:R`a = int(input("a = "))
+b = int(input("b = "))
+print("Somme =", a + b)`,
+   tests:[{e:'5\n7',s:'Somme = 12'},{e:'-3\n3',s:'Somme = 0'},{e:'100\n250',s:'Somme = 350'}]},
+  {titre:'Aire d\'un rectangle', enonce:`Lire la longueur et la largeur (nombres réels) d'un rectangle et afficher <code>Aire = …</code>.`,
+   exemple:'Entrées : 5 puis 2.5\nSortie : Aire = 12.5',
+   depart:R`# Ecrivez votre programme ici
+`, indice:`Les dimensions peuvent être décimales : utilisez <code>float()</code>.`,
+   solution:R`longueur = float(input("Longueur : "))
+largeur = float(input("Largeur : "))
+print("Aire =", longueur * largeur)`,
+   tests:[{e:'5\n2.5',s:'Aire = 12.5'},{e:'3\n4',s:'Aire = 12.0'}]}
+ ],
+ quiz:[
+  {q:`Que renvoie la fonction <code>input()</code> ?`, r:['Un entier','Un réel','Toujours une chaîne de caractères','Le type dépend de la saisie'], b:2, e:`input() renvoie toujours un str ; il faut convertir avec int() ou float().`},
+  {q:`Qu'affiche <code>print(7 / 2)</code> ?`, r:['3','3.5','4','3,5'], b:1, e:`L'opérateur / donne toujours un réel (float).`},
+  {q:`Quel nom de variable est valide ?`, r:['2note','note-finale','note_finale','class'], b:2, e:`Pas de chiffre au début, pas de tiret (c'est une soustraction), pas de mot réservé.`},
+  {q:`Qu'affiche <code>print("a", "b", sep="")</code> ?`, r:['a b','ab','a,b','"a""b"'], b:1, e:`sep="" supprime l'espace placé par défaut entre les valeurs.`},
+  {q:`Qu'affiche <code>print("3" + "4")</code> ?`, r:['7','34','"3+4"','Une erreur'], b:1, e:`Le + entre deux chaînes les concatène.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch2', titre:'Opérateurs et expressions', court:'Opérateurs',
+ resume:'Opérateurs arithmétiques, priorités, module math, comparaisons et booléens.',
+ objectifs:['Utiliser les opérateurs arithmétiques, dont // et %','Connaître les règles de priorité','Utiliser le module math et les fonctions intégrées','Ecrire des expressions de comparaison et des expressions logiques'],
+ cours:[
+`<h3>Opérateurs arithmétiques</h3>
+<table class="t"><tr><th>Opérateur</th><th>Opération</th><th>Exemple</th><th>Résultat</th></tr>
+<tr><td><code>+ - *</code></td><td>Addition, soustraction, multiplication</td><td><code>4 * 3</code></td><td>12</td></tr>
+<tr><td><code>/</code></td><td>Division réelle</td><td><code>17 / 5</code></td><td>3.4</td></tr>
+<tr><td><code>//</code></td><td>Quotient de la division entière</td><td><code>17 // 5</code></td><td>3</td></tr>
+<tr><td><code>%</code></td><td>Reste de la division entière (modulo)</td><td><code>17 % 5</code></td><td>2</td></tr>
+<tr><td><code>**</code></td><td>Puissance</td><td><code>2 ** 10</code></td><td>1024</td></tr></table>`,
+{code:R`a, b = 17, 5
+print("a + b  =", a + b)
+print("a - b  =", a - b)
+print("a * b  =", a * b)
+print("a / b  =", a / b)
+print("a // b =", a // b, "(quotient entier)")
+print("a % b  =", a % b, "(reste)")
+print("a ** 2 =", a ** 2, "(puissance)")`},
+`<p>Le <b>modulo</b> est très utile : <code>n % 2 == 0</code> teste si <code>n</code> est pair, <code>n % 10</code> donne le dernier chiffre de <code>n</code>.</p>
+<h3>Priorité des opérateurs</h3>
+<p>Du plus prioritaire au moins prioritaire : <b>parenthèses</b>, puis <code>**</code>, puis <code>* / // %</code>, puis <code>+ -</code>. A priorité égale, on calcule de gauche à droite (sauf <code>**</code>, de droite à gauche). En cas de doute, mettez des parenthèses.</p>`,
+{code:R`print(2 + 3 * 4)       # 14
+print((2 + 3) * 4)     # 20
+print(2 ** 3 ** 2)     # 512 : 3 ** 2 est calculé en premier
+print(-3 ** 2)         # -9 : la puissance passe avant le signe moins
+print(10 - 4 - 3)      # 3 : de gauche à droite`},
+`<h3>Affectations composées</h3>
+<p><code>x += 5</code> est un raccourci pour <code>x = x + 5</code>. Il existe aussi <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>//=</code>, <code>%=</code>, <code>**=</code>.</p>`,
+{code:R`total = 0
+total += 10    # total = total + 10  -> 10
+total *= 3     # total = total * 3   -> 30
+total -= 5     # total = total - 5   -> 25
+print(total)`},
+`<h3>Le module math et les fonctions intégrées</h3>
+<p>Un <b>module</b> regroupe des fonctions prêtes à l'emploi. On l'importe avec <code>import</code>.</p>`,
+{code:R`import math
+
+print(math.sqrt(16))         # racine carrée
+print(math.pi)
+print(round(math.pi, 2))     # arrondi à 2 décimales
+print(abs(-7), max(3, 9, 4), min(3, 9, 4))
+print(math.floor(4.7), math.ceil(4.2))   # partie entière inférieure / supérieure
+print(0.1 + 0.2)             # les réels sont stockés de façon approchée !`},
+`<h3>Comparaisons et opérateurs logiques</h3>
+<p>Une comparaison donne un booléen (<code>True</code> ou <code>False</code>) : <code>==</code> (égal), <code>!=</code> (différent), <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>. On les combine avec <code>and</code>, <code>or</code> et <code>not</code>.</p>
+<div class="attention">Ne confondez pas <code>=</code> (affectation : « ranger ») et <code>==</code> (comparaison : « est-ce égal ? »).</div>`,
+{code:R`x = 7
+print(x > 5, x == 7, x != 7)
+print(x > 0 and x < 10)     # vrai si les deux sont vrais
+print(x < 0 or x > 5)       # vrai si au moins un est vrai
+print(not x > 5)            # inverse la valeur
+print(0 <= x <= 10)         # comparaison enchaînée`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li><code>//</code> donne le quotient entier et <code>%</code> le reste.</li>
+<li>La priorité est <code>**</code>, puis <code>* / // %</code>, puis <code>+ -</code> ; les parenthèses passent avant tout.</li>
+<li><code>import math</code> donne accès à <code>math.sqrt</code>, <code>math.pi</code>, etc.</li>
+<li><code>==</code> compare, <code>=</code> affecte.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Heures et minutes', enonce:`Lire une durée en minutes (entier) et l'afficher en heures et minutes sous la forme <code>2 h 5 min</code>.`,
+   exemple:'Entrée : 125\nSortie : 2 h 5 min',
+   depart:R`minutes = int(input("Durée en minutes : "))
+`, indice:`Le nombre d'heures est <code>minutes // 60</code> et le reste <code>minutes % 60</code>.`,
+   solution:R`minutes = int(input("Durée en minutes : "))
+print(minutes // 60, "h", minutes % 60, "min")`,
+   tests:[{e:'125',s:'2 h 5 min'},{e:'60',s:'1 h 0 min'},{e:'59',s:'0 h 59 min'},{e:'1440',s:'24 h 0 min'}]},
+  {titre:'Moyenne de trois notes', enonce:`Lire trois notes (réels) et afficher leur moyenne arrondie à 2 décimales avec <code>round()</code>.`,
+   exemple:'Entrées : 12, 15, 14\nSortie : 13.67',
+   depart:R`# Ecrivez votre programme ici
+`, indice:`Attention aux parenthèses : <code>(n1 + n2 + n3) / 3</code>.`,
+   solution:R`n1 = float(input("Note 1 : "))
+n2 = float(input("Note 2 : "))
+n3 = float(input("Note 3 : "))
+print(round((n1 + n2 + n3) / 3, 2))`,
+   tests:[{e:'12\n15\n14',s:'13.67'},{e:'10\n10\n10',s:'10.0'},{e:'8.5\n11\n16.25',s:'11.92'}]},
+  {titre:'Hypoténuse', enonce:`Lire les deux côtés <code>a</code> et <code>b</code> de l'angle droit d'un triangle rectangle et afficher l'hypoténuse arrondie à 2 décimales.`,
+   exemple:'Entrées : 3 puis 4\nSortie : 5.0',
+   depart:R`import math
+`, indice:`Théorème de Pythagore : <code>c = math.sqrt(a**2 + b**2)</code>.`,
+   solution:R`import math
+a = float(input("a = "))
+b = float(input("b = "))
+print(round(math.sqrt(a ** 2 + b ** 2), 2))`,
+   tests:[{e:'3\n4',s:'5.0'},{e:'1\n1',s:'1.41'},{e:'5\n12',s:'13.0'}]}
+ ],
+ quiz:[
+  {q:`Que vaut <code>17 % 5</code> ?`, r:['3','2','3.4','5'], b:1, e:`17 = 5 × 3 + 2 : le reste est 2.`},
+  {q:`Que vaut <code>2 + 3 * 4</code> ?`, r:['20','14','24','9'], b:1, e:`La multiplication est prioritaire : 2 + 12 = 14.`},
+  {q:`Que vaut <code>7 // 2</code> ?`, r:['3.5','3','4','1'], b:1, e:`// donne le quotient de la division entière.`},
+  {q:`Que vaut <code>True and False</code> ?`, r:['True','False','None','Une erreur'], b:1, e:`and est vrai seulement si les deux opérandes sont vrais.`},
+  {q:`Comment tester qu'un entier <code>n</code> est pair ?`, r:['n / 2 == 0','n % 2 == 0','n // 2 == 0','n = 2'], b:1, e:`Un nombre pair a un reste nul dans la division par 2.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch3', titre:'Structures conditionnelles', court:'Conditions',
+ resume:'if, elif, else, indentation, conditions composées et imbriquées.',
+ objectifs:['Ecrire des instructions if / elif / else','Respecter l\'indentation des blocs','Combiner des conditions avec and / or / not','Imbriquer des tests'],
+ cours:[
+`<h3>L'instruction if … else</h3>
+<p>Une structure conditionnelle exécute un bloc d'instructions <b>seulement si</b> une condition est vraie. La ligne <code>if</code> se termine par <b>deux-points</b> <code>:</code> et le bloc est <b>indenté</b> (décalé de 4 espaces).</p>`,
+{code:R`note = float(input("Note : "))
+if note >= 10:
+    print("Admis")
+    print("Félicitations !")
+else:
+    print("Ajourné")
+print("Fin du programme")      # non indentée : toujours exécutée`, entree:'15'},
+`<div class="attention">L'indentation fait partie de la syntaxe : un décalage incohérent provoque une <code>IndentationError</code>. Dans l'éditeur, la touche <kbd>Tab</kbd> insère 4 espaces et <kbd>Entrée</kbd> après <code>:</code> indente automatiquement.</div>
+<h3>Plusieurs cas : elif</h3>
+<p><code>elif</code> (contraction de <i>else if</i>) teste une nouvelle condition si les précédentes sont fausses. Seul le <b>premier</b> bloc dont la condition est vraie est exécuté.</p>`,
+{code:R`temperature = float(input("Température : "))
+if temperature < 36:
+    print("Hypothermie")
+elif temperature <= 37.5:
+    print("Normale")
+elif temperature <= 39:
+    print("Fièvre")
+else:
+    print("Forte fièvre")`, entree:'37.8'},
+`<h3>Conditions composées</h3>`,
+{code:R`age = int(input("Age : "))
+carte = input("Carte étudiant (O/N) : ")
+if age < 26 and carte == "O":
+    print("Tarif réduit")
+else:
+    print("Plein tarif")`, entree:'19\nO'},
+`<h3>Conditions imbriquées</h3>
+<p>Un bloc peut lui-même contenir un <code>if</code>. Exemple : le plus grand de trois nombres.</p>`,
+{code:R`a = int(input("a = "))
+b = int(input("b = "))
+c = int(input("c = "))
+if a >= b:
+    if a >= c:
+        plus_grand = a
+    else:
+        plus_grand = c
+else:
+    if b >= c:
+        plus_grand = b
+    else:
+        plus_grand = c
+print("Le plus grand est", plus_grand)`, entree:'4\n9\n2'},
+`<h3>Expression conditionnelle</h3>
+<p>Pour choisir une valeur selon une condition, en une ligne : <code>valeur_si_vrai if condition else valeur_si_faux</code>.</p>`,
+{code:R`n = 7
+parite = "pair" if n % 2 == 0 else "impair"
+print(n, "est", parite)
+
+# Valeurs considérées comme fausses : 0, 0.0, "", [], None
+nom = ""
+if not nom:
+    print("Le nom est vide")`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li>Structure : <code>if condition:</code>, puis un bloc indenté, puis éventuellement <code>elif</code> et <code>else</code>.</li>
+<li>Dans un enchaînement <code>if</code> / <code>elif</code>, un seul bloc est exécuté : le premier dont la condition est vraie.</li>
+<li>Indentation de 4 espaces, toujours la même dans un bloc.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Pair ou impair', enonce:`Lire un entier et afficher <code>pair</code> ou <code>impair</code>.`,
+   exemple:'Entrée : 7\nSortie : impair',
+   depart:R`n = int(input("Entier : "))
+`, indice:`Utilisez le reste de la division par 2.`,
+   solution:R`n = int(input("Entier : "))
+if n % 2 == 0:
+    print("pair")
+else:
+    print("impair")`,
+   tests:[{e:'7',s:'impair'},{e:'10',s:'pair'},{e:'0',s:'pair'},{e:'-3',s:'impair'}]},
+  {titre:'Mention', enonce:`Lire une note sur 20 et afficher : <code>Note invalide</code> (hors de [0, 20]), <code>Ajourné</code> (&lt; 10), <code>Passable</code> (&lt; 12), <code>Assez bien</code> (&lt; 14), <code>Bien</code> (&lt; 16) ou <code>Très bien</code>.`,
+   exemple:'Entrée : 13.5\nSortie : Assez bien',
+   depart:R`note = float(input("Note : "))
+`, indice:`Testez d'abord la validité, puis enchaînez les <code>elif</code> dans l'ordre croissant.`,
+   solution:R`note = float(input("Note : "))
+if note < 0 or note > 20:
+    print("Note invalide")
+elif note < 10:
+    print("Ajourné")
+elif note < 12:
+    print("Passable")
+elif note < 14:
+    print("Assez bien")
+elif note < 16:
+    print("Bien")
+else:
+    print("Très bien")`,
+   tests:[{e:'9.5',s:'Ajourné'},{e:'10',s:'Passable'},{e:'13.99',s:'Assez bien'},{e:'15',s:'Bien'},{e:'18',s:'Très bien'},{e:'21',s:'Note invalide'}]},
+  {titre:'Année bissextile', enonce:`Une année est bissextile si elle est divisible par 4 mais pas par 100, ou si elle est divisible par 400. Lire une année et afficher <code>bissextile</code> ou <code>non bissextile</code>.`,
+   exemple:'Entrée : 2024\nSortie : bissextile',
+   depart:R`annee = int(input("Année : "))
+`, indice:`<code>(annee % 4 == 0 and annee % 100 != 0) or annee % 400 == 0</code>`,
+   solution:R`annee = int(input("Année : "))
+if (annee % 4 == 0 and annee % 100 != 0) or annee % 400 == 0:
+    print("bissextile")
+else:
+    print("non bissextile")`,
+   tests:[{e:'2024',s:'bissextile'},{e:'1900',s:'non bissextile'},{e:'2000',s:'bissextile'},{e:'2026',s:'non bissextile'}]}
+ ],
+ quiz:[
+  {q:`Quel caractère termine obligatoirement la ligne d'un <code>if</code> ?`, r:[';','.',':','{'], b:2, e:`Les deux-points annoncent le bloc indenté.`},
+  {q:`Avec <code>x = 15</code>, qu'affiche ce code ?<br><code>if x &gt; 10: print("A")<br>elif x &gt; 5: print("B")<br>else: print("C")</code>`, r:['A','B','A puis B','C'], b:0, e:`Seul le premier bloc dont la condition est vraie est exécuté.`},
+  {q:`Quelle valeur est considérée comme fausse dans un test ?`, r:['"0"','" "','0','[0]'], b:2, e:`0, 0.0, "", [] et None sont « faux » ; "0" est une chaîne non vide, donc « vraie ».`},
+  {q:`Quelle erreur provoque un bloc mal décalé ?`, r:['NameError','IndentationError','ValueError','TypeError'], b:1, e:`L'indentation fait partie de la syntaxe de Python.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch4', titre:'Boucles while et for', court:'Boucles',
+ resume:'Répétitions avec while et for, range(), accumulateurs, break et continue.',
+ objectifs:['Répéter des instructions avec while','Parcourir une suite de valeurs avec for et range()','Utiliser compteurs et accumulateurs','Contrôler une boucle avec break et continue'],
+ cours:[
+`<h3>La boucle while</h3>
+<p><code>while condition:</code> répète le bloc <b>tant que</b> la condition est vraie. La condition est testée <b>avant</b> chaque tour : il faut qu'une instruction du bloc la rende fausse un jour, sinon la boucle est infinie.</p>`,
+{code:R`compteur = 1
+while compteur <= 5:
+    print("Tour", compteur)
+    compteur += 1          # sans cette ligne : boucle infinie !
+print("Terminé")`},
+`<p>Usage classique : <b>contrôler une saisie</b> en redemandant tant qu'elle est incorrecte.</p>`,
+{code:R`note = float(input("Note (0 à 20) : "))
+while note < 0 or note > 20:
+    print("Note invalide !")
+    note = float(input("Note (0 à 20) : "))
+print("Note enregistrée :", note)`, entree:'-4\n25\n15'},
+`<div class="attention">Si votre programme ne s'arrête pas (boucle infinie), cliquez sur <b>■ Arrêter</b>. Le moteur Python redémarre alors en quelques secondes.</div>
+<h3>La boucle for et range()</h3>
+<p><code>for variable in séquence:</code> exécute le bloc une fois pour chaque élément de la séquence. <code>range()</code> fabrique une suite d'entiers :</p>
+<table class="t"><tr><th>Appel</th><th>Valeurs produites</th></tr>
+<tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4 (5 exclu)</td></tr>
+<tr><td><code>range(2, 6)</code></td><td>2, 3, 4, 5</td></tr>
+<tr><td><code>range(1, 10, 2)</code></td><td>1, 3, 5, 7, 9 (pas de 2)</td></tr>
+<tr><td><code>range(10, 0, -3)</code></td><td>10, 7, 4, 1</td></tr></table>`,
+{code:R`for i in range(5):
+    print(i, end=" ")
+print()
+for i in range(1, 11, 2):
+    print(i, end=" ")
+print()
+for i in range(10, 0, -3):
+    print(i, end=" ")
+print()
+for lettre in "Python":      # for parcourt aussi une chaîne
+    print(lettre, end="-")`},
+`<h3>Compteurs et accumulateurs</h3>
+<p>Un <b>accumulateur</b> est une variable initialisée <b>avant</b> la boucle et mise à jour à chaque tour (somme, produit). Un <b>compteur</b> compte les tours qui vérifient une condition.</p>`,
+{code:R`n = 100
+somme = 0
+nb_multiples = 0
+for i in range(1, n + 1):
+    somme += i
+    if i % 7 == 0:
+        nb_multiples += 1
+print("Somme de 1 à", n, "=", somme)
+print("Multiples de 7 :", nb_multiples)`},
+`<h3>break et continue</h3>
+<p><code>break</code> <b>sort</b> immédiatement de la boucle ; <code>continue</code> <b>passe au tour suivant</b> sans exécuter la fin du bloc.</p>`,
+{code:R`for i in range(1, 20):
+    if i % 2 == 0:
+        continue        # on saute les nombres pairs
+    if i > 11:
+        break           # on arrête tout après 11
+    print(i, end=" ")`},
+`<h3>Boucles imbriquées</h3>`,
+{code:R`for i in range(1, 5):
+    for j in range(1, i + 1):
+        print("*", end="")
+    print()             # retour à la ligne après chaque rangée`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li><code>while</code> : nombre de tours inconnu à l'avance ; <code>for</code> : parcours d'une séquence connue.</li>
+<li><code>range(a, b)</code> s'arrête <b>avant</b> <code>b</code>.</li>
+<li>Initialiser les accumulateurs <b>avant</b> la boucle.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Table de multiplication', enonce:`Lire un entier <code>n</code> et afficher sa table de multiplication de 1 à 10, une ligne par produit, au format <code>7 x 3 = 21</code>.`,
+   exemple:'Entrée : 7\nSortie :\n7 x 1 = 7\n7 x 2 = 14\n...\n7 x 10 = 70',
+   depart:R`n = int(input("n = "))
+`, indice:`<code>for i in range(1, 11):</code> puis <code>print(n, "x", i, "=", n * i)</code>.`,
+   solution:R`n = int(input("n = "))
+for i in range(1, 11):
+    print(n, "x", i, "=", n * i)`,
+   tests:[{e:'7',s:'7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70'},{e:'2',s:'2 x 1 = 2\n2 x 2 = 4\n2 x 3 = 6\n2 x 4 = 8\n2 x 5 = 10\n2 x 6 = 12\n2 x 7 = 14\n2 x 8 = 16\n2 x 9 = 18\n2 x 10 = 20'}]},
+  {titre:'Factorielle', enonce:`Lire un entier <code>n ≥ 0</code> et afficher <code>n! = 1 × 2 × … × n</code> (avec 0! = 1).`,
+   exemple:'Entrée : 5\nSortie : 120',
+   depart:R`n = int(input("n = "))
+`, indice:`Accumulateur multiplicatif initialisé à 1.`,
+   solution:R`n = int(input("n = "))
+fact = 1
+for i in range(2, n + 1):
+    fact *= i
+print(fact)`,
+   tests:[{e:'5',s:'120'},{e:'0',s:'1'},{e:'10',s:'3628800'},{e:'1',s:'1'}]},
+  {titre:'Nombre premier', enonce:`Un entier n ≥ 2 est premier s'il n'a pas d'autre diviseur que 1 et lui-même. Lire n et afficher <code>premier</code> ou <code>non premier</code>.`,
+   exemple:'Entrée : 17\nSortie : premier',
+   depart:R`n = int(input("n = "))
+`, indice:`Cherchez un diviseur <code>d</code> entre 2 et n-1 (ou jusqu'à √n) ; utilisez une variable booléenne ou <code>break</code>. Attention au cas n &lt; 2.`,
+   solution:R`n = int(input("n = "))
+premier = n >= 2
+d = 2
+while d * d <= n and premier:
+    if n % d == 0:
+        premier = False
+    d += 1
+if premier:
+    print("premier")
+else:
+    print("non premier")`,
+   tests:[{e:'17',s:'premier'},{e:'2',s:'premier'},{e:'1',s:'non premier'},{e:'21',s:'non premier'},{e:'97',s:'premier'},{e:'49',s:'non premier'}]}
+ ],
+ quiz:[
+  {q:`Quelles valeurs produit <code>range(1, 5)</code> ?`, r:['1, 2, 3, 4, 5','1, 2, 3, 4','0, 1, 2, 3, 4','2, 3, 4, 5'], b:1, e:`La borne de fin est exclue.`},
+  {q:`Combien de fois s'exécute le bloc de <code>for i in range(3, 12, 3):</code> ?`, r:['3','4','9','12'], b:0, e:`Valeurs : 3, 6, 9.`},
+  {q:`Que fait <code>break</code> ?`, r:['Passe au tour suivant','Quitte immédiatement la boucle','Arrête le programme','Recommence la boucle'], b:1, e:`continue passe au tour suivant ; break sort de la boucle.`},
+  {q:`<code>x = 10</code> puis <code>while x &lt; 5: print(x)</code>. Combien d'affichages ?`, r:['0','1','5','Infini'], b:0, e:`La condition est fausse dès le départ : le bloc n'est jamais exécuté.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch5', titre:'Chaînes de caractères', court:'Chaînes',
+ resume:'Indices, tranches, méthodes, parcours et formatage avec les f-strings.',
+ objectifs:['Accéder aux caractères par indice et extraire des tranches','Utiliser les principales méthodes des chaînes','Parcourir une chaîne avec une boucle','Formater un affichage avec les f-strings'],
+ cours:[
+`<h3>Indices et tranches</h3>
+<p>Une chaîne est une <b>séquence</b> de caractères numérotés à partir de <b>0</b>. Les indices négatifs partent de la fin (<code>-1</code> = dernier caractère). La tranche <code>s[début:fin:pas]</code> extrait une sous-chaîne, <code>fin</code> exclu.</p>
+<table class="t idx"><tr><td>Caractère</td><td>P</td><td>y</td><td>t</td><td>h</td><td>o</td><td>n</td></tr><tr><td>Indice</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>Indice négatif</td><td>-6</td><td>-5</td><td>-4</td><td>-3</td><td>-2</td><td>-1</td></tr></table>`,
+{code:R`mot = "Informatique"
+print(len(mot))               # nombre de caractères
+print(mot[0], mot[1], mot[-1])
+print(mot[0:5])               # 'Infor'
+print(mot[5:])                # 'matique'
+print(mot[:3])                # 'Inf'
+print(mot[::-1])              # chaîne inversée
+print(mot[::2])               # un caractère sur deux`},
+`<div class="attention">Une chaîne est <b>non modifiable</b> (immuable) : <code>mot[0] = "i"</code> provoque une <code>TypeError</code>. On crée une nouvelle chaîne : <code>mot = "i" + mot[1:]</code>.</div>
+<h3>Méthodes utiles</h3>`,
+{code:R`s = "  Faculté des Sciences  "
+print(s.strip())                       # supprime les espaces aux extrémités
+print(s.upper())
+print(s.lower())
+print(s.replace("Sciences", "Lettres"))
+print(s.split())                       # découpe en liste de mots
+print("-".join(["2026", "11", "19"]))  # assemble une liste
+print("Sciences" in s, s.count("e"), s.find("des"))
+print("python".capitalize(), "le monde".title())`},
+`<h3>Parcourir une chaîne</h3>`,
+{code:R`phrase = "programmation python"
+compteur = 0
+for c in phrase:                 # parcours des caractères
+    if c in "aeiouy":
+        compteur += 1
+print("Nombre de voyelles :", compteur)
+
+for i in range(len(phrase)):     # parcours des indices
+    if phrase[i] == "o":
+        print("o trouvé à l'indice", i)`},
+`<h3>Formater avec les f-strings</h3>
+<p>Une chaîne précédée de <code>f</code> peut contenir des expressions entre accolades <code>{ }</code>, avec un format facultatif après <code>:</code>.</p>`,
+{code:R`nom = "Youssef"
+moyenne = 14.4567
+print(f"{nom} a obtenu {moyenne:.2f}/20")   # 2 décimales
+print(f"[{nom:>10}]")      # aligné à droite sur 10 caractères
+print(f"[{nom:<10}]")      # aligné à gauche
+print(f"[{nom:^10}]")      # centré
+print(f"{42:05d}")         # complété par des zéros
+print(f"{0.256:.1%}")      # pourcentage
+print(ord("A"), chr(66))   # code d'un caractère et inverse`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li>Le premier indice est <code>0</code> et le dernier <code>-1</code> ; dans une tranche, <code>fin</code> est exclu.</li>
+<li>Les méthodes (<code>upper</code>, <code>replace</code>, <code>strip</code>…) renvoient une <b>nouvelle</b> chaîne.</li>
+<li><code>split()</code> transforme une chaîne en liste, <code>join()</code> fait l'inverse.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Compter les voyelles', enonce:`Lire une phrase et afficher le nombre de voyelles (a, e, i, o, u, y), en majuscules ou en minuscules.`,
+   exemple:'Entrée : Errachidia\nSortie : 5',
+   depart:R`phrase = input("Phrase : ")
+`, indice:`Parcourez <code>phrase.lower()</code> et testez <code>c in "aeiouy"</code>.`,
+   solution:R`phrase = input("Phrase : ")
+nb = 0
+for c in phrase.lower():
+    if c in "aeiouy":
+        nb += 1
+print(nb)`,
+   tests:[{e:'Errachidia',s:'5'},{e:'Python',s:'2'},{e:'BCDF',s:'0'},{e:'Programmation en PYTHON',s:'8'}]},
+  {titre:'Palindrome', enonce:`Un palindrome se lit de la même façon dans les deux sens. Lire une phrase et afficher <code>palindrome</code> ou <code>non palindrome</code>, en ignorant les espaces et la casse.`,
+   exemple:'Entrée : Esope reste ici et se repose\nSortie : palindrome',
+   depart:R`phrase = input("Phrase : ")
+`, indice:`Nettoyez : <code>s = phrase.replace(" ", "").lower()</code>, puis comparez <code>s</code> à <code>s[::-1]</code>.`,
+   solution:R`phrase = input("Phrase : ")
+s = phrase.replace(" ", "").lower()
+if s == s[::-1]:
+    print("palindrome")
+else:
+    print("non palindrome")`,
+   tests:[{e:'Radar',s:'palindrome'},{e:'Bonjour',s:'non palindrome'},{e:'Esope reste ici et se repose',s:'palindrome'},{e:'kayak',s:'palindrome'}]},
+  {titre:'Initiales', enonce:`Lire un nom complet et afficher ses initiales en majuscules, chacune suivie d'un point.`,
+   exemple:'Entrée : guido van rossum\nSortie : G.V.R.',
+   depart:R`nom = input("Nom complet : ")
+`, indice:`<code>for mot in nom.split():</code> puis ajoutez <code>mot[0].upper() + "."</code> à une chaîne résultat.`,
+   solution:R`nom = input("Nom complet : ")
+res = ""
+for mot in nom.split():
+    res += mot[0].upper() + "."
+print(res)`,
+   tests:[{e:'guido van rossum',s:'G.V.R.'},{e:'ada lovelace',s:'A.L.'},{e:'Alan',s:'A.'}]}
+ ],
+ quiz:[
+  {q:`Que vaut <code>"Python"[1:4]</code> ?`, r:['"Pyt"','"yth"','"ytho"','"yt"'], b:1, e:`Indices 1, 2 et 3 (4 exclu).`},
+  {q:`Que vaut <code>"Python"[-1]</code> ?`, r:['"P"','"n"','"o"','Une erreur'], b:1, e:`-1 désigne le dernier caractère.`},
+  {q:`Que produit <code>"a,b,c".split(",")</code> ?`, r:['"abc"','["a", "b", "c"]','("a", "b", "c")','["a,b,c"]'], b:1, e:`split découpe selon le séparateur et renvoie une liste.`},
+  {q:`<code>s = "abc"</code> puis <code>s[0] = "x"</code> :`, r:['s devient "xbc"','TypeError : une chaîne est immuable','s devient "x"','Rien ne se passe'], b:1, e:`Il faut créer une nouvelle chaîne : "x" + s[1:].`},
+  {q:`Qu'affiche <code>print(f"{3.14159:.2f}")</code> ?`, r:['3.14159','3.1','3.14','3.15'], b:2, e:`.2f : deux chiffres après la virgule.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch6', titre:'Listes et tuples', court:'Listes',
+ resume:'Créer, modifier, parcourir et trier des listes ; compréhensions ; tuples.',
+ objectifs:['Créer et modifier une liste','Utiliser les méthodes append, insert, remove, pop, sort','Parcourir une liste et construire une liste par compréhension','Distinguer liste et tuple'],
+ cours:[
+`<h3>Créer et modifier une liste</h3>
+<p>Une <b>liste</b> est une séquence ordonnée et <b>modifiable</b> de valeurs, écrite entre crochets. Les indices et les tranches fonctionnent comme pour les chaînes.</p>`,
+{code:R`notes = [12, 15.5, 9, 17]
+print(notes, len(notes))
+print(notes[0], notes[-1])
+notes[2] = 10            # une liste est modifiable
+notes.append(14)         # ajout à la fin
+notes.insert(0, 11)      # insertion à l'indice 0
+print(notes)
+notes.remove(15.5)       # supprime la première occurrence de 15.5
+dernier = notes.pop()    # retire et renvoie le dernier élément
+print(notes, dernier)
+print(sum(notes), min(notes), max(notes))`},
+`<h3>Parcourir une liste</h3>`,
+{code:R`filieres = ["Informatique", "Physique", "Chimie"]
+for f in filieres:
+    print("-", f)
+for i, f in enumerate(filieres, start=1):   # indice et valeur
+    print(i, f)`},
+`<h3>Rechercher et trier</h3>`,
+{code:R`nombres = [5, 2, 9, 1, 7]
+print(sorted(nombres))           # NOUVELLE liste triée
+print(nombres)                   # l'originale est inchangée
+nombres.sort(reverse=True)       # tri SUR PLACE, décroissant
+print(nombres)
+print(nombres[1:3], nombres[::-1])
+print(9 in nombres, nombres.index(9), nombres.count(1))`},
+`<h3>Construire une liste</h3>
+<p>Avec une boucle et <code>append</code>, ou en une ligne avec une <b>liste en compréhension</b> : <code>[expression for x in séquence if condition]</code>.</p>`,
+{code:R`carres = []
+for i in range(1, 6):
+    carres.append(i ** 2)
+print(carres)
+
+carres2 = [i ** 2 for i in range(1, 6)]
+pairs = [x for x in range(20) if x % 2 == 0]
+print(carres2)
+print(pairs)`},
+`<p>Lire plusieurs nombres saisis sur une même ligne :</p>`,
+{code:R`ligne = input("Nombres séparés par des espaces : ")
+valeurs = [int(x) for x in ligne.split()]
+print(valeurs, "somme =", sum(valeurs))`, entree:'12 8 15 10'},
+`<h3>Attention aux alias</h3>
+<p><code>b = a</code> ne copie pas la liste : <code>a</code> et <code>b</code> désignent la <b>même</b> liste. Pour une copie, utilisez <code>a.copy()</code> ou <code>a[:]</code>.</p>`,
+{code:R`a = [1, 2, 3]
+b = a          # b désigne la MEME liste
+c = a.copy()   # c est une copie indépendante
+a.append(4)
+print(a, b, c)`},
+`<h3>Tuples et listes de listes</h3>
+<p>Un <b>tuple</b> s'écrit entre parenthèses ; il est <b>non modifiable</b>. On l'utilise pour des données groupées (coordonnées, enregistrement) et pour renvoyer plusieurs valeurs.</p>`,
+{code:R`point = (3, 4)
+x, y = point                      # déballage
+print(x, y)
+etudiant = ("Hind", 20, "Informatique")
+print(etudiant[0], len(etudiant))
+
+matrice = [[1, 2, 3],
+           [4, 5, 6]]
+print(matrice[1][2])              # ligne 1, colonne 2 -> 6
+for ligne in matrice:
+    for v in ligne:
+        print(v, end=" ")
+    print()`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li>Liste : <code>[ ]</code>, modifiable ; tuple : <code>( )</code>, non modifiable.</li>
+<li><code>sorted(liste)</code> renvoie une nouvelle liste ; <code>liste.sort()</code> trie sur place et renvoie <code>None</code>.</li>
+<li><code>b = a</code> crée un alias, pas une copie.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Statistiques de notes', enonce:`Lire un entier <code>n</code>, puis <code>n</code> notes (réels), une par ligne. Afficher sur trois lignes : <code>Moyenne = …</code> (arrondie à 2 décimales), <code>Max = …</code>, <code>Min = …</code>.`,
+   exemple:'Entrées : 4, 12, 16, 11, 15\nSortie :\nMoyenne = 13.5\nMax = 16.0\nMin = 11.0',
+   depart:R`n = int(input("Nombre de notes : "))
+notes = []
+`, indice:`Remplissez la liste avec une boucle <code>for</code> et <code>append</code>, puis utilisez <code>sum</code>, <code>max</code>, <code>min</code>.`,
+   solution:R`n = int(input("Nombre de notes : "))
+notes = []
+for i in range(n):
+    notes.append(float(input(f"Note {i + 1} : ")))
+print("Moyenne =", round(sum(notes) / n, 2))
+print("Max =", max(notes))
+print("Min =", min(notes))`,
+   tests:[{e:'4\n12\n16\n11\n15',s:'Moyenne = 13.5\nMax = 16.0\nMin = 11.0'},{e:'3\n10\n10\n9',s:'Moyenne = 9.67\nMax = 10.0\nMin = 9.0'}]},
+  {titre:'Inverser une liste', enonce:`Lire des entiers sur une ligne (séparés par des espaces) et les afficher dans l'ordre inverse, séparés par des espaces, <b>sans</b> utiliser <code>reverse()</code>, <code>reversed()</code> ni <code>[::-1]</code>.`,
+   exemple:'Entrée : 1 2 3 4\nSortie : 4 3 2 1',
+   depart:R`valeurs = input("Nombres : ").split()
+`, indice:`Parcourez les indices de <code>len(valeurs) - 1</code> à <code>0</code> avec <code>range(len(valeurs) - 1, -1, -1)</code>.`,
+   solution:R`valeurs = input("Nombres : ").split()
+res = []
+for i in range(len(valeurs) - 1, -1, -1):
+    res.append(valeurs[i])
+print(" ".join(res))`,
+   tests:[{e:'1 2 3 4',s:'4 3 2 1'},{e:'7',s:'7'},{e:'10 -5 3',s:'3 -5 10'}]},
+  {titre:'Supprimer les doublons', enonce:`Lire des entiers sur une ligne et afficher les valeurs sans doublons, dans l'ordre de leur première apparition, séparées par des espaces.`,
+   exemple:'Entrée : 3 1 3 2 1\nSortie : 3 1 2',
+   depart:R`valeurs = input("Nombres : ").split()
+`, indice:`Construisez une nouvelle liste et n'ajoutez une valeur que si elle n'y est pas déjà (<code>not in</code>).`,
+   solution:R`valeurs = input("Nombres : ").split()
+uniques = []
+for v in valeurs:
+    if v not in uniques:
+        uniques.append(v)
+print(" ".join(uniques))`,
+   tests:[{e:'3 1 3 2 1',s:'3 1 2'},{e:'5 5 5',s:'5'},{e:'1 2 3',s:'1 2 3'}]}
+ ],
+ quiz:[
+  {q:`Après <code>L = [1, 2]</code> puis <code>L.append(3)</code>, L vaut :`, r:['[3, 1, 2]','[1, 2, 3]','[1, 2, [3]]','[4]'], b:1, e:`append ajoute à la fin.`},
+  {q:`Que renvoie <code>L.sort()</code> ?`, r:['La liste triée','None (la liste est triée sur place)','Une copie triée','Le plus petit élément'], b:1, e:`Pour obtenir une nouvelle liste triée, utilisez sorted(L).`},
+  {q:`<code>a = [1, 2]</code>, <code>b = a</code>, <code>b.append(3)</code>. Que vaut a ?`, r:['[1, 2]','[1, 2, 3]','[3]','Une erreur'], b:1, e:`a et b désignent la même liste (alias).`},
+  {q:`Que vaut <code>[x * 2 for x in range(4)]</code> ?`, r:['[2, 4, 6, 8]','[0, 2, 4, 6]','[0, 1, 2, 3]','[8]'], b:1, e:`x prend les valeurs 0, 1, 2, 3.`},
+  {q:`Quelle structure est non modifiable ?`, r:['list','tuple','dict','set'], b:1, e:`Le tuple est immuable.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch7', titre:'Dictionnaires et ensembles', court:'Dictionnaires',
+ resume:'Associer des clés à des valeurs, compter des occurrences, opérations sur les ensembles.',
+ objectifs:['Créer, consulter et modifier un dictionnaire','Parcourir clés, valeurs et paires','Compter des occurrences avec un dictionnaire','Utiliser les ensembles et leurs opérations'],
+ cours:[
+`<h3>Le dictionnaire</h3>
+<p>Un <b>dictionnaire</b> associe des <b>clés</b> (uniques) à des <b>valeurs</b>. On y accède par la clé et non par un indice : <code>{clé: valeur, …}</code>.</p>`,
+{code:R`etudiant = {"nom": "Sara", "age": 19, "filiere": "Informatique"}
+print(etudiant["nom"])
+etudiant["age"] = 20               # modification
+etudiant["ville"] = "Errachidia"   # ajout d'une nouvelle clé
+del etudiant["filiere"]            # suppression
+print(etudiant)
+print(len(etudiant), "nom" in etudiant)
+print(etudiant.get("note", "non renseignée"))   # valeur par défaut si absente`},
+`<div class="attention">Accéder à une clé absente avec <code>d["clé"]</code> provoque une <code>KeyError</code>. Testez d'abord avec <code>in</code> ou utilisez <code>d.get(clé, défaut)</code>.</div>
+<h3>Parcourir un dictionnaire</h3>`,
+{code:R`notes = {"Algo": 14, "Python": 16, "Maths": 11}
+for matiere in notes:                  # parcours des clés
+    print(matiere)
+for matiere, n in notes.items():       # parcours des paires
+    print(f"{matiere:<8} {n}")
+print(list(notes.keys()), list(notes.values()))
+print("Moyenne :", round(sum(notes.values()) / len(notes), 2))`},
+`<h3>Compter des occurrences</h3>
+<p>Schéma très fréquent : la clé est l'élément compté, la valeur est le nombre d'apparitions.</p>`,
+{code:R`texte = "le chat et le chien et le lapin"
+compte = {}
+for mot in texte.split():
+    compte[mot] = compte.get(mot, 0) + 1
+print(compte)
+meilleur = max(compte, key=compte.get)
+print("Mot le plus fréquent :", meilleur)`},
+`<h3>Valeurs composées</h3>`,
+{code:R`classes = {"S1": ["Sara", "Anas"], "S3": ["Hind"]}
+classes["S1"].append("Omar")
+for niveau, liste in classes.items():
+    print(niveau, ":", ", ".join(liste))`},
+`<h3>Les ensembles (set)</h3>
+<p>Un <b>ensemble</b> est une collection <b>sans doublons</b> et <b>sans ordre</b>. Il permet les opérations mathématiques : union <code>|</code>, intersection <code>&amp;</code>, différence <code>-</code>.</p>`,
+{code:R`a = {1, 2, 3, 4}
+b = {3, 4, 5}
+print(a | b)        # union
+print(a & b)        # intersection
+print(a - b)        # différence
+print(set([1, 1, 2, 2, 3]))      # élimine les doublons
+print(sorted({"pomme", "kiwi", "banane"}))`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li><code>d[clé]</code> lit ou écrit ; <code>d.get(clé, défaut)</code> lit sans risque d'erreur.</li>
+<li><code>for k, v in d.items():</code> parcourt les paires clé/valeur.</li>
+<li>Un <code>set</code> élimine les doublons ; ses éléments n'ont pas d'ordre.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Fréquence des mots', enonce:`Lire une phrase et afficher, pour chaque mot <b>dans l'ordre de première apparition</b>, une ligne <code>mot : nombre</code>.`,
+   exemple:'Entrée : le chat et le chien\nSortie :\nle : 2\nchat : 1\net : 1\nchien : 1',
+   depart:R`phrase = input("Phrase : ")
+compte = {}
+`, indice:`Un dictionnaire conserve l'ordre d'insertion des clés : comptez, puis parcourez <code>compte.items()</code>.`,
+   solution:R`phrase = input("Phrase : ")
+compte = {}
+for mot in phrase.split():
+    compte[mot] = compte.get(mot, 0) + 1
+for mot, n in compte.items():
+    print(mot, ":", n)`,
+   tests:[{e:'le chat et le chien',s:'le : 2\nchat : 1\net : 1\nchien : 1'},{e:'a b a b a',s:'a : 3\nb : 2'}]},
+  {titre:'Annuaire', enonce:`Lire un entier <code>n</code>, puis <code>n</code> lignes « nom numéro ». Lire enfin un nom à chercher et afficher son numéro, ou <code>inconnu</code>.`,
+   exemple:'Entrées : 2, Sara 0612, Anas 0700, Anas\nSortie : 0700',
+   depart:R`n = int(input("Nombre de contacts : "))
+annuaire = {}
+`, indice:`<code>nom, numero = input().split()</code> puis <code>annuaire[nom] = numero</code> ; à la fin <code>annuaire.get(nom, "inconnu")</code>.`,
+   solution:R`n = int(input("Nombre de contacts : "))
+annuaire = {}
+for i in range(n):
+    nom, numero = input("Nom numéro : ").split()
+    annuaire[nom] = numero
+cherche = input("Nom recherché : ")
+print(annuaire.get(cherche, "inconnu"))`,
+   tests:[{e:'2\nSara 0612\nAnas 0700\nAnas',s:'0700'},{e:'1\nHind 0655\nOmar',s:'inconnu'}]},
+  {titre:'Mots communs', enonce:`Lire deux phrases (une par ligne) et afficher les mots présents dans les deux, triés par ordre alphabétique et séparés par des espaces, ou <code>aucun</code>.`,
+   exemple:'Entrées : le chat dort, le chien dort\nSortie : dort le',
+   depart:R`a = set(input("Phrase 1 : ").split())
+b = set(input("Phrase 2 : ").split())
+`, indice:`Intersection <code>a &amp; b</code>, puis <code>" ".join(sorted(...))</code>.`,
+   solution:R`a = set(input("Phrase 1 : ").split())
+b = set(input("Phrase 2 : ").split())
+communs = sorted(a & b)
+if communs:
+    print(" ".join(communs))
+else:
+    print("aucun")`,
+   tests:[{e:'le chat dort\nle chien dort',s:'dort le'},{e:'un deux\ntrois quatre',s:'aucun'}]}
+ ],
+ quiz:[
+  {q:`Que provoque <code>d["x"]</code> si la clé <code>"x"</code> n'existe pas ?`, r:['None','0','KeyError','Elle est créée'], b:2, e:`Utilisez d.get("x") pour obtenir None (ou une valeur par défaut).`},
+  {q:`Comment parcourir à la fois les clés et les valeurs de <code>d</code> ?`, r:['for k, v in d:','for k, v in d.items():','for k in d.values():','for (k, v) in range(d):'], b:1, e:`items() renvoie les paires (clé, valeur).`},
+  {q:`Que vaut <code>len({1, 2, 2, 3, 3, 3})</code> ?`, r:['6','3','2','1'], b:1, e:`Un ensemble ne garde pas les doublons.`},
+  {q:`Que fait <code>d["a"] = d.get("a", 0) + 1</code> ?`, r:['Une erreur si "a" est absent','Incrémente le compteur de "a" (le crée à 1 s\'il est absent)','Supprime "a"','Remet "a" à 0'], b:1, e:`C'est le schéma classique du comptage.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch8', titre:'Fonctions', court:'Fonctions',
+ resume:'Définir des fonctions, paramètres, return, portée des variables, récursivité.',
+ objectifs:['Définir et appeler une fonction','Distinguer paramètres, arguments et valeur de retour','Comprendre la portée locale des variables','Ecrire une fonction récursive simple'],
+ cours:[
+`<h3>Définir et appeler une fonction</h3>
+<p>Une <b>fonction</b> est un bloc de code nommé et réutilisable. On la <b>définit</b> avec <code>def</code>, puis on l'<b>appelle</b> par son nom suivi de parenthèses. Les fonctions évitent de répéter du code et découpent un problème en sous-problèmes.</p>`,
+{code:R`def saluer(nom):              # nom est un PARAMETRE
+    print("Bonjour", nom)
+
+saluer("Sara")                # "Sara" est un ARGUMENT
+saluer("Anas")`},
+`<h3>Renvoyer un résultat : return</h3>
+<p><code>return</code> termine la fonction et <b>renvoie</b> une valeur à l'endroit de l'appel, où elle peut être utilisée dans un calcul. Une fonction sans <code>return</code> renvoie <code>None</code>.</p>`,
+{code:R`def carre(x):
+    return x * x
+
+def moyenne(a, b, c):
+    """Renvoie la moyenne de trois nombres."""   # docstring
+    return (a + b + c) / 3
+
+resultat = carre(7) + 1
+print(resultat)
+print(round(moyenne(12, 15, 14), 2))
+
+def affiche_carre(x):
+    print(x * x)               # affiche mais ne renvoie rien
+r = affiche_carre(3)
+print("Valeur renvoyée :", r)`},
+`<div class="attention"><b>print</b> affiche une valeur à l'écran ; <b>return</b> la transmet au programme. Une fonction de calcul doit en général <b>renvoyer</b> son résultat.</div>
+<h3>Paramètres par défaut et arguments nommés</h3>`,
+{code:R`def puissance(base, exposant=2):     # valeur par défaut
+    return base ** exposant
+
+print(puissance(5))                 # exposant vaut 2
+print(puissance(2, 10))
+print(puissance(exposant=3, base=4))   # arguments nommés`},
+`<h3>Renvoyer plusieurs valeurs</h3>`,
+{code:R`def min_max(liste):
+    return min(liste), max(liste)   # renvoie un tuple
+
+petit, grand = min_max([4, 9, 1, 7])
+print(petit, grand)`},
+`<h3>Portée des variables</h3>
+<p>Une variable créée dans une fonction est <b>locale</b> : elle n'existe que pendant l'exécution de la fonction et ne modifie pas une variable de même nom à l'extérieur.</p>`,
+{code:R`x = 10
+def f():
+    x = 99              # variable LOCALE, distincte du x global
+    print("dans f :", x)
+f()
+print("dehors :", x)`},
+`<h3>Fonctions booléennes</h3>`,
+{code:R`def est_pair(n):
+    return n % 2 == 0
+
+for i in range(1, 7):
+    if est_pair(i):
+        print(i, "est pair")`},
+`<h3>Récursivité</h3>
+<p>Une fonction <b>récursive</b> s'appelle elle-même. Elle doit toujours avoir un <b>cas de base</b> qui arrête les appels.</p>`,
+{code:R`def factorielle(n):
+    if n == 0:                       # cas de base
+        return 1
+    return n * factorielle(n - 1)    # appel récursif
+
+print(factorielle(5))`},
+`<h3>Fonctions anonymes (lambda) et modules</h3>`,
+{code:R`import random
+
+carre = lambda x: x ** 2
+print(carre(9))
+
+etudiants = [("Sara", 15), ("Anas", 12), ("Hind", 17)]
+print(sorted(etudiants, key=lambda e: e[1], reverse=True))   # tri par note
+
+print("Dé :", random.randint(1, 6))          # entier aléatoire entre 1 et 6
+print("Tirage :", random.choice(["pile", "face"]))`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li><code>def nom(paramètres):</code> définit une fonction ; <code>nom(arguments)</code> l'appelle.</li>
+<li><code>return</code> renvoie une valeur ; sans <code>return</code>, la fonction renvoie <code>None</code>.</li>
+<li>Les variables d'une fonction sont locales ; une fonction récursive a toujours un cas de base.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Nombres premiers', enonce:`Ecrire une fonction <code>est_premier(n)</code> qui renvoie <code>True</code> si n est premier. Le programme lit un entier <code>m</code> et affiche les nombres premiers de 2 à m, séparés par des espaces.`,
+   exemple:'Entrée : 20\nSortie : 2 3 5 7 11 13 17 19',
+   depart:R`def est_premier(n):
+    # à compléter
+    pass
+
+m = int(input("m = "))
+`, indice:`Dans la fonction, renvoyez <code>False</code> dès qu'un diviseur est trouvé. Dans le programme, collectez les premiers dans une liste puis <code>" ".join(...)</code> (après conversion en <code>str</code>).`,
+   solution:R`def est_premier(n):
+    if n < 2:
+        return False
+    d = 2
+    while d * d <= n:
+        if n % d == 0:
+            return False
+        d += 1
+    return True
+
+m = int(input("m = "))
+premiers = [str(k) for k in range(2, m + 1) if est_premier(k)]
+print(" ".join(premiers))`,
+   tests:[{e:'20',s:'2 3 5 7 11 13 17 19'},{e:'2',s:'2'},{e:'30',s:'2 3 5 7 11 13 17 19 23 29'}]},
+  {titre:'PGCD récursif', enonce:`Ecrire une fonction récursive <code>pgcd(a, b)</code> utilisant l'algorithme d'Euclide : pgcd(a, 0) = a et pgcd(a, b) = pgcd(b, a % b). Lire a et b et afficher leur PGCD.`,
+   exemple:'Entrées : 48 puis 18\nSortie : 6',
+   depart:R`def pgcd(a, b):
+    pass
+
+a = int(input("a = "))
+b = int(input("b = "))
+`, indice:`Cas de base : <code>if b == 0: return a</code>.`,
+   solution:R`def pgcd(a, b):
+    if b == 0:
+        return a
+    return pgcd(b, a % b)
+
+a = int(input("a = "))
+b = int(input("b = "))
+print(pgcd(a, b))`,
+   tests:[{e:'48\n18',s:'6'},{e:'17\n5',s:'1'},{e:'100\n75',s:'25'}]},
+  {titre:'Suite de Fibonacci', enonce:`Ecrire une fonction <code>fibonacci(n)</code> qui renvoie la liste des <code>n</code> premiers termes (0, 1, 1, 2, 3, 5…). Lire n et afficher les termes séparés par des espaces.`,
+   exemple:'Entrée : 7\nSortie : 0 1 1 2 3 5 8',
+   depart:R`def fibonacci(n):
+    pass
+
+n = int(input("n = "))
+`, indice:`Partez de <code>a, b = 0, 1</code> ; à chaque tour, ajoutez <code>a</code> puis faites <code>a, b = b, a + b</code>.`,
+   solution:R`def fibonacci(n):
+    termes = []
+    a, b = 0, 1
+    for i in range(n):
+        termes.append(a)
+        a, b = b, a + b
+    return termes
+
+n = int(input("n = "))
+print(" ".join(str(t) for t in fibonacci(n)))`,
+   tests:[{e:'7',s:'0 1 1 2 3 5 8'},{e:'1',s:'0'},{e:'10',s:'0 1 1 2 3 5 8 13 21 34'}]}
+ ],
+ quiz:[
+  {q:`Que renvoie une fonction qui ne contient pas de <code>return</code> ?`, r:['0','""','None','Une erreur'], b:2, e:`Elle renvoie implicitement None.`},
+  {q:`Avec <code>def f(a, b=3): return a * b</code>, que vaut <code>f(2)</code> ?`, r:['2','5','6','Une erreur'], b:2, e:`b prend sa valeur par défaut 3.`},
+  {q:`Une variable créée à l'intérieur d'une fonction est :`, r:['Globale','Locale à la fonction','Partagée par toutes les fonctions','Constante'], b:1, e:`Elle disparaît à la fin de l'appel.`},
+  {q:`Que manque-t-il à une fonction récursive qui provoque une RecursionError ?`, r:['Un print','Un cas de base','Un paramètre par défaut','Un import'], b:1, e:`Sans cas de base, les appels ne s'arrêtent jamais.`}
+ ]
+},
+/* ------------------------------------------------------------------ */
+{
+ id:'ch9', titre:'Exceptions et fichiers', court:'Exceptions & fichiers',
+ resume:'Gérer les erreurs avec try / except, lire et écrire des fichiers texte.',
+ objectifs:['Intercepter une erreur avec try / except','Distinguer les principales exceptions','Lever une exception avec raise','Lire et écrire un fichier texte avec with open()'],
+ cours:[
+`<h3>Intercepter une erreur : try / except</h3>
+<p>Lorsqu'une erreur (une <b>exception</b>) survient, le programme s'arrête. Le bloc <code>try</code> permet de l'intercepter : si une instruction du bloc <code>try</code> échoue, Python exécute le bloc <code>except</code> correspondant au lieu de s'arrêter.</p>`,
+{code:R`try:
+    n = int(input("Entier : "))
+    print("Le double est", 2 * n)
+except ValueError:
+    print("Ce n'est pas un entier valide.")`, entree:'abc'},
+`<h3>Plusieurs exceptions, else et finally</h3>
+<p><code>else</code> s'exécute s'il n'y a eu <b>aucune</b> erreur ; <code>finally</code> s'exécute <b>dans tous les cas</b>.</p>`,
+{code:R`try:
+    a = float(input("a = "))
+    b = float(input("b = "))
+    resultat = a / b
+except ValueError:
+    print("Saisie non numérique")
+except ZeroDivisionError:
+    print("Division par zéro impossible")
+else:
+    print("a / b =", resultat)
+finally:
+    print("Fin du calcul")`, entree:'10\n0'},
+`<table class="t"><tr><th>Exception</th><th>Cause typique</th></tr>
+<tr><td><code>ValueError</code></td><td><code>int("abc")</code> : valeur incorrecte</td></tr>
+<tr><td><code>TypeError</code></td><td><code>"a" + 1</code> : types incompatibles</td></tr>
+<tr><td><code>ZeroDivisionError</code></td><td>Division par zéro</td></tr>
+<tr><td><code>IndexError</code></td><td>Indice hors de la liste</td></tr>
+<tr><td><code>KeyError</code></td><td>Clé absente d'un dictionnaire</td></tr>
+<tr><td><code>NameError</code></td><td>Variable non définie (faute de frappe)</td></tr>
+<tr><td><code>FileNotFoundError</code></td><td>Fichier introuvable</td></tr></table>
+<h3>Lever une exception : raise</h3>`,
+{code:R`def retirer(solde, montant):
+    if montant > solde:
+        raise ValueError("Solde insuffisant")
+    return solde - montant
+
+try:
+    print(retirer(500, 200))
+    print(retirer(500, 800))
+except ValueError as e:
+    print("Erreur :", e)`},
+`<h3>Saisie robuste</h3>`,
+{code:R`while True:
+    try:
+        n = int(input("Nombre positif : "))
+        if n > 0:
+            break
+        print("Il doit être positif.")
+    except ValueError:
+        print("Saisie invalide.")
+print("Merci :", n)`, entree:'x\n-3\n7'},
+`<h3>Ecrire et lire un fichier texte</h3>
+<p><code>open(nom, mode)</code> ouvre un fichier : <code>"r"</code> lecture (par défaut), <code>"w"</code> écriture (écrase le contenu), <code>"a"</code> ajout à la fin. Avec <code>with</code>, le fichier est <b>fermé automatiquement</b> à la fin du bloc.</p>
+<div class="astuce">Dans ce logiciel, les fichiers sont créés dans un espace virtuel du navigateur : ils restent disponibles tant que la page est ouverte.</div>`,
+{code:R`with open("etudiants.txt", "w") as f:
+    f.write("Sara;15\n")
+    f.write("Anas;12\n")
+    f.write("Hind;17\n")
+
+with open("etudiants.txt", "r") as f:
+    contenu = f.read()          # tout le fichier dans une chaîne
+print(contenu)`},
+`<p>Lecture <b>ligne par ligne</b> et traitement :</p>`,
+{code:R`with open("etudiants.txt", "w") as f:
+    f.write("Sara;15\nAnas;12\nHind;17\n")
+
+total = 0
+nb = 0
+with open("etudiants.txt") as f:
+    for ligne in f:
+        nom, note = ligne.strip().split(";")
+        total += int(note)
+        nb += 1
+        print(f"{nom:<6} {note}")
+print("Moyenne :", round(total / nb, 2))`},
+`<p>Mode ajout et fichier absent :</p>`,
+{code:R`with open("journal.txt", "a") as f:
+    f.write("Nouvelle exécution\n")
+with open("journal.txt") as f:
+    print(f.readlines())        # liste des lignes ; relancez pour voir l'ajout
+
+try:
+    with open("inexistant.txt") as f:
+        print(f.read())
+except FileNotFoundError:
+    print("Fichier introuvable.")`},
+`<div class="retenir"><b>A retenir</b><ul>
+<li><code>try</code> / <code>except Type:</code> intercepte une erreur précise ; <code>finally</code> s'exécute toujours.</li>
+<li><code>raise</code> signale une erreur dans vos propres fonctions.</li>
+<li>Utilisez toujours <code>with open(...) as f:</code> ; mode <code>"w"</code> = écraser, <code>"a"</code> = ajouter.</li></ul></div>`
+ ],
+ exercices:[
+  {titre:'Saisie robuste', enonce:`Lire des valeurs jusqu'à obtenir un entier valide. Pour chaque saisie invalide, afficher <code>Valeur invalide</code>. Afficher enfin <code>Merci : …</code> suivi de l'entier.`,
+   exemple:'Entrées : abc, 4.5, 42\nSortie :\nValeur invalide\nValeur invalide\nMerci : 42',
+   depart:R`# Ecrivez votre programme ici
+`, indice:`Boucle <code>while True</code> avec <code>try: n = int(input()); break</code> et <code>except ValueError:</code>.`,
+   solution:R`while True:
+    try:
+        n = int(input("Entier : "))
+        break
+    except ValueError:
+        print("Valeur invalide")
+print("Merci :", n)`,
+   tests:[{e:'abc\n4.5\n42',s:'Valeur invalide\nValeur invalide\nMerci : 42'},{e:'7',s:'Merci : 7'}]},
+  {titre:'Division sûre', enonce:`Lire deux nombres a et b et afficher a / b arrondi à 2 décimales. Afficher <code>Division par zéro impossible</code> si b = 0 et <code>Saisie invalide</code> si une saisie n'est pas un nombre.`,
+   exemple:'Entrées : 10 puis 3\nSortie : 3.33',
+   depart:R`# Ecrivez votre programme ici
+`, indice:`Deux blocs <code>except</code> : <code>ValueError</code> et <code>ZeroDivisionError</code>.`,
+   solution:R`try:
+    a = float(input("a = "))
+    b = float(input("b = "))
+    print(round(a / b, 2))
+except ValueError:
+    print("Saisie invalide")
+except ZeroDivisionError:
+    print("Division par zéro impossible")`,
+   tests:[{e:'10\n3',s:'3.33'},{e:'5\n0',s:'Division par zéro impossible'},{e:'abc\n2',s:'Saisie invalide'},{e:'-9\n2',s:'-4.5'}]},
+  {titre:'Fichier de noms', enonce:`Lire un entier <code>n</code> puis <code>n</code> prénoms et les écrire dans le fichier <code>noms.txt</code>, un par ligne. Relire ensuite le fichier et afficher chaque prénom en majuscules, puis <code>Total : …</code>.`,
+   exemple:'Entrées : 3, sara, anas, hind\nSortie :\nSARA\nANAS\nHIND\nTotal : 3',
+   depart:R`n = int(input("Nombre de prénoms : "))
+`, indice:`Ecrivez avec <code>open("noms.txt", "w")</code> et <code>f.write(nom + "\\n")</code> ; relisez avec une boucle sur le fichier et <code>ligne.strip().upper()</code>.`,
+   solution:R`n = int(input("Nombre de prénoms : "))
+with open("noms.txt", "w") as f:
+    for i in range(n):
+        f.write(input("Prénom : ") + "\n")
+total = 0
+with open("noms.txt") as f:
+    for ligne in f:
+        print(ligne.strip().upper())
+        total += 1
+print("Total :", total)`,
+   tests:[{e:'3\nsara\nanas\nhind',s:'SARA\nANAS\nHIND\nTotal : 3'},{e:'1\nomar',s:'OMAR\nTotal : 1'}]}
+ ],
+ quiz:[
+  {q:`Quel bloc s'exécute dans tous les cas, erreur ou non ?`, r:['except','else','finally','try'], b:2, e:`finally sert par exemple à libérer une ressource.`},
+  {q:`Quelle exception provoque <code>int("12a")</code> ?`, r:['TypeError','ValueError','NameError','KeyError'], b:1, e:`Le type est correct (str) mais la valeur ne représente pas un entier.`},
+  {q:`Que fait le mode <code>"w"</code> de open() sur un fichier existant ?`, r:['Ajoute à la fin','Efface le contenu puis écrit','Lit le fichier','Provoque une erreur'], b:1, e:`Pour ajouter à la fin, utilisez "a".`},
+  {q:`Quel est l'avantage de <code>with open(...) as f:</code> ?`, r:['Le fichier est plus rapide','Le fichier est fermé automatiquement','Le fichier est crypté','Aucun'], b:1, e:`La fermeture est garantie, même en cas d'erreur.`}
+ ]
+}
+];
+
+/* ===== AIDE-MEMOIRE ===== */
+const AIDE=[
+ ['Entrées / sorties',[['print(a, b, sep=" ", end="\\n")','Afficher'],['x = input("Message : ")','Lire une chaîne'],['n = int(input())','Lire un entier'],['f"{x:.2f}"','Formater (2 décimales)']]],
+ ['Types et conversions',[['int  float  str  bool','Types de base'],['type(x)','Type d\'une valeur'],['int("12")  float("3.5")  str(7)','Conversions'],['round(x, 2)  abs(x)','Arrondi, valeur absolue']]],
+ ['Opérateurs',[['+  -  *  /','Opérations'],['//  %  **','Quotient, reste, puissance'],['==  !=  <  <=  >  >=','Comparaisons'],['and  or  not','Logique'],['x += 1','Affectation composée']]],
+ ['Conditions',[['if c:\n    ...\nelif c2:\n    ...\nelse:\n    ...','Structure conditionnelle'],['v1 if c else v2','Expression conditionnelle']]],
+ ['Boucles',[['while c:','Tant que'],['for i in range(a, b, pas):','Pour i de a à b-1'],['for x in sequence:','Parcours'],['break  continue','Sortir / tour suivant'],['for i, x in enumerate(L):','Indice et valeur']]],
+ ['Chaînes',[['s[i]  s[a:b]  s[::-1]','Indice, tranche, inverse'],['len(s)  x in s','Longueur, appartenance'],['s.upper()  s.lower()  s.strip()','Casse, espaces'],['s.split()  " ".join(L)','Découper, assembler'],['s.replace(a, b)  s.find(x)  s.count(x)','Remplacer, chercher, compter']]],
+ ['Listes et tuples',[['L = [1, 2, 3]','Création'],['L.append(x)  L.insert(i, x)','Ajouter'],['L.remove(x)  L.pop()','Supprimer'],['sorted(L)  L.sort()','Trier'],['sum(L) min(L) max(L)','Statistiques'],['[x*2 for x in L if x > 0]','Compréhension'],['t = (1, 2)  a, b = t','Tuple, déballage']]],
+ ['Dictionnaires et ensembles',[['d = {"cle": valeur}','Création'],['d[k] = v  del d[k]','Ajouter/modifier, supprimer'],['d.get(k, defaut)','Lire sans erreur'],['for k, v in d.items():','Parcours'],['s = {1, 2}  a | b  a & b  a - b','Ensembles']]],
+ ['Fonctions',[['def f(a, b=0):\n    return a + b','Définition'],['lambda x: x * 2','Fonction anonyme'],['import math  math.sqrt(x)','Module'],['import random  random.randint(1, 6)','Aléatoire']]],
+ ['Exceptions et fichiers',[['try:\n    ...\nexcept ValueError:\n    ...\nfinally:\n    ...','Gestion d\'erreurs'],['raise ValueError("msg")','Lever une erreur'],['with open("f.txt", "w") as f:\n    f.write("texte\\n")','Ecrire'],['with open("f.txt") as f:\n    for ligne in f: ...','Lire ligne par ligne']]]
+];
+
+/* =====================================================================
+   Programmation Python 1 — moteur, éditeur et interface
+   ===================================================================== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const Store={
+  get(k,d){try{const v=localStorage.getItem('py1_'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('py1_'+k,JSON.stringify(v))}catch(e){}}
+};
+
+/* ---------------------------------------------------------------------
+   1. Moteur Python (Pyodide dans un Web Worker, repli sur le fil principal)
+   --------------------------------------------------------------------- */
+const PYO='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+const PREAMBULE=String.raw`
+import sys, io, builtins, traceback
+import sortie
+
+class _Flux:
+    def __init__(self, f):
+        self.f = f
+        self.n = 0
+    def write(self, t):
+        t = str(t)
+        self.n += len(t)
+        if self.n > 200000:
+            raise RuntimeError("Sortie trop longue : votre programme contient peut-être une boucle infinie.")
+        self.f(t)
+        return len(t)
+    def flush(self):
+        pass
+    def isatty(self):
+        return False
+
+_AIDE = {
+ "NameError": "Nom inconnu : variable ou fonction non définie, faute de frappe (majuscules ?) ou variable utilisée avant d'être créée.",
+ "UnboundLocalError": "Variable locale utilisée avant d'avoir reçu une valeur dans la fonction.",
+ "TypeError": "Types incompatibles : par exemple additionner une chaîne et un nombre (pensez à int() ou str()), ou mauvais nombre d'arguments.",
+ "ValueError": "Valeur incorrecte : par exemple int('abc') ou int('4.5'). Vérifiez la saisie et la conversion.",
+ "ZeroDivisionError": "Division par zéro : vérifiez le diviseur avant de diviser.",
+ "IndexError": "Indice hors limites : les indices vont de 0 à len(...) - 1.",
+ "KeyError": "Clé absente du dictionnaire : testez avec « in » ou utilisez .get().",
+ "AttributeError": "Cette méthode ou cet attribut n'existe pas pour ce type de valeur.",
+ "RecursionError": "Trop d'appels récursifs : vérifiez le cas de base de votre fonction.",
+ "FileNotFoundError": "Fichier introuvable : vérifiez le nom ou créez le fichier d'abord.",
+ "EOFError": "Le programme demande plus de valeurs que la zone « Entrées » n'en contient : ajoutez une valeur par ligne.",
+ "IndentationError": "Problème d'indentation : les lignes d'un même bloc doivent avoir le même décalage (4 espaces), et un bloc est attendu après « : ».",
+ "TabError": "Mélange de tabulations et d'espaces dans l'indentation.",
+ "SyntaxError": "Erreur de syntaxe : vérifiez les « : », les parenthèses et guillemets fermés, et l'orthographe des mots-clés.",
+ "ModuleNotFoundError": "Module introuvable : vérifiez son nom.",
+}
+
+def _aide(e):
+    for c in type(e).__mro__:
+        if c.__name__ in _AIDE:
+            return _AIDE[c.__name__]
+    return ""
+
+def _executer(code, entree, echo):
+    out = _Flux(sortie.ecrire)
+    err = _Flux(sortie.erreur)
+    lignes = io.StringIO(entree)
+    def _input(invite=""):
+        if echo and invite:
+            out.write(str(invite))
+        l = lignes.readline()
+        if l == "":
+            if echo:
+                out.write("\n")
+            raise EOFError("plus aucune valeur dans la zone Entrées")
+        l = l.rstrip("\r\n")
+        if echo:
+            out.write(l + "\n")
+        return l
+    anciens = (sys.stdout, sys.stderr, builtins.input)
+    sys.stdout, sys.stderr, builtins.input = out, err, _input
+    src = code.split("\n")
+    ns = {"__name__": "__main__"}
+    try:
+        exec(compile(code, "<programme>", "exec"), ns)
+    except SystemExit:
+        pass
+    except SyntaxError as e:
+        nom = type(e).__name__
+        err.write(f"{nom} (ligne {e.lineno}) : {e.msg}\n")
+        if e.text:
+            t = e.text.rstrip("\n")
+            err.write("    " + t + "\n")
+            if e.offset and e.offset > 0:
+                err.write("    " + " " * (e.offset - 1) + "^\n")
+        err.write("Conseil : " + _aide(e) + "\n")
+    except BaseException as e:
+        cadres = [f for f in traceback.extract_tb(e.__traceback__) if f.filename == "<programme>"]
+        if cadres:
+            err.write("Traceback (appel le plus récent en dernier) :\n")
+            for f in cadres:
+                lieu = "" if f.name == "<module>" else f", dans la fonction {f.name}"
+                err.write(f"  Ligne {f.lineno}{lieu}\n")
+                if 0 < f.lineno <= len(src):
+                    err.write("    " + src[f.lineno - 1].strip() + "\n")
+        err.write(f"{type(e).__name__} : {e}\n")
+        a = _aide(e)
+        if a:
+            err.write("Conseil : " + a + "\n")
+    finally:
+        sys.stdout, sys.stderr, builtins.input = anciens
+`;
+
+const Py={
+  etat:'chargement', version:'', mode:'worker', w:null, file:[], cour:null, seq:0, py:null,
+  surEtat:[],
+  notifier(){this.surEtat.forEach(f=>f(this.etat))},
+  init(){
+    this.etat='chargement';this.notifier();
+    const src=`importScripts(${JSON.stringify(PYO+'pyodide.js')});
+let cur=0;
+const pret=(async()=>{
+  const py=await loadPyodide({indexURL:${JSON.stringify(PYO)}});
+  py.registerJsModule('sortie',{ecrire:s=>postMessage({t:'out',id:cur,s}),erreur:s=>postMessage({t:'err',id:cur,s})});
+  py.runPython(${JSON.stringify(PREAMBULE)});
+  postMessage({t:'pret',v:py.runPython('import sys; sys.version.split()[0]')});
+  return py;
+})();
+pret.catch(e=>postMessage({t:'echec',m:String(e)}));
+onmessage=async e=>{const py=await pret;const d=e.data;cur=d.id;
+  try{const f=py.globals.get('_executer');f(d.code,d.entree,d.echo);f.destroy();}
+  catch(x){postMessage({t:'err',id:cur,s:'Erreur interne : '+String(x)+'\\n'})}
+  postMessage({t:'fin',id:cur});};`;
+    let w;
+    try{w=new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));}
+    catch(e){return this.repli();}
+    this.w=w;
+    const garde=setTimeout(()=>{if(this.etat==='chargement'&&this.w===w){w.terminate();this.repli()}},60000);
+    w.onmessage=e=>{const d=e.data;
+      if(d.t==='pret'){clearTimeout(garde);this.version=d.v;this.etat='pret';this.notifier();this.suivant();return}
+      if(d.t==='echec'){clearTimeout(garde);w.terminate();this.repli();return}
+      const c=this.cour;if(!c||c.id!==d.id)return;
+      if(d.t==='out')c.out(d.s);else if(d.t==='err')c.err(d.s);
+      else if(d.t==='fin')this.terminer({ok:true});
+    };
+    w.onerror=ev=>{ev.preventDefault();clearTimeout(garde);if(this.etat==='chargement'){w.terminate();this.repli()}};
+  },
+  async repli(){ /* exécution sur le fil principal (sans bouton Arrêter) */
+    this.mode='principal';this.w=null;
+    try{
+      if(!window.loadPyodide){await new Promise((ok,ko)=>{const s=document.createElement('script');s.src=PYO+'pyodide.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+      const py=await loadPyodide({indexURL:PYO});
+      py.registerJsModule('sortie',{ecrire:s=>this.cour&&this.cour.out(s),erreur:s=>this.cour&&this.cour.err(s)});
+      py.runPython(PREAMBULE);
+      this.py=py;this.version=py.runPython('import sys; sys.version.split()[0]');
+      this.etat='pret';this.notifier();this.suivant();
+    }catch(e){this.etat='echec';this.notifier();
+      this.file.forEach(t=>{t.err('Impossible de charger Python : vérifiez votre connexion Internet puis rechargez la page.\n');t.fin({ok:false})});this.file=[];}
+  },
+  executer(code,entree,{echo=true,out=()=>{},err=()=>{},delai=0}={}){
+    return new Promise(fin=>{this.file.push({id:++this.seq,code,entree,echo,out,err,fin,delai});this.suivant()});
+  },
+  suivant(){
+    if(this.cour||this.etat!=='pret'||!this.file.length)return;
+    const t=this.cour=this.file.shift();this.etat='execution';this.notifier();
+    if(t.delai&&this.mode==='worker')t.minuteur=setTimeout(()=>{this.arreter(true)},t.delai);
+    if(this.mode==='worker')this.w.postMessage({id:t.id,code:t.code,entree:t.entree,echo:t.echo});
+    else setTimeout(()=>{try{const f=this.py.globals.get('_executer');f(t.code,t.entree,t.echo);f.destroy()}catch(x){t.err(String(x)+'\n')}this.terminer({ok:true})},20);
+  },
+  terminer(r){const t=this.cour;if(!t)return;clearTimeout(t.minuteur);this.cour=null;this.etat='pret';this.notifier();t.fin(r);this.suivant()},
+  arreter(delai){
+    if(this.mode!=='worker'||!this.cour)return;
+    const t=this.cour;clearTimeout(t.minuteur);this.cour=null;
+    this.w.terminate();
+    t.err(delai?'\n■ Temps limite dépassé : le programme a été arrêté (boucle infinie ?).\n':'\n■ Programme arrêté.\n');
+    t.fin({ok:false,arret:true});
+    this.init();
+  }
+};
+
+/* ---------------------------------------------------------------------
+   2. Editeur de code avec coloration syntaxique
+   --------------------------------------------------------------------- */
+const KW=new Set('False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield'.split(' '));
+const BI=new Set('print input int float str bool len range list dict set tuple type abs min max sum round sorted reversed enumerate zip map filter open isinstance ord chr any all divmod pow format help'.split(' '));
+function colorer(code){
+  const re=/(#[^\n]*)|((?:\b[rRbBfFuU]{1,2})?(?:"""[\s\S]*?(?:"""|$)|'''[\s\S]*?(?:'''|$)|"(?:\\.|[^"\\\n])*"?|'(?:\\.|[^'\\\n])*'?))|(\b\d+(?:\.\d*)?(?:[eE][+-]?\d+)?\b)|([A-Za-z_À-ÿ][\wÀ-ÿ]*)/g;
+  let h='',d=0,m,prec='';
+  while((m=re.exec(code))){
+    h+=esc(code.slice(d,m.index));d=re.lastIndex;
+    const t=esc(m[0]);
+    if(m[1])h+=`<span class="tk-c">${t}</span>`;
+    else if(m[2])h+=`<span class="tk-s">${t}</span>`;
+    else if(m[3])h+=`<span class="tk-n">${t}</span>`;
+    else if(KW.has(m[4]))h+=`<span class="tk-k">${t}</span>`;
+    else if(prec==='def'||prec==='class')h+=`<span class="tk-f">${t}</span>`;
+    else if(BI.has(m[4]))h+=`<span class="tk-b">${t}</span>`;
+    else h+=t;
+    if(m[4])prec=m[4];else if(!m[1])prec='';
+  }
+  return h+esc(code.slice(d))+'\n';
+}
+function Editeur(parent,{code='',auto=false,surExec=null}={}){
+  parent.classList.add('ed');
+  parent.innerHTML=`<div class="ed-gut" aria-hidden="true"></div><div class="ed-zone"><pre class="ed-hl" aria-hidden="true"></pre><textarea spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Code Python"></textarea></div>`;
+  const ta=parent.querySelector('textarea'),hl=parent.querySelector('.ed-hl'),gut=parent.querySelector('.ed-gut');
+  const maj=()=>{
+    hl.innerHTML=colorer(ta.value);
+    const n=ta.value.split('\n').length;
+    gut.innerHTML=Array.from({length:n},(_,i)=>i+1).join('<br>');
+    if(auto){parent.style.height=Math.min(Math.max(n,3)*21+22,560)+'px'}
+    sync();
+  };
+  const sync=()=>{hl.scrollTop=ta.scrollTop;hl.scrollLeft=ta.scrollLeft;gut.scrollTop=ta.scrollTop};
+  const inserer=t=>{ta.focus();if(!document.execCommand||!document.execCommand('insertText',false,t)){ta.setRangeText(t,ta.selectionStart,ta.selectionEnd,'end')}maj()};
+  ta.addEventListener('input',maj);ta.addEventListener('scroll',sync);
+  ta.addEventListener('keydown',e=>{
+    const v=ta.value,a=ta.selectionStart,b=ta.selectionEnd;
+    if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();surExec&&surExec();return}
+    if(e.key==='Tab'){
+      e.preventDefault();
+      const deb=v.lastIndexOf('\n',a-1)+1;
+      if(!e.shiftKey&&a===b){inserer('    ');return}
+      const finL=v.indexOf('\n',b-(b>a&&v[b-1]==='\n'?1:0));const fin=finL<0?v.length:finL;
+      const bloc=v.slice(deb,fin).split('\n');
+      const nouv=bloc.map(l=>e.shiftKey?l.replace(/^ {1,4}/,''):'    '+l).join('\n');
+      ta.setSelectionRange(deb,fin);inserer(nouv);ta.setSelectionRange(deb,deb+nouv.length);return;
+    }
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();
+      const deb=v.lastIndexOf('\n',a-1)+1,ligne=v.slice(deb,a);
+      let ind=ligne.match(/^\s*/)[0];
+      const sansCom=ligne.replace(/#.*$/,'').trimEnd();
+      if(sansCom.endsWith(':'))ind+='    ';
+      else if(/^\s*(return|break|continue|pass|raise)\b/.test(ligne))ind=ind.slice(0,Math.max(0,ind.length-4));
+      inserer('\n'+ind);return;
+    }
+    if(e.key==='Backspace'&&a===b){
+      const deb=v.lastIndexOf('\n',a-1)+1,avant=v.slice(deb,a);
+      if(avant.length&&/^ +$/.test(avant)){e.preventDefault();const k=avant.length%4||4;ta.setSelectionRange(a-k,a);inserer('');}
+    }
+    if((e.ctrlKey||e.metaKey)&&e.key==='/'){
+      e.preventDefault();
+      const deb=v.lastIndexOf('\n',a-1)+1;const finL=v.indexOf('\n',b);const fin=finL<0?v.length:finL;
+      const bloc=v.slice(deb,fin).split('\n');const tous=bloc.every(l=>/^\s*#/.test(l)||!l.trim());
+      const nouv=bloc.map(l=>tous?l.replace(/^(\s*)# ?/,'$1'):(l.trim()?l.replace(/^(\s*)/,'$1# '):l)).join('\n');
+      ta.setSelectionRange(deb,fin);inserer(nouv);
+    }
+  });
+  ta.value=code;maj();
+  return {get:()=>ta.value,set:c=>{ta.value=c;maj()},focus:()=>ta.focus(),ta};
+}
+
+/* ---------------------------------------------------------------------
+   3. Console : exécution avec affichage de la sortie
+   --------------------------------------------------------------------- */
+function lancer(code,entree,cons,boutons){
+  cons.innerHTML='';cons.classList.add('actif');
+  const ajout=(s,cl)=>{let d=cons.lastElementChild;if(!d||d.className!==cl){d=document.createElement('span');d.className=cl;cons.appendChild(d)}
+    if(d.textContent.length<100000)d.textContent+=s;cons.scrollTop=cons.scrollHeight};
+  if(Py.etat==='chargement')ajout('Chargement de Python en cours… votre programme démarrera automatiquement.\n','c-info');
+  if(Py.etat==='echec'){ajout('Python n\'a pas pu être chargé : vérifiez la connexion Internet puis rechargez la page.\n','c-err');return Promise.resolve()}
+  boutons&&boutons.forEach(b=>b.disabled=true);
+  const t0=performance.now();let premier=true;
+  return Py.executer(code,entree,{echo:true,out:s=>{if(premier){cons.innerHTML='';premier=false}ajout(s,'c-out')},err:s=>{if(premier){cons.innerHTML='';premier=false}ajout(s,'c-err')}})
+    .then(r=>{if(premier)cons.innerHTML='';const ms=Math.round(performance.now()-t0);
+      if(!cons.textContent.trim())ajout('(aucun affichage)\n','c-info');
+      ajout(`\n— Terminé${r&&r.arret?' (interrompu)':''} —`,'c-fin');
+      boutons&&boutons.forEach(b=>b.disabled=false);});
+}
+
+/* ---------------------------------------------------------------------
+   4. Navigation et pages
+   --------------------------------------------------------------------- */
+const prog=Store.get('progres',{quiz:{},ex:{}});
+const sauver=()=>Store.set('progres',prog);
+const exReussis=c=>c.exercices.filter((e,i)=>prog.ex[c.id+'.'+i]).length;
+const chapFini=c=>(prog.quiz[c.id]||0)>=60&&exReussis(c)>=2;
+
+function nav(){
+  const v=location.hash.slice(1)||'accueil';
+  let h=`<a href="#accueil" class="${v==='accueil'?'on':''}"><span class="num">⌂</span>Accueil</a>
+  <a href="#mon-programme" class="${v==='mon-programme'?'on':''}"><span class="num">▶</span>Mon programme</a>
+  <div class="nav-t">Chapitres</div>`;
+  CHAPITRES.forEach((c,i)=>{const f=chapFini(c);h+=`<a href="#${c.id}" class="${v===c.id?'on':''} ${f?'ok':''}"><span class="num">${f?'✓':i+1}</span>${c.court}</a>`});
+  h+=`<div class="nav-t">Ressources</div><a href="#aide-memoire" class="${v==='aide-memoire'?'on':''}"><span class="num">≡</span>Aide-mémoire</a>`;
+  $('#nav').innerHTML=h;
+}
+function route(){
+  const v=location.hash.slice(1)||'accueil';
+  nav();$('#side').classList.remove('ouvert');
+  const c=CHAPITRES.find(x=>x.id===v);
+  if(c)pageChapitre(c);
+  else if(v==='mon-programme')pageProgramme();
+  else if(v==='aide-memoire')pageAide();
+  else pageAccueil();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+
+function pageAccueil(){
+  const fin=CHAPITRES.filter(chapFini).length,tot=CHAPITRES.reduce((s,c)=>s+c.exercices.length,0),
+        exr=Object.values(prog.ex).filter(Boolean).length,pct=Math.round(fin/CHAPITRES.length*100);
+  $('#main').innerHTML=`
+  <div class="hero"><div><span class="pill">Tronc Commun Informatique Appliquée – S1 – Licence Digitalisation</span>
+  <h1>Programmation Python 1</h1>
+  <p>Apprenez Python pas à pas : lisez le cours, modifiez et exécutez les exemples, puis écrivez vos propres programmes. Python s'exécute directement dans votre navigateur, sans aucune installation.</p>
+  <div class="barre"><a class="btn" href="#ch1">Commencer le cours →</a><a class="btn sec" href="#mon-programme">▶ Ecrire mon programme</a></div></div>
+  <pre class="hero-code">${colorer('def bienvenue(nom):\n    return f"Bienvenue {nom} !"\n\nfor etudiant in ["Sara", "Anas"]:\n    print(bienvenue(etudiant))')}</pre></div>
+  <div class="stats"><div><b>${fin}/${CHAPITRES.length}</b><span>chapitres validés</span></div><div><b>${exr}/${tot}</b><span>exercices réussis</span></div><div style="flex:2"><span>Progression globale</span><div class="prog"><i style="width:${pct}%"></i></div></div></div>
+  <h2>Chapitres</h2>
+  <div class="grille">${CHAPITRES.map((c,i)=>{const q=prog.quiz[c.id];return `<a class="mod" href="#${c.id}"><span class="nm">Chapitre ${i+1}</span><b>${c.titre}</b><small>${c.resume}</small>
+   <span class="mod-pied"><span class="badge ${exReussis(c)===c.exercices.length?'vert':''}">Exercices ${exReussis(c)}/${c.exercices.length}</span>${q!==undefined?`<span class="badge ${q>=60?'vert':'ambre'}">Quiz ${q} %</span>`:''}</span></a>`}).join('')}</div>
+  <h2>Comment ça marche ?</h2>
+  <div class="trois"><div class="carte"><b>1. Cours</b><p>Chaque notion est illustrée par des exemples exécutables. Modifiez-les et observez le résultat.</p></div>
+  <div class="carte"><b>2. Exercices</b><p>Ecrivez votre solution puis cliquez sur <b>Vérifier</b> : le logiciel la teste automatiquement sur plusieurs cas.</p></div>
+  <div class="carte"><b>3. Quiz</b><p>Un chapitre est validé avec au moins 2 exercices réussis et 60 % au quiz.</p></div></div>`;
+}
+
+function pageChapitre(c){
+  const i=CHAPITRES.indexOf(c),prec=CHAPITRES[i-1],suiv=CHAPITRES[i+1];
+  $('#main').innerHTML=`<span class="pill">Chapitre ${i+1} / ${CHAPITRES.length}</span>
+  <h1>${c.titre}</h1>
+  <div class="onglets" id="ong"><button data-o="cours" class="on">Cours</button><button data-o="exercices">Exercices <span class="badge">${exReussis(c)}/${c.exercices.length}</span></button><button data-o="quiz">Quiz</button></div>
+  <div id="o-cours"><div class="objectifs"><b>Objectifs du chapitre</b><ul>${c.objectifs.map(o=>`<li>${o}</li>`).join('')}</ul></div><div id="cours"></div>
+  <div class="barre" style="margin-top:22px"><button class="btn" data-aller="exercices">Passer aux exercices →</button></div></div>
+  <div id="o-exercices" hidden></div><div id="o-quiz" hidden></div>
+  <div class="pied-nav">${prec?`<a class="btn sec" href="#${prec.id}">← ${prec.court}</a>`:'<span></span>'}${suiv?`<a class="btn sec" href="#${suiv.id}">${suiv.court} →</a>`:`<a class="btn sec" href="#mon-programme">Mon programme →</a>`}</div>`;
+  const cours=$('#cours');
+  c.cours.forEach(b=>{if(typeof b==='string'){const d=document.createElement('div');d.innerHTML=b;cours.appendChild(d)}else cours.appendChild(blocExemple(b))});
+  const montrer=o=>{document.querySelectorAll('#ong button').forEach(b=>b.classList.toggle('on',b.dataset.o===o));
+    ['cours','exercices','quiz'].forEach(x=>$('#o-'+x).hidden=x!==o);
+    if(o==='exercices'&&!$('#o-exercices').dataset.ok){pageExercices(c,$('#o-exercices'));$('#o-exercices').dataset.ok=1}
+    if(o==='quiz'&&!$('#o-quiz').dataset.ok){quiz(c,$('#o-quiz'));$('#o-quiz').dataset.ok=1}};
+  document.querySelectorAll('#ong button').forEach(b=>b.onclick=()=>montrer(b.dataset.o));
+  document.querySelectorAll('[data-aller]').forEach(b=>b.onclick=()=>{montrer(b.dataset.aller);window.scrollTo(0,0)});
+}
+
+function blocExemple(ex){
+  const d=document.createElement('div');d.className='exemple';
+  d.innerHTML=`<div class="ex-ed"></div>
+  ${ex.entree!==undefined?`<div class="entrees"><label>Entrées <small>(une valeur par ligne)</small></label><textarea class="mono" rows="${Math.min(ex.entree.split('\n').length,4)}">${esc(ex.entree)}</textarea></div>`:''}
+  <div class="ex-barre"><button class="btn petit run">▶ Exécuter</button><button class="btn sec petit stop" hidden>■ Arrêter</button><button class="btn sec petit raz" title="Restaurer l'exemple">↺</button><button class="btn sec petit ouvrir" title="Ouvrir dans Mon programme">Ouvrir dans Mon programme ↗</button><span class="kbd-aide"><kbd>Ctrl</kbd>+<kbd>Entrée</kbd></span></div>
+  <pre class="console" hidden></pre>`;
+  const ed=Editeur(d.querySelector('.ex-ed'),{code:ex.code,auto:true,surExec:()=>run()});
+  const cons=d.querySelector('.console'),btn=d.querySelector('.run'),stop=d.querySelector('.stop');
+  const entree=()=>{const t=d.querySelector('.entrees textarea');return t?t.value:''};
+  const run=()=>{if(btn.disabled)return;cons.hidden=false;stop.hidden=Py.mode!=='worker';lancer(ed.get(),entree(),cons,[btn]).then(()=>stop.hidden=true)};
+  btn.onclick=run;stop.onclick=()=>Py.arreter();
+  d.querySelector('.raz').onclick=()=>{ed.set(ex.code);cons.hidden=true};
+  d.querySelector('.ouvrir').onclick=()=>{Store.set('brouillon',{code:ed.get(),entree:entree(),nom:''});location.hash='mon-programme'};
+  return d;
+}
+
+function normaliser(s){return s.replace(/\r/g,'').split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/^\n+|\n+$/g,'')}
+
+function pageExercices(c,el){
+  el.innerHTML=`<div class="astuce">Pour chaque exercice : écrivez votre programme, testez-le avec <b>Exécuter</b>, puis cliquez sur <b>Vérifier</b>. Le logiciel l'exécute sur plusieurs jeux d'entrées et compare l'affichage obtenu à l'affichage attendu. Les messages de <code>input()</code> ne sont pas pris en compte lors de la vérification.</div>`;
+  c.exercices.forEach((x,k)=>{
+    const cle=c.id+'.'+k,sauve=Store.get('ex_'+cle,null);
+    const d=document.createElement('div');d.className='exo';
+    d.innerHTML=`<div class="exo-tete"><span class="exo-num">${k+1}</span><b>${x.titre}</b><span class="etat badge ${prog.ex[cle]?'vert':''}">${prog.ex[cle]?'✓ Réussi':'A faire'}</span></div>
+    <p>${x.enonce}</p><pre class="exemple-io">${esc(x.exemple)}</pre>
+    <div class="ex-ed"></div>
+    <div class="entrees"><label>Entrées pour « Exécuter » <small>(une valeur par ligne)</small></label><textarea class="mono" rows="2">${esc(x.tests[0].e)}</textarea></div>
+    <div class="ex-barre"><button class="btn petit run">▶ Exécuter</button><button class="btn sec petit stop" hidden>■ Arrêter</button><button class="btn petit verif">✔ Vérifier</button>
+    <button class="btn sec petit ind">💡 Indice</button><button class="btn sec petit sol">Solution</button><button class="btn sec petit raz" title="Revenir au code de départ">↺</button></div>
+    <div class="indice" hidden>${x.indice}</div>
+    <pre class="console" hidden></pre><div class="resultat"></div>
+    <div class="solution" hidden><div class="barre"><b>Solution proposée</b><button class="btn sec petit charger">Charger dans l'éditeur</button></div><pre class="code-lu">${colorer(x.solution)}</pre></div>`;
+    el.appendChild(d);
+    const ed=Editeur(d.querySelector('.ex-ed'),{code:sauve!==null?sauve:x.depart,auto:true,surExec:()=>run()});
+    ed.ta.addEventListener('input',()=>Store.set('ex_'+cle,ed.get()));
+    const cons=d.querySelector('.console'),btns=[d.querySelector('.run'),d.querySelector('.verif')],stop=d.querySelector('.stop');
+    const run=()=>{if(btns[0].disabled)return;cons.hidden=false;stop.hidden=Py.mode!=='worker';lancer(ed.get(),d.querySelector('.entrees textarea').value,cons,btns).then(()=>stop.hidden=true)};
+    btns[0].onclick=run;stop.onclick=()=>Py.arreter();
+    d.querySelector('.ind').onclick=()=>{const i=d.querySelector('.indice');i.hidden=!i.hidden};
+    d.querySelector('.sol').onclick=()=>{const s=d.querySelector('.solution');if(s.hidden&&!prog.ex[cle]){d.querySelector('.resultat').innerHTML='<div class="retour info">Essayez d\'abord par vous-même ! Cliquez à nouveau sur « Solution » pour l\'afficher.</div>';if(!d.dataset.avert){d.dataset.avert=1;return}}s.hidden=!s.hidden};
+    d.querySelector('.charger').onclick=()=>{ed.set(x.solution);Store.set('ex_'+cle,x.solution)};
+    d.querySelector('.raz').onclick=()=>{ed.set(x.depart);Store.set('ex_'+cle,x.depart)};
+    d.querySelector('.verif').onclick=async()=>{
+      const res=d.querySelector('.resultat');btns.forEach(b=>b.disabled=true);
+      res.innerHTML=`<div class="retour info">${Py.etat==='chargement'?'Chargement de Python… ':''}Vérification en cours…</div>`;
+      const lignes=[];let ok=0;
+      for(const t of x.tests){
+        let out='',err='';
+        const r=await Py.executer(ed.get(),t.e,{echo:false,out:s=>out+=s,err:s=>err+=s,delai:6000});
+        const bon=!err&&normaliser(out)===normaliser(t.s);if(bon)ok++;
+        lignes.push({t,out:err?(out+err):out,bon,arret:r&&r.arret});
+        if(r&&r.arret)break;
+      }
+      btns.forEach(b=>b.disabled=false);
+      const tous=ok===x.tests.length;
+      if(tous){prog.ex[cle]=true;sauver();nav();d.querySelector('.etat').className='etat badge vert';d.querySelector('.etat').textContent='✓ Réussi';
+        const bt=document.querySelector('#ong [data-o="exercices"] .badge');if(bt)bt.textContent=`${exReussis(c)}/${c.exercices.length}`}
+      res.innerHTML=`<div class="retour ${tous?'ok':'ko'}"><b>${tous?'Bravo ! Tous les tests sont réussis.':`${ok} test(s) réussi(s) sur ${x.tests.length}.`}</b>${tous?'':' Comparez l\'affichage obtenu à l\'affichage attendu (espaces et majuscules comptent).'}</div>
+      <table class="t tests"><tr><th>Test</th><th>Entrées</th><th>Attendu</th><th>Obtenu</th><th></th></tr>${lignes.map((l,j)=>`<tr class="${l.bon?'bon':'faux'}"><td>${j+1}</td><td><pre>${esc(l.t.e)}</pre></td><td><pre>${esc(l.t.s)}</pre></td><td><pre>${esc(l.out.replace(/\n+$/,''))||'<i>(rien)</i>'}</pre></td><td>${l.bon?'✓':'✗'}</td></tr>`).join('')}${lignes.length<x.tests.length?`<tr><td colspan="5"><i>Tests suivants non exécutés : corrigez d'abord la boucle infinie.</i></td></tr>`:''}</table>`;
+    };
+  });
+}
+
+function quiz(c,el){
+  el.innerHTML=c.quiz.map((q,i)=>`<div class="q" data-i="${i}"><p>${i+1}. ${q.q}</p>${q.r.map((r,j)=>`<label><input type="radio" name="q${i}" value="${j}"> <span>${esc(r)}</span></label>`).join('')}<div class="expl">${esc(q.e)}</div></div>`).join('')+
+  `<div class="barre"><button class="btn" id="valider">Valider mes réponses</button><button class="btn sec" id="refaire" hidden>Recommencer</button></div><div id="res"></div>`;
+  el.querySelector('#valider').onclick=()=>{
+    let bon=0;
+    c.quiz.forEach((q,i)=>{const b=el.querySelector(`.q[data-i="${i}"]`);b.classList.add('corrige');const ch=b.querySelector('input:checked');
+      b.querySelectorAll('label').forEach((l,j)=>{l.classList.toggle('bon',j===q.b);if(ch&&+ch.value===j&&j!==q.b)l.classList.add('faux')});
+      if(ch&&+ch.value===q.b)bon++;b.querySelectorAll('input').forEach(x=>x.disabled=true)});
+    const s=Math.round(bon/c.quiz.length*100);prog.quiz[c.id]=Math.max(s,prog.quiz[c.id]||0);sauver();nav();
+    el.querySelector('#res').innerHTML=`<div class="retour ${s>=60?'ok':'ko'}"><b>Score : ${bon}/${c.quiz.length} (${s} %)</b> — ${s>=60?'Quiz réussi !':'Relisez le cours et réessayez.'}</div>`;
+    el.querySelector('#valider').hidden=true;el.querySelector('#refaire').hidden=false;
+  };
+  el.querySelector('#refaire').onclick=()=>quiz(c,el);
+}
+
+function pageProgramme(){
+  const b=Store.get('brouillon',{code:'# Mon premier programme\nnom = input("Votre nom : ")\nprint("Bonjour", nom, "!")\n\nfor i in range(1, 4):\n    print(i, "x", i, "=", i * i)\n',entree:'Sara',nom:''});
+  const progs=Store.get('programmes',{});
+  const exemples=[];CHAPITRES.forEach((c,ci)=>c.cours.forEach(x=>{if(typeof x==='object')exemples.push({g:`Chapitre ${ci+1} – ${c.court}`,code:x.code,entree:x.entree||'',titre:(x.code.split('\n').find(l=>l.trim())||'').slice(0,48)})}));
+  $('#main').innerHTML=`<h1>Mon programme</h1><p class="sous">Ecrivez, exécutez et enregistrez vos propres programmes Python.</p>
+  <div class="ide">
+   <div class="ide-barre">
+     <input type="text" id="nomp" placeholder="nom_du_programme.py" value="${esc(b.nom||'')}">
+     <button class="btn petit" id="run">▶ Exécuter</button><button class="btn sec petit" id="stop" hidden>■ Arrêter</button>
+     <span class="sep"></span>
+     <button class="btn sec petit" id="nouv">Nouveau</button><button class="btn sec petit" id="enr">Enregistrer</button>
+     <select id="ouvrir"><option value="">Ouvrir…</option>${Object.keys(progs).sort().map(n=>`<option>${esc(n)}</option>`).join('')}</select>
+     <select id="exs"><option value="">Charger un exemple du cours…</option>${[...new Set(exemples.map(e=>e.g))].map(g=>`<optgroup label="${esc(g)}">${exemples.map((e,i)=>e.g===g?`<option value="${i}">${esc(e.titre)}</option>`:'').join('')}</optgroup>`).join('')}</select>
+     <span class="sep"></span>
+     <button class="btn sec petit" id="cop">Copier le code</button><label class="btn sec petit fichier">Importer .py<input type="file" id="imp" accept=".py,.txt" hidden></label>
+   </div>
+   <div class="ide-corps"><div id="edp"></div>
+    <div class="ide-droite"><label>Entrées <small>(une valeur par ligne, lues par input())</small></label><textarea id="ent" class="mono" rows="4">${esc(b.entree||'')}</textarea>
+    <div class="cons-tete"><label>Console</label><button class="lien" id="eff">Effacer</button></div><pre class="console grande" id="cons">Cliquez sur ▶ Exécuter ou appuyez sur Ctrl+Entrée.</pre></div></div>
+  </div><div id="msg"></div>
+  <div class="carte"><b>Raccourcis de l'éditeur</b> : <kbd>Ctrl</kbd>+<kbd>Entrée</kbd> exécuter · <kbd>Tab</kbd> / <kbd>Maj</kbd>+<kbd>Tab</kbd> indenter / désindenter (aussi sur plusieurs lignes) · <kbd>Entrée</kbd> après « : » indente automatiquement · <kbd>Ctrl</kbd>+<kbd>/</kbd> commenter / décommenter.
+  <br>Vos programmes sont enregistrés dans ce navigateur, sur cet ordinateur. Pour les conserver ailleurs, utilisez « Copier le code ».</div>`;
+  const ed=Editeur($('#edp'),{code:b.code,surExec:()=>run()});
+  const garder=()=>Store.set('brouillon',{code:ed.get(),entree:$('#ent').value,nom:$('#nomp').value});
+  ed.ta.addEventListener('input',garder);$('#ent').oninput=garder;$('#nomp').oninput=garder;
+  const msg=(t,cl='info')=>{$('#msg').innerHTML=`<div class="retour ${cl}">${t}</div>`;setTimeout(()=>$('#msg').innerHTML='',4000)};
+  const run=()=>{if($('#run').disabled)return;$('#stop').hidden=Py.mode!=='worker';
+    if(/\binput\s*\(/.test(ed.get())&&!$('#ent').value.trim())msg('Votre programme utilise input() : écrivez les valeurs à saisir dans la zone « Entrées », une par ligne.');
+    lancer(ed.get(),$('#ent').value,$('#cons'),[$('#run')]).then(()=>$('#stop').hidden=true)};
+  $('#run').onclick=run;$('#stop').onclick=()=>Py.arreter();
+  $('#eff').onclick=()=>{$('#cons').textContent=''};
+  $('#nouv').onclick=()=>{ed.set('');$('#ent').value='';$('#nomp').value='';garder();ed.focus()};
+  $('#enr').onclick=()=>{let n=$('#nomp').value.trim();if(!n){msg('Donnez un nom au programme (zone en haut à gauche).','ko');$('#nomp').focus();return}
+    if(!/\.py$/.test(n)){n+='.py';$('#nomp').value=n}
+    const p=Store.get('programmes',{});p[n]={code:ed.get(),entree:$('#ent').value};Store.set('programmes',p);garder();
+    if(![...$('#ouvrir').options].some(o=>o.value===n))$('#ouvrir').insertAdjacentHTML('beforeend',`<option>${esc(n)}</option>`);msg(`Programme « ${esc(n)} » enregistré.`,'ok')};
+  $('#ouvrir').onchange=e=>{const n=e.target.value;if(!n)return;const p=Store.get('programmes',{})[n];if(p){ed.set(p.code);$('#ent').value=p.entree||'';$('#nomp').value=n;garder()}e.target.value=''};
+  $('#exs').onchange=e=>{const x=exemples[+e.target.value];if(x){ed.set(x.code);$('#ent').value=x.entree;$('#nomp').value='';garder()}e.target.value=''};
+  $('#cop').onclick=async()=>{try{await navigator.clipboard.writeText(ed.get());msg('Code copié dans le presse-papiers.','ok')}catch(e){ed.ta.select();msg('Copie automatique refusée : le code est sélectionné, appuyez sur Ctrl+C.')}};
+  $('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{ed.set(t);$('#nomp').value=f.name;garder();msg(`Fichier « ${esc(f.name)} » importé.`,'ok')});e.target.value=''};
+}
+
+function pageAide(){
+  $('#main').innerHTML=`<h1>Aide-mémoire Python</h1><p class="sous">L'essentiel du semestre sur une page. Cliquez sur un code pour l'ouvrir dans Mon programme.</p>
+  <div class="aide">${AIDE.map(([t,l])=>`<div class="carte"><b>${t}</b><table class="t">${l.map(([c,d])=>`<tr><td><pre class="code-lu mini" data-c="${esc(c)}">${colorer(c)}</pre></td><td>${esc(d)}</td></tr>`).join('')}</table></div>`).join('')}</div>`;
+  document.querySelectorAll('[data-c]').forEach(p=>p.onclick=()=>{Store.set('brouillon',{code:p.dataset.c+'\n',entree:'',nom:''});location.hash='mon-programme'});
+}
+
+/* ---------------------------------------------------------------------
+   5. Démarrage
+   --------------------------------------------------------------------- */
+Py.surEtat.push(e=>{const s=$('#etat');if(!s)return;
+  s.className='etat-py '+e;
+  s.innerHTML={chargement:'<i></i>Chargement de Python…',pret:`<i></i>Python ${Py.version} prêt`,execution:'<i></i>Exécution…',echec:'<i></i>Python indisponible'}[e]||e;});
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('ouvert');
+route();
+Py.init();
+
+</script>
+</body>
+</html>
