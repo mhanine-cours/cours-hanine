@@ -91,7 +91,7 @@ h3{font-size:18px;margin:28px 0 8px;color:var(--bleu-f)}
 .mod b{font-size:16px;line-height:1.3}
 .mod small{color:var(--gris);font-size:13.5px}
 .mod-pied{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
-.trois{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.trois{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--bleu-c);color:var(--bleu-f)}
 .badge.vert{background:var(--vert-c);color:var(--vert)}.badge.ambre{background:var(--ambre-c);color:var(--ambre)}
 /* chapitre */
@@ -164,6 +164,14 @@ svg.orga .o-titre{font-weight:700;fill:var(--bleu-f)}
 table.trace td,table.verite td{font-family:var(--mono);font-size:14px;text-align:center}
 table.trace td:first-child{text-align:left}
 p.mots code{display:inline-block;margin:2px 0}
+.td-tete h2{margin:12px 0 4px}
+.td-exo{background:#fff;border:1px solid var(--ligne);border-left:5px solid var(--bleu);border-radius:12px;padding:16px 18px;margin:16px 0}
+.td-exo:nth-child(even){border-left-color:var(--jaune)}
+.td-enonce{margin:8px 0 12px}
+.td-enonce ol{padding-left:22px}
+.td-enonce pre.code-lu{margin:8px 0}
+.td-sol{margin-top:12px;border-top:2px dashed var(--ligne);padding-top:10px}
+.td-sol-titre{display:inline-block;background:var(--vert-c);color:var(--vert);font-weight:800;font-size:13px;padding:2px 10px;border-radius:20px;margin-bottom:6px}
 /* exercices */
 .exo{background:#fff;border:1px solid var(--ligne);border-radius:14px;padding:18px 18px 16px;margin:18px 0}
 .exo-tete{display:flex;align-items:center;gap:10px}
@@ -2385,18 +2393,19 @@ function pageAccueil(){
    <span class="mod-pied"><span class="badge ${exReussis(c)===c.exercices.length?'vert':''}">Exercices ${exReussis(c)}/${c.exercices.length}</span>${q!==undefined?`<span class="badge ${q>=60?'vert':'ambre'}">Quiz ${q} %</span>`:''}</span></a>`}).join('')}</div>
   <h2>Comment ça marche ?</h2>
   <div class="trois"><div class="carte"><b>1. Cours</b><p>Chaque notion est illustrée par des exemples exécutables. Modifiez-les et observez le résultat.</p></div>
-  <div class="carte"><b>2. Exercices</b><p>Ecrivez votre solution puis cliquez sur <b>Vérifier</b> : le logiciel la teste automatiquement sur plusieurs cas.</p></div>
-  <div class="carte"><b>3. Quiz</b><p>Un chapitre est validé avec au moins 2 exercices réussis et 60 % au quiz.</p></div></div>`;
+  <div class="carte"><b>2. Travaux dirigés</b><p>Une série d'exercices par chapitre, à préparer sur papier, avec une solution détaillée et exécutable.</p></div>
+  <div class="carte"><b>3. Exercices</b><p>Ecrivez votre solution puis cliquez sur <b>Vérifier</b> : le logiciel la teste automatiquement sur plusieurs cas.</p></div>
+  <div class="carte"><b>4. Quiz</b><p>Un chapitre est validé avec au moins 2 exercices réussis et 60 % au quiz.</p></div></div>`;
 }
 
 function pageChapitre(c){
   const i=CHAPITRES.indexOf(c),prec=CHAPITRES[i-1],suiv=CHAPITRES[i+1];
   $('#main').innerHTML=`<span class="pill">Chapitre ${i+1} / ${CHAPITRES.length}</span>
   <h1>${c.titre}</h1>
-  <div class="onglets" id="ong"><button data-o="cours" class="on">Cours</button><button data-o="exercices">Exercices <span class="badge">${exReussis(c)}/${c.exercices.length}</span></button><button data-o="quiz">Quiz</button></div>
+  <div class="onglets" id="ong"><button data-o="cours" class="on">Cours</button><button data-o="td">Travaux dirigés</button><button data-o="exercices">Exercices <span class="badge">${exReussis(c)}/${c.exercices.length}</span></button><button data-o="quiz">Quiz</button></div>
   <div id="o-cours"><div class="objectifs"><b>Objectifs du chapitre</b><ul>${c.objectifs.map(o=>`<li>${o}</li>`).join('')}</ul></div><div id="cours"></div>
-  <div class="barre" style="margin-top:22px"><button class="btn" data-aller="exercices">Passer aux exercices →</button></div></div>
-  <div id="o-exercices" hidden></div><div id="o-quiz" hidden></div>
+  <div class="barre" style="margin-top:22px"><button class="btn" data-aller="td">Passer aux travaux dirigés →</button><button class="btn sec" data-aller="exercices">Exercices auto-corrigés →</button></div></div>
+  <div id="o-td" hidden></div><div id="o-exercices" hidden></div><div id="o-quiz" hidden></div>
   <div class="pied-nav">${prec?`<a class="btn sec" href="#${prec.id}">← ${prec.court}</a>`:'<span></span>'}${suiv?`<a class="btn sec" href="#${suiv.id}">${suiv.court} →</a>`:`<a class="btn sec" href="#mon-programme">Mon programme →</a>`}</div>`;
   const cours=$('#cours');
   c.cours.forEach(b=>{if(typeof b==='string'){const d=document.createElement('div');d.innerHTML=b;cours.appendChild(d)}else cours.appendChild(blocExemple(b))});
@@ -2407,7 +2416,8 @@ function pageChapitre(c){
     som.querySelectorAll('button').forEach(b=>b.onclick=()=>{const h=h3[+b.dataset.k];window.scrollTo({top:h.getBoundingClientRect().top+window.scrollY-70,behavior:'smooth'})});
     h3.forEach((h,k)=>h.insertAdjacentHTML('afterbegin',`<span class="h-num">${k+1}</span>`));}
   const montrer=o=>{document.querySelectorAll('#ong button').forEach(b=>b.classList.toggle('on',b.dataset.o===o));
-    ['cours','exercices','quiz'].forEach(x=>$('#o-'+x).hidden=x!==o);
+    ['cours','td','exercices','quiz'].forEach(x=>$('#o-'+x).hidden=x!==o);
+    if(o==='td'&&!$('#o-td').dataset.ok){pageTD(c,$('#o-td'));$('#o-td').dataset.ok=1}
     if(o==='exercices'&&!$('#o-exercices').dataset.ok){pageExercices(c,$('#o-exercices'));$('#o-exercices').dataset.ok=1}
     if(o==='quiz'&&!$('#o-quiz').dataset.ok){quiz(c,$('#o-quiz'));$('#o-quiz').dataset.ok=1}};
   document.querySelectorAll('#ong button').forEach(b=>b.onclick=()=>montrer(b.dataset.o));
@@ -2547,9 +2557,765 @@ Py.surEtat.push(e=>{const s=$('#etat');if(!s)return;
   s.className='etat-py '+e;
   s.innerHTML={chargement:'<i></i>Chargement de Python…',pret:`<i></i>Python ${Py.version} prêt`,execution:'<i></i>Exécution…',echec:'<i></i>Python indisponible'}[e]||e;});
 $('#menuBtn').onclick=()=>$('#side').classList.toggle('ouvert');
+
+function pageTD(c,el){
+  const i=CHAPITRES.indexOf(c),serie=TD[c.id]||[];
+  el.innerHTML=`<div class="td-tete"><span class="pill">Série n° ${i+1}</span><h2>Travaux dirigés – ${c.court}</h2>
+  <p class="sous">${serie.length} exercices à préparer sur papier puis à vérifier sur machine. Cherchez d'abord par vous-même avant d'afficher la solution.</p></div><div id="td-liste"></div>
+  <div class="barre" style="margin-top:20px"><button class="btn" id="td-suite">Exercices auto-corrigés →</button></div>`;
+  const liste=el.querySelector('#td-liste');
+  serie.forEach((x,k)=>{
+    const d=document.createElement('div');d.className='td-exo';
+    d.innerHTML=`<div class="exo-tete"><span class="exo-num">${k+1}</span><b>Exercice ${k+1} : ${x.t}</b></div><div class="td-enonce">${x.e}</div>
+    <button class="btn sec petit td-voir">Afficher la solution</button><div class="td-sol" hidden><div class="td-sol-titre">Solution</div></div>`;
+    liste.appendChild(d);
+    const sol=d.querySelector('.td-sol');let rendu=false;
+    d.querySelector('.td-voir').onclick=e=>{
+      if(!rendu){x.s.forEach(b=>{if(typeof b==='string'){const p=document.createElement('div');p.innerHTML=b;sol.appendChild(p)}else sol.appendChild(blocExemple(b))});rendu=true}
+      sol.hidden=!sol.hidden;e.target.textContent=sol.hidden?'Afficher la solution':'Masquer la solution'};
+  });
+  el.querySelector('#td-suite').onclick=()=>{document.querySelector('#ong [data-o="exercices"]').click();window.scrollTo(0,0)};
+}
+
+/* ===== TRAVAUX DIRIGES avec solutions ===== */
+const TD={
+/* ============================================================ CH1 */
+ch1:[
+{t:'Tableau de suivi',
+ e:`<p>On considère le programme suivant :</p><pre class="code-lu">${colorer('a = 5\nb = a + 3\na = b * 2\nb = a - b\na = a + b')}</pre>
+<ol><li>Dresser le tableau de suivi des variables <code>a</code> et <code>b</code> après chaque instruction.</li><li>Quelles sont les valeurs finales de <code>a</code> et <code>b</code> ?</li></ol>`,
+ s:[`<table class="t trace"><tr><th>Instruction</th><th>a</th><th>b</th></tr><tr><td><code>a = 5</code></td><td>5</td><td>—</td></tr><tr><td><code>b = a + 3</code></td><td>5</td><td>8</td></tr><tr><td><code>a = b * 2</code></td><td>16</td><td>8</td></tr><tr><td><code>b = a - b</code></td><td>16</td><td>8</td></tr><tr><td><code>a = a + b</code></td><td>24</td><td>8</td></tr></table><p>Valeurs finales : <b>a = 24</b> et <b>b = 8</b>. Vérification :</p>`,
+ {code:R`a = 5
+b = a + 3
+a = b * 2
+b = a - b
+a = a + b
+print("a =", a, "b =", b)`}]},
+{t:'Types et valeurs',
+ e:`<p>Donner le <b>type</b> et la <b>valeur</b> de chacune des expressions suivantes :</p>
+<ol><li><code>3 + 4.0</code></li><li><code>"3" + "4"</code></li><li><code>"ab" * 3</code></li><li><code>int("12") + 1</code></li><li><code>float("2.5") * 2</code></li><li><code>str(5) + "0"</code></li><li><code>10 / 5</code></li><li><code>len("Python")</code></li></ol>`,
+ s:[`<table class="t"><tr><th>Expression</th><th>Type</th><th>Valeur</th><th>Explication</th></tr>
+<tr><td><code>3 + 4.0</code></td><td>float</td><td>7.0</td><td>int + float donne un float</td></tr>
+<tr><td><code>"3" + "4"</code></td><td>str</td><td>"34"</td><td>concaténation</td></tr>
+<tr><td><code>"ab" * 3</code></td><td>str</td><td>"ababab"</td><td>répétition</td></tr>
+<tr><td><code>int("12") + 1</code></td><td>int</td><td>13</td><td>conversion puis addition</td></tr>
+<tr><td><code>float("2.5") * 2</code></td><td>float</td><td>5.0</td><td></td></tr>
+<tr><td><code>str(5) + "0"</code></td><td>str</td><td>"50"</td><td>concaténation de deux chaînes</td></tr>
+<tr><td><code>10 / 5</code></td><td>float</td><td>2.0</td><td><code>/</code> donne toujours un float</td></tr>
+<tr><td><code>len("Python")</code></td><td>int</td><td>6</td><td>nombre de caractères</td></tr></table>`,
+ {code:R`for expr in ['3 + 4.0', '"3" + "4"', '"ab" * 3', 'int("12") + 1',
+             'float("2.5") * 2', 'str(5) + "0"', '10 / 5', 'len("Python")']:
+    v = eval(expr)
+    print(f"{expr:<18} -> {v!r:<10} {type(v).__name__}")`}]},
+{t:'Echange de deux variables',
+ e:`<ol><li>Ecrire un programme qui lit deux valeurs <code>a</code> et <code>b</code> puis échange leurs contenus en utilisant une variable intermédiaire <code>temp</code>.</li><li>Pourquoi les deux instructions <code>a = b</code> puis <code>b = a</code> ne suffisent-elles pas ?</li><li>Réécrire l'échange avec l'affectation multiple de Python.</li></ol>`,
+ s:[`<p><b>2.</b> Après <code>a = b</code>, l'ancienne valeur de <code>a</code> est perdue : <code>b = a</code> recopie alors la valeur de <code>b</code> dans <code>b</code>. Les deux variables finissent avec la même valeur. Il faut sauvegarder <code>a</code> avant de l'écraser.</p>`,
+ {code:R`a = input("a = ")
+b = input("b = ")
+print("Avant :", a, b)
+
+# 1. Avec une variable intermédiaire
+temp = a
+a = b
+b = temp
+print("Après l'échange :", a, b)
+
+# 3. Avec l'affectation multiple (on échange à nouveau)
+a, b = b, a
+print("Après un second échange :", a, b)`, entree:'Sara\nAnas'}]},
+{t:'Cercle',
+ e:`<p>Ecrire un programme qui lit le rayon <code>r</code> d'un cercle (réel) et affiche son <b>périmètre</b> (2πr) et sa <b>surface</b> (πr²), arrondis à 2 décimales. On utilisera la valeur 3.14159 pour π, rangée dans une variable <code>PI</code>.</p>`,
+ s:[{code:R`PI = 3.14159
+r = float(input("Rayon : "))
+perimetre = 2 * PI * r
+surface = PI * r * r
+print("Périmètre :", round(perimetre, 2))
+print("Surface   :", round(surface, 2))`, entree:'2.5'}]},
+{t:'Chasse aux erreurs',
+ e:`<p>Le programme suivant doit lire l'année de naissance et afficher l'âge en 2026. Il contient <b>quatre erreurs</b>. Les identifier et proposer une version corrigée.</p>
+<pre class="code-lu">${colorer('annee = input("Année de naissance : ")\nage = 2026 - Annee\nprint("Vous avez" age "ans)\nPrint("Fin")')}</pre>`,
+ s:[`<ol><li><code>input</code> renvoie une chaîne : il faut <code>int(input(...))</code>, sinon <code>TypeError</code>.</li><li><code>Annee</code> au lieu de <code>annee</code> : <code>NameError</code> (Python distingue les majuscules).</li><li>Il manque les virgules entre les valeurs de <code>print</code> et le guillemet fermant de <code>"ans"</code> : <code>SyntaxError</code>.</li><li><code>Print</code> avec une majuscule n'existe pas : <code>print</code>.</li></ol>`,
+ {code:R`annee = int(input("Année de naissance : "))
+age = 2026 - annee
+print("Vous avez", age, "ans")
+print("Fin")`, entree:'2005'}]}
+],
+/* ============================================================ CH2 */
+ch2:[
+{t:'Evaluation d\'expressions',
+ e:`<p>Sans utiliser l'ordinateur, donner la valeur de chaque expression, puis vérifier.</p>
+<ol><li><code>17 // 5</code> et <code>17 % 5</code></li><li><code>-17 // 5</code> et <code>-17 % 5</code></li><li><code>2 ** 3 ** 2</code></li><li><code>10 - 2 * 3 + 4</code></li><li><code>(10 - 2) * (3 + 4)</code></li><li><code>7 / 2 * 2</code></li><li><code>15 % 4 * 2</code></li><li><code>not 3 &gt; 2 or 5 == 5</code></li><li><code>3 &lt; 5 &lt; 2</code></li></ol>`,
+ s:[`<ol><li>3 et 2 (17 = 5 × 3 + 2).</li><li>-4 et 3 : <code>//</code> arrondit vers le bas (−3,4 → −4) et le reste est du signe du diviseur : −17 = 5 × (−4) + 3.</li><li>512 : <code>**</code> se calcule de droite à gauche, 3² = 9 puis 2⁹.</li><li>8 : 10 − 6 + 4.</li><li>56.</li><li>7.0 : (7 / 2) × 2 = 3.5 × 2, de gauche à droite.</li><li>6 : (15 % 4) × 2 = 3 × 2.</li><li>True : <code>not 3 &gt; 2</code> vaut False, puis False or True.</li><li>False : équivaut à <code>3 &lt; 5 and 5 &lt; 2</code>.</li></ol>`,
+ {code:R`print(17 // 5, 17 % 5)
+print(-17 // 5, -17 % 5)
+print(2 ** 3 ** 2)
+print(10 - 2 * 3 + 4)
+print((10 - 2) * (3 + 4))
+print(7 / 2 * 2)
+print(15 % 4 * 2)
+print(not 3 > 2 or 5 == 5)
+print(3 < 5 < 2)`}]},
+{t:'Les chiffres d\'un nombre',
+ e:`<p>Ecrire un programme qui lit un entier de trois chiffres (par exemple 472) et affiche :</p><ol><li>son chiffre des centaines, des dizaines et des unités ;</li><li>la somme de ses chiffres ;</li><li>le nombre obtenu en inversant les chiffres (274).</li></ol><p>On utilisera uniquement <code>//</code> et <code>%</code>.</p>`,
+ s:[{code:R`n = int(input("Nombre à 3 chiffres : "))
+c = n // 100
+d = n // 10 % 10
+u = n % 10
+print("Centaines :", c, "Dizaines :", d, "Unités :", u)
+print("Somme des chiffres :", c + d + u)
+print("Nombre inversé :", u * 100 + d * 10 + c)`, entree:'472'}]},
+{t:'Conversion d\'une durée',
+ e:`<p>Ecrire un programme qui lit une durée en secondes et l'affiche en jours, heures, minutes et secondes. Exemple : 200000 s → 2 j 7 h 33 min 20 s.</p>`,
+ s:[`<p>On divise successivement : 1 jour = 86400 s, 1 heure = 3600 s, 1 minute = 60 s ; le reste de chaque division sert à l'étape suivante.</p>`,
+ {code:R`t = int(input("Durée en secondes : "))
+j = t // 86400
+t = t % 86400
+h = t // 3600
+t = t % 3600
+m = t // 60
+s = t % 60
+print(j, "j", h, "h", m, "min", s, "s")`, entree:'200000'}]},
+{t:'Points du plan',
+ e:`<p>On lit les coordonnées de deux points A(xa, ya) et B(xb, yb). Ecrire un programme qui affiche :</p><ol><li>la distance AB = √((xb − xa)² + (yb − ya)²), arrondie au centième ;</li><li>les coordonnées du milieu I de [AB] ;</li><li>la pente de la droite (AB) si xa ≠ xb (on admettra ici que c'est le cas).</li></ol>`,
+ s:[{code:R`import math
+xa = float(input("xa = "))
+ya = float(input("ya = "))
+xb = float(input("xb = "))
+yb = float(input("yb = "))
+distance = math.sqrt((xb - xa) ** 2 + (yb - ya) ** 2)
+print("AB =", round(distance, 2))
+print("Milieu I : (", (xa + xb) / 2, ",", (ya + yb) / 2, ")")
+print("Pente :", (yb - ya) / (xb - xa))`, entree:'1\n2\n4\n6'}]},
+{t:'Ecrire des conditions',
+ e:`<p>Ecrire l'expression booléenne Python qui est vraie lorsque :</p><ol><li><code>x</code> appartient à l'intervalle [0, 20] ;</li><li><code>n</code> est un entier pair et strictement positif ;</li><li><code>n</code> est multiple de 3 ou de 5, mais pas des deux ;</li><li>trois longueurs <code>a</code>, <code>b</code>, <code>c</code> peuvent former un triangle (chaque côté est inférieur à la somme des deux autres).</li></ol>`,
+ s:[`<ol><li><code>0 &lt;= x &lt;= 20</code></li><li><code>n % 2 == 0 and n &gt; 0</code></li><li><code>(n % 3 == 0) != (n % 5 == 0)</code> ou <code>(n % 3 == 0 or n % 5 == 0) and not (n % 15 == 0)</code></li><li><code>a &lt; b + c and b &lt; a + c and c &lt; a + b</code></li></ol>`,
+ {code:R`x, n = 12.5, 10
+a, b, c = 3, 4, 8
+print(0 <= x <= 20)
+print(n % 2 == 0 and n > 0)
+print((n % 3 == 0) != (n % 5 == 0))
+print(a < b + c and b < a + c and c < a + b)`}]}
+],
+/* ============================================================ CH3 */
+ch3:[
+{t:'Prévoir l\'affichage',
+ e:`<p>Qu'affiche ce programme pour <code>x</code> = −3, 0, 7 et 15 ?</p><pre class="code-lu">${colorer('if x > 0:\n    if x > 10:\n        print("grand")\n    else:\n        print("moyen")\nelif x == 0:\n    print("nul")\nelse:\n    print("négatif")\nprint("fin")')}</pre>`,
+ s:[`<table class="t"><tr><th>x</th><th>Affichage</th></tr><tr><td>−3</td><td>négatif puis fin</td></tr><tr><td>0</td><td>nul puis fin</td></tr><tr><td>7</td><td>moyen puis fin</td></tr><tr><td>15</td><td>grand puis fin</td></tr></table>`,
+ {code:R`for x in [-3, 0, 7, 15]:
+    print("x =", x, ":", end=" ")
+    if x > 0:
+        if x > 10:
+            print("grand", end=" ")
+        else:
+            print("moyen", end=" ")
+    elif x == 0:
+        print("nul", end=" ")
+    else:
+        print("négatif", end=" ")
+    print("fin")`}]},
+{t:'Facture d\'électricité par tranches',
+ e:`<p>Une compagnie (tarifs fictifs) facture la consommation mensuelle par tranches : les 100 premiers kWh à 0,90 DH, les kWh de 101 à 150 à 1,07 DH, et les kWh au-delà de 150 à 1,17 DH. Une redevance fixe de 25 DH s'ajoute.</p><p>Ecrire un programme qui lit la consommation et affiche le montant à payer. Exemple : 180 kWh → 90 + 53,5 + 35,1 + 25 = 203,6 DH.</p>`,
+ s:[`<p>Chaque tranche n'est facturée que pour la partie de la consommation qui s'y trouve.</p>`,
+ {code:R`kwh = float(input("Consommation (kWh) : "))
+if kwh <= 100:
+    montant = kwh * 0.90
+elif kwh <= 150:
+    montant = 100 * 0.90 + (kwh - 100) * 1.07
+else:
+    montant = 100 * 0.90 + 50 * 1.07 + (kwh - 150) * 1.17
+montant += 25
+print("Montant à payer :", round(montant, 2), "DH")`, entree:'180'}]},
+{t:'Ranger trois nombres',
+ e:`<p>Ecrire un programme qui lit trois nombres et les affiche dans l'ordre croissant, <b>sans</b> utiliser <code>sorted</code>, <code>min</code> ni <code>max</code>.</p>`,
+ s:[`<p>Méthode : on échange <code>a</code> et <code>b</code> si besoin pour avoir a ≤ b, puis <code>b</code> et <code>c</code> pour placer le plus grand en dernier, puis à nouveau <code>a</code> et <code>b</code>.</p>`,
+ {code:R`a = float(input("a = "))
+b = float(input("b = "))
+c = float(input("c = "))
+if a > b:
+    a, b = b, a
+if b > c:
+    b, c = c, b
+if a > b:
+    a, b = b, a
+print(a, "<=", b, "<=", c)`, entree:'7\n-2\n4'}]},
+{t:'Validité d\'une date',
+ e:`<p>Ecrire un programme qui lit un jour, un mois et une année et indique si la date est valide. On rappelle que février a 29 jours les années bissextiles, que les mois 4, 6, 9 et 11 ont 30 jours et les autres 31.</p>`,
+ s:[{code:R`j = int(input("Jour : "))
+m = int(input("Mois : "))
+a = int(input("Année : "))
+
+bissextile = (a % 4 == 0 and a % 100 != 0) or a % 400 == 0
+if m < 1 or m > 12:
+    nb_jours = 0
+elif m == 2:
+    nb_jours = 29 if bissextile else 28
+elif m in (4, 6, 9, 11):
+    nb_jours = 30
+else:
+    nb_jours = 31
+
+if 1 <= j <= nb_jours:
+    print(f"{j:02d}/{m:02d}/{a} est une date valide")
+else:
+    print("Date invalide")`, entree:'29\n2\n2026'}]},
+{t:'Calculatrice simple',
+ e:`<p>Ecrire un programme qui lit deux nombres et un opérateur (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) et affiche le résultat. Il doit afficher un message d'erreur pour un opérateur inconnu ou une division par zéro.</p>`,
+ s:[{code:R`a = float(input("Premier nombre : "))
+op = input("Opérateur : ")
+b = float(input("Second nombre : "))
+if op == "+":
+    print(a, "+", b, "=", a + b)
+elif op == "-":
+    print(a, "-", b, "=", a - b)
+elif op == "*":
+    print(a, "*", b, "=", a * b)
+elif op == "/":
+    if b == 0:
+        print("Erreur : division par zéro")
+    else:
+        print(a, "/", b, "=", a / b)
+else:
+    print("Opérateur inconnu :", op)`, entree:'12\n/\n5'}]}
+],
+/* ============================================================ CH4 */
+ch4:[
+{t:'Suivre une boucle',
+ e:`<p>Dresser le tableau de suivi du programme suivant et donner l'affichage obtenu.</p><pre class="code-lu">${colorer('i = 1\ns = 0\nwhile i < 10:\n    s = s + i\n    i = i + 3\nprint(i, s)')}</pre>`,
+ s:[`<table class="t trace"><tr><th>Tour</th><th>i (début)</th><th>s après</th><th>i après</th></tr><tr><td>1</td><td>1</td><td>1</td><td>4</td></tr><tr><td>2</td><td>4</td><td>5</td><td>7</td></tr><tr><td>3</td><td>7</td><td>12</td><td>10</td></tr></table><p>La condition <code>10 &lt; 10</code> est fausse : la boucle s'arrête. Affichage : <b>10 12</b>.</p>`,
+ {code:R`i = 1
+s = 0
+while i < 10:
+    s = s + i
+    i = i + 3
+print(i, s)`}]},
+{t:'Diviseurs et nombres parfaits',
+ e:`<ol><li>Ecrire un programme qui lit un entier n &gt; 0 et affiche ses diviseurs ainsi que leur nombre.</li><li>Un nombre est <b>parfait</b> s'il est égal à la somme de ses diviseurs autres que lui-même (6 = 1 + 2 + 3). Compléter le programme pour indiquer si n est parfait.</li><li>Afficher tous les nombres parfaits inférieurs à 10 000.</li></ol>`,
+ s:[{code:R`n = int(input("n = "))
+somme = 0
+nb = 0
+for d in range(1, n + 1):
+    if n % d == 0:
+        print(d, end=" ")
+        nb += 1
+        if d != n:
+            somme += d
+print()
+print("Nombre de diviseurs :", nb)
+print("Parfait :", somme == n)
+
+# 3. Nombres parfaits < 10000
+for k in range(2, 10000):
+    s = 1
+    d = 2
+    while d * d <= k:
+        if k % d == 0:
+            s += d
+            if d != k // d:
+                s += k // d
+        d += 1
+    if s == k:
+        print(k, "est parfait")`, entree:'28'}]},
+{t:'PGCD et PPCM',
+ e:`<ol><li>Ecrire un programme qui calcule le PGCD de deux entiers positifs par l'algorithme d'Euclide : tant que b ≠ 0, remplacer (a, b) par (b, a % b) ; le PGCD est alors a.</li><li>En déduire le PPCM, sachant que PGCD(a, b) × PPCM(a, b) = a × b.</li><li>Dresser le tableau de suivi pour a = 84 et b = 36.</li></ol>`,
+ s:[`<table class="t trace"><tr><th>a</th><th>b</th><th>a % b</th></tr><tr><td>84</td><td>36</td><td>12</td></tr><tr><td>36</td><td>12</td><td>0</td></tr><tr><td>12</td><td>0</td><td>—</td></tr></table><p>PGCD = 12, PPCM = 84 × 36 / 12 = 252.</p>`,
+ {code:R`a = int(input("a = "))
+b = int(input("b = "))
+x, y = a, b
+while y != 0:
+    print(f"a = {x:<4} b = {y:<4} a % b = {x % y}")
+    x, y = y, x % y
+print("PGCD =", x)
+print("PPCM =", a * b // x)`, entree:'84\n36'}]},
+{t:'Dessins d\'étoiles',
+ e:`<p>Lire un entier n et afficher, à l'aide de boucles imbriquées :</p><ol><li>un triangle rectangle de n lignes ;</li><li>une pyramide centrée de n lignes ;</li><li>un carré creux de côté n.</li></ol>`,
+ s:[{code:R`n = int(input("n = "))
+
+for i in range(1, n + 1):          # 1. triangle
+    print("*" * i)
+print()
+
+for i in range(1, n + 1):          # 2. pyramide
+    print(" " * (n - i) + "*" * (2 * i - 1))
+print()
+
+for i in range(n):                 # 3. carré creux
+    if i == 0 or i == n - 1:
+        print("* " * n)
+    else:
+        print("* " + "  " * (n - 2) + "*")`, entree:'5'}]},
+{t:'Suite de Syracuse',
+ e:`<p>Partant d'un entier n &gt; 0, on applique la règle : si n est pair, n devient n / 2 ; sinon n devient 3n + 1. On s'arrête quand n vaut 1.</p><ol><li>Ecrire un programme qui affiche les termes de la suite.</li><li>Afficher le nombre d'étapes (temps de vol) et la plus grande valeur atteinte (altitude maximale).</li></ol>`,
+ s:[{code:R`n = int(input("n = "))
+etapes = 0
+altitude = n
+print(n, end=" ")
+while n != 1:
+    if n % 2 == 0:
+        n = n // 2
+    else:
+        n = 3 * n + 1
+    etapes += 1
+    altitude = max(altitude, n)
+    print(n, end=" ")
+print()
+print("Temps de vol :", etapes, "- Altitude maximale :", altitude)`, entree:'27'}]}
+],
+/* ============================================================ CH5 */
+ch5:[
+{t:'Indices et tranches',
+ e:`<p>Avec <code>s = "Errachidia"</code>, donner la valeur de :</p><ol><li><code>s[0]</code>, <code>s[-1]</code>, <code>s[3]</code></li><li><code>s[2:5]</code>, <code>s[:4]</code>, <code>s[6:]</code></li><li><code>s[::-1]</code>, <code>s[1::3]</code></li><li><code>len(s)</code>, <code>s.count("i")</code>, <code>s.find("chi")</code></li><li><code>s.upper()[:3] + s[-3:]</code></li></ol>`,
+ s:[`<ol><li><code>"E"</code>, <code>"a"</code>, <code>"a"</code></li><li><code>"rac"</code>, <code>"Erra"</code>, <code>"idia"</code></li><li><code>"aidihcarrE"</code>, <code>"rhda"</code> (indices 1, 4, 7)</li><li>10, 2, 4</li><li><code>"ERRdia"</code></li></ol>`,
+ {code:R`s = "Errachidia"
+print(s[0], s[-1], s[3])
+print(s[2:5], s[:4], s[6:])
+print(s[::-1], s[1::3])
+print(len(s), s.count("i"), s.find("chi"))
+print(s.upper()[:3] + s[-3:])`}]},
+{t:'Analyse d\'une phrase',
+ e:`<p>Ecrire un programme qui lit une phrase et affiche le nombre de majuscules, de minuscules, de chiffres, d'espaces et d'autres caractères.</p>`,
+ s:[{code:R`phrase = input("Phrase : ")
+maj = minu = chif = esp = autres = 0
+for c in phrase:
+    if c.isupper():
+        maj += 1
+    elif c.islower():
+        minu += 1
+    elif c.isdigit():
+        chif += 1
+    elif c == " ":
+        esp += 1
+    else:
+        autres += 1
+print("Majuscules :", maj)
+print("Minuscules :", minu)
+print("Chiffres   :", chif)
+print("Espaces    :", esp)
+print("Autres     :", autres)`, entree:'La Licence Digitalisation compte 3 semestres, en 2026 !'}]},
+{t:'Mots d\'une phrase',
+ e:`<p>Lire une phrase et afficher : le nombre de mots, le mot le plus long, et la phrase avec chaque mot commençant par une majuscule, <b>sans</b> utiliser <code>title()</code>.</p>`,
+ s:[{code:R`phrase = input("Phrase : ")
+mots = phrase.split()
+print("Nombre de mots :", len(mots))
+
+plus_long = ""
+for m in mots:
+    if len(m) > len(plus_long):
+        plus_long = m
+print("Mot le plus long :", plus_long)
+
+resultat = []
+for m in mots:
+    resultat.append(m[0].upper() + m[1:].lower())
+print(" ".join(resultat))`, entree:'la programmation python est passionnante'}]},
+{t:'Mot de passe robuste',
+ e:`<p>Un mot de passe est jugé robuste s'il contient au moins 8 caractères, au moins une majuscule, une minuscule, un chiffre et un caractère spécial (ni lettre ni chiffre). Ecrire un programme qui lit un mot de passe et affiche les règles non respectées, ou <code>Mot de passe robuste</code>.</p>`,
+ s:[{code:R`mdp = input("Mot de passe : ")
+a_maj = a_min = a_chif = a_spec = False
+for c in mdp:
+    if c.isupper():
+        a_maj = True
+    elif c.islower():
+        a_min = True
+    elif c.isdigit():
+        a_chif = True
+    else:
+        a_spec = True
+
+problemes = []
+if len(mdp) < 8:
+    problemes.append("au moins 8 caractères")
+if not a_maj:
+    problemes.append("une majuscule")
+if not a_min:
+    problemes.append("une minuscule")
+if not a_chif:
+    problemes.append("un chiffre")
+if not a_spec:
+    problemes.append("un caractère spécial")
+
+if problemes:
+    print("Il manque :", ", ".join(problemes))
+else:
+    print("Mot de passe robuste")`, entree:'python2026'}]},
+{t:'Anagrammes',
+ e:`<p>Deux mots sont des anagrammes s'ils sont formés des mêmes lettres (ex. « chien » et « niche »). Ecrire un programme qui lit deux mots et indique s'ils sont anagrammes, sans tenir compte des majuscules.</p><ol><li>Avec <code>sorted</code>.</li><li>Sans <code>sorted</code>, en comptant les lettres.</li></ol>`,
+ s:[{code:R`m1 = input("Mot 1 : ").lower()
+m2 = input("Mot 2 : ").lower()
+
+# 1. Avec sorted
+print("Anagrammes (méthode 1) :", sorted(m1) == sorted(m2))
+
+# 2. En comptant chaque lettre
+ok = len(m1) == len(m2)
+for c in m1:
+    if m1.count(c) != m2.count(c):
+        ok = False
+print("Anagrammes (méthode 2) :", ok)`, entree:'Chien\nniche'}]}
+],
+/* ============================================================ CH6 */
+ch6:[
+{t:'Prévoir l\'état d\'une liste',
+ e:`<p>Donner le contenu de <code>L</code> et la valeur affichée après chaque ligne.</p><pre class="code-lu">${colorer('L = [4, 8, 15]\nL.append(16)\nL.insert(1, 23)\nx = L.pop(0)\nL.remove(15)\nL[1] = L[1] * 2\nprint(L, x, len(L), L[-2:])')}</pre>`,
+ s:[`<table class="t trace"><tr><th>Instruction</th><th>L</th></tr><tr><td><code>L = [4, 8, 15]</code></td><td>[4, 8, 15]</td></tr><tr><td><code>L.append(16)</code></td><td>[4, 8, 15, 16]</td></tr><tr><td><code>L.insert(1, 23)</code></td><td>[4, 23, 8, 15, 16]</td></tr><tr><td><code>x = L.pop(0)</code></td><td>[23, 8, 15, 16], x = 4</td></tr><tr><td><code>L.remove(15)</code></td><td>[23, 8, 16]</td></tr><tr><td><code>L[1] = L[1] * 2</code></td><td>[23, 16, 16]</td></tr></table><p>Affichage : <code>[23, 16, 16] 4 3 [16, 16]</code></p>`,
+ {code:R`L = [4, 8, 15]
+L.append(16)
+L.insert(1, 23)
+x = L.pop(0)
+L.remove(15)
+L[1] = L[1] * 2
+print(L, x, len(L), L[-2:])`}]},
+{t:'Statistiques d\'une classe',
+ e:`<p>On saisit les notes d'une classe sur une ligne. Ecrire un programme qui affiche :</p><ol><li>la moyenne ;</li><li>l'écart-type σ = √(moyenne des carrés des écarts à la moyenne) ;</li><li>les notes supérieures à la moyenne ;</li><li>le pourcentage d'admis (note ≥ 10).</li></ol>`,
+ s:[{code:R`import math
+notes = [float(x) for x in input("Notes : ").split()]
+n = len(notes)
+moyenne = sum(notes) / n
+variance = sum((x - moyenne) ** 2 for x in notes) / n
+print("Moyenne :", round(moyenne, 2))
+print("Ecart-type :", round(math.sqrt(variance), 2))
+print("Au-dessus de la moyenne :", [x for x in notes if x > moyenne])
+admis = len([x for x in notes if x >= 10])
+print(f"Admis : {admis}/{n} soit {admis / n:.1%}")`, entree:'12 8.5 15 10 17 6 13.5 9'}]},
+{t:'Fusion de deux listes triées',
+ e:`<p>On dispose de deux listes déjà triées par ordre croissant. Ecrire un programme qui construit la liste triée contenant tous leurs éléments, <b>sans</b> utiliser <code>sort</code> ni <code>sorted</code>, en parcourant les deux listes en parallèle.</p>`,
+ s:[`<p>On compare les éléments en tête de chaque liste et on prend le plus petit ; quand une liste est épuisée, on recopie la fin de l'autre.</p>`,
+ {code:R`A = [2, 5, 9, 14, 20]
+B = [1, 5, 6, 18]
+C = []
+i = j = 0
+while i < len(A) and j < len(B):
+    if A[i] <= B[j]:
+        C.append(A[i])
+        i += 1
+    else:
+        C.append(B[j])
+        j += 1
+C.extend(A[i:])
+C.extend(B[j:])
+print(C)`}]},
+{t:'Tri par sélection',
+ e:`<p>Le tri par sélection cherche le plus petit élément de la liste et l'échange avec le premier, puis cherche le plus petit parmi les suivants et l'échange avec le deuxième, etc.</p><ol><li>Appliquer l'algorithme à la main sur [29, 10, 14, 37, 13].</li><li>Le programmer en affichant la liste après chaque étape.</li></ol>`,
+ s:[{code:R`L = [29, 10, 14, 37, 13]
+n = len(L)
+for i in range(n - 1):
+    pos_min = i
+    for j in range(i + 1, n):
+        if L[j] < L[pos_min]:
+            pos_min = j
+    L[i], L[pos_min] = L[pos_min], L[i]
+    print("Etape", i + 1, ":", L)`}]},
+{t:'Matrices',
+ e:`<p>Soient deux matrices 2 × 3 représentées par des listes de listes. Ecrire un programme qui calcule et affiche :</p><ol><li>leur somme ;</li><li>la transposée de la première (matrice 3 × 2) ;</li><li>la somme de chaque ligne et de chaque colonne de la première.</li></ol>`,
+ s:[{code:R`A = [[1, 2, 3],
+     [4, 5, 6]]
+B = [[7, 8, 9],
+     [1, 0, 2]]
+lignes, colonnes = len(A), len(A[0])
+
+S = [[A[i][j] + B[i][j] for j in range(colonnes)] for i in range(lignes)]
+print("A + B =", S)
+
+T = [[A[i][j] for i in range(lignes)] for j in range(colonnes)]
+print("Transposée de A =", T)
+
+for i in range(lignes):
+    print("Somme ligne", i, ":", sum(A[i]))
+for j in range(colonnes):
+    print("Somme colonne", j, ":", sum(A[i][j] for i in range(lignes)))`}]}
+],
+/* ============================================================ CH7 */
+ch7:[
+{t:'Prévoir les résultats',
+ e:`<p>Que vaut le dictionnaire <code>d</code> et qu'affiche ce programme ?</p><pre class="code-lu">${colorer('d = {"a": 1, "b": 2}\nd["c"] = 3\nd["a"] = d["a"] + 10\nd.pop("b")\nprint(d, len(d), "b" in d, d.get("b", 0))\nfor k, v in d.items():\n    print(k * v)')}</pre>`,
+ s:[`<p><code>d</code> vaut <code>{'a': 11, 'c': 3}</code>. Affichage : <code>{'a': 11, 'c': 3} 2 False 0</code>, puis <code>aaaaaaaaaaa</code> (11 fois « a ») et <code>ccc</code>.</p>`,
+ {code:R`d = {"a": 1, "b": 2}
+d["c"] = 3
+d["a"] = d["a"] + 10
+d.pop("b")
+print(d, len(d), "b" in d, d.get("b", 0))
+for k, v in d.items():
+    print(k * v)`}]},
+{t:'Fréquence des lettres',
+ e:`<p>Ecrire un programme qui lit un texte et affiche le nombre d'apparitions de chaque lettre (sans distinguer majuscules et minuscules, en ignorant les autres caractères), par ordre alphabétique, puis les trois lettres les plus fréquentes.</p>`,
+ s:[{code:R`texte = input("Texte : ").lower()
+freq = {}
+for c in texte:
+    if c.isalpha():
+        freq[c] = freq.get(c, 0) + 1
+
+for lettre in sorted(freq):
+    print(lettre, ":", freq[lettre])
+
+top = sorted(freq, key=freq.get, reverse=True)[:3]
+print("Les plus fréquentes :", top)`, entree:'La programmation en Python est accessible a tous'}]},
+{t:'Petit traducteur',
+ e:`<ol><li>Créer un dictionnaire français → anglais d'une dizaine de mots.</li><li>Lire une phrase en français et la traduire mot à mot ; un mot inconnu est conservé entre crochets.</li><li>Construire le dictionnaire inverse anglais → français.</li></ol>`,
+ s:[{code:R`fr_en = {"le": "the", "la": "the", "chat": "cat", "chien": "dog",
+         "mange": "eats", "dort": "sleeps", "petit": "little",
+         "grand": "big", "et": "and", "poisson": "fish"}
+
+phrase = input("Phrase en français : ").lower()
+traduction = [fr_en.get(m, "[" + m + "]") for m in phrase.split()]
+print(" ".join(traduction))
+
+en_fr = {}
+for fr, en in fr_en.items():
+    en_fr[en] = fr          # attention : "the" n'est gardé qu'une fois
+print(en_fr)`, entree:'Le petit chat mange le poisson rouge'}]},
+{t:'Relevé de notes',
+ e:`<p>On représente les notes par un dictionnaire <code>{nom: [liste des notes]}</code>.</p><ol><li>Afficher la moyenne de chaque étudiant.</li><li>Afficher le major de la promotion.</li><li>Construire le dictionnaire <code>{nom: "Admis"/"Ajourné"}</code> (seuil 10).</li><li>Ajouter une note à un étudiant, et un nouvel étudiant.</li></ol>`,
+ s:[{code:R`notes = {"Sara": [14, 16, 12], "Anas": [9, 11, 8.5], "Hind": [17, 15, 18]}
+
+notes["Anas"].append(13)        # 4. ajout d'une note
+notes["Omar"] = [10, 12]        # 4. nouvel étudiant
+
+moyennes = {}
+for nom, liste in notes.items():
+    moyennes[nom] = sum(liste) / len(liste)
+    print(f"{nom:<6} {moyennes[nom]:.2f}")
+
+major = max(moyennes, key=moyennes.get)
+print("Major :", major)
+
+resultat = {nom: ("Admis" if m >= 10 else "Ajourné") for nom, m in moyennes.items()}
+print(resultat)`}]},
+{t:'Clubs de l\'université',
+ e:`<p>Trois clubs sont représentés par des ensembles de noms d'étudiants. Déterminer avec les opérations ensemblistes : les étudiants inscrits dans au moins un club, dans les trois clubs, uniquement au club informatique, et dans exactement un club.</p>`,
+ s:[{code:R`info = {"Sara", "Anas", "Hind", "Omar", "Yassine"}
+theatre = {"Hind", "Salma", "Omar"}
+sport = {"Anas", "Omar", "Salma", "Karim"}
+
+print("Au moins un club :", sorted(info | theatre | sport))
+print("Les trois clubs  :", sorted(info & theatre & sport))
+print("Informatique seul:", sorted(info - theatre - sport))
+
+tous = info | theatre | sport
+un_seul = [e for e in sorted(tous) if (e in info) + (e in theatre) + (e in sport) == 1]
+print("Exactement un    :", un_seul)`}]}
+],
+/* ============================================================ CH8 */
+ch8:[
+{t:'Prévoir l\'affichage',
+ e:`<p>Qu'affiche ce programme ? Justifier.</p><pre class="code-lu">${colorer('def f(x):\n    x = x * 2\n    print("dans f :", x)\n    return x + 1\n\ndef g(y):\n    print("g reçoit", y)\n\nx = 5\nr = f(x)\nprint(x, r)\ns = g(r)\nprint(s)')}</pre>`,
+ s:[`<p>Affichage : <code>dans f : 10</code>, puis <code>5 11</code> (le <code>x</code> de la fonction est local : le <code>x</code> global vaut toujours 5), puis <code>g reçoit 11</code>, puis <code>None</code> car <code>g</code> n'a pas de <code>return</code>.</p>`,
+ {code:R`def f(x):
+    x = x * 2
+    print("dans f :", x)
+    return x + 1
+
+def g(y):
+    print("g reçoit", y)
+
+x = 5
+r = f(x)
+print(x, r)
+s = g(r)
+print(s)`}]},
+{t:'Bibliothèque de fonctions sur les listes',
+ e:`<p>Ecrire, <b>sans</b> utiliser les fonctions intégrées correspondantes, les fonctions suivantes puis les tester :</p><ol><li><code>somme(L)</code> et <code>moyenne(L)</code> ;</li><li><code>maximum(L)</code> qui renvoie la plus grande valeur ;</li><li><code>compter(L, x)</code> : nombre d'occurrences de x ;</li><li><code>position(L, x)</code> : indice de la première occurrence, ou −1.</li></ol>`,
+ s:[{code:R`def somme(L):
+    s = 0
+    for x in L:
+        s += x
+    return s
+
+def moyenne(L):
+    return somme(L) / len(L)
+
+def maximum(L):
+    m = L[0]
+    for x in L[1:]:
+        if x > m:
+            m = x
+    return m
+
+def compter(L, x):
+    n = 0
+    for v in L:
+        if v == x:
+            n += 1
+    return n
+
+def position(L, x):
+    for i in range(len(L)):
+        if L[i] == x:
+            return i
+    return -1
+
+notes = [12, 15, 9, 15, 11]
+print(somme(notes), moyenne(notes), maximum(notes))
+print(compter(notes, 15), position(notes, 9), position(notes, 20))`}]},
+{t:'Fonctions récursives',
+ e:`<p>Ecrire de façon récursive :</p><ol><li><code>puissance(x, n)</code> qui calcule xⁿ (n entier ≥ 0) ;</li><li><code>somme_chiffres(n)</code> ;</li><li><code>est_palindrome(s)</code> : une chaîne est un palindrome si elle a au plus un caractère, ou si son premier et son dernier caractère sont égaux et que le milieu est un palindrome.</li></ol>`,
+ s:[{code:R`def puissance(x, n):
+    if n == 0:
+        return 1
+    return x * puissance(x, n - 1)
+
+def somme_chiffres(n):
+    if n < 10:
+        return n
+    return n % 10 + somme_chiffres(n // 10)
+
+def est_palindrome(s):
+    if len(s) <= 1:
+        return True
+    return s[0] == s[-1] and est_palindrome(s[1:-1])
+
+print(puissance(2, 10), puissance(5, 0))
+print(somme_chiffres(90517))
+print(est_palindrome("radar"), est_palindrome("python"))`}]},
+{t:'Conversion binaire',
+ e:`<ol><li>Ecrire <code>vers_binaire(n)</code> qui renvoie l'écriture binaire (chaîne) d'un entier n ≥ 0 par divisions successives par 2.</li><li>Ecrire <code>vers_decimal(b)</code> qui fait la conversion inverse.</li><li>Vérifier sur les entiers de 0 à 20 que <code>vers_decimal(vers_binaire(n)) == n</code>, et comparer avec <code>bin(n)</code>.</li></ol>`,
+ s:[{code:R`def vers_binaire(n):
+    if n == 0:
+        return "0"
+    b = ""
+    while n > 0:
+        b = str(n % 2) + b
+        n = n // 2
+    return b
+
+def vers_decimal(b):
+    n = 0
+    for chiffre in b:
+        n = n * 2 + int(chiffre)
+    return n
+
+print(vers_binaire(37), vers_decimal("100101"))
+ok = all(vers_decimal(vers_binaire(n)) == n and "0b" + vers_binaire(n) == bin(n)
+         for n in range(21))
+print("Vérification de 0 à 20 :", ok)`}]},
+{t:'Programme structuré : gestion d\'une classe',
+ e:`<p>Ecrire un programme composé de fonctions : <code>saisir_notes(n)</code> qui lit n notes et renvoie la liste, <code>mention(note)</code> qui renvoie la mention, <code>afficher_bilan(notes)</code> qui affiche chaque note avec sa mention, la moyenne et le nombre d'admis, et une fonction <code>main()</code> qui enchaîne le tout.</p>`,
+ s:[{code:R`def saisir_notes(n):
+    notes = []
+    for i in range(n):
+        notes.append(float(input(f"Note {i + 1} : ")))
+    return notes
+
+def mention(note):
+    if note < 10:
+        return "Ajourné"
+    elif note < 12:
+        return "Passable"
+    elif note < 14:
+        return "Assez bien"
+    elif note < 16:
+        return "Bien"
+    return "Très bien"
+
+def afficher_bilan(notes):
+    for i, note in enumerate(notes, start=1):
+        print(f"Etudiant {i} : {note:5.2f}  {mention(note)}")
+    print("Moyenne :", round(sum(notes) / len(notes), 2))
+    print("Admis   :", len([x for x in notes if x >= 10]))
+
+def main():
+    n = int(input("Nombre d'étudiants : "))
+    afficher_bilan(saisir_notes(n))
+
+main()`, entree:'4\n13.5\n8\n16.25\n11'}]}
+],
+/* ============================================================ CH9 */
+ch9:[
+{t:'Déroulement de try / except',
+ e:`<p>Qu'affiche ce programme lorsque l'utilisateur saisit successivement <code>4</code>, <code>0</code> et <code>abc</code> ?</p><pre class="code-lu">${colorer('try:\n    x = int(input())\n    print("A")\n    y = 12 / x\n    print("B")\nexcept ValueError:\n    print("C")\nexcept ZeroDivisionError:\n    print("D")\nelse:\n    print("E", y)\nfinally:\n    print("F")')}</pre>`,
+ s:[`<table class="t"><tr><th>Saisie</th><th>Affichage</th><th>Explication</th></tr><tr><td>4</td><td>A, B, E 3.0, F</td><td>aucune erreur : le bloc else s'exécute</td></tr><tr><td>0</td><td>A, D, F</td><td>la division échoue après « A »</td></tr><tr><td>abc</td><td>C, F</td><td><code>int("abc")</code> échoue dès la première ligne</td></tr></table>`,
+ {code:R`for saisie in ["4", "0", "abc"]:
+    print("--- Saisie :", saisie)
+    try:
+        x = int(saisie)
+        print("A")
+        y = 12 / x
+        print("B")
+    except ValueError:
+        print("C")
+    except ZeroDivisionError:
+        print("D")
+    else:
+        print("E", y)
+    finally:
+        print("F")`}]},
+{t:'Saisie contrôlée',
+ e:`<p>Ecrire une fonction <code>lire_entier(message, mini, maxi)</code> qui redemande la saisie tant que l'utilisateur ne fournit pas un entier compris entre <code>mini</code> et <code>maxi</code>, en affichant un message adapté à chaque erreur. L'utiliser pour lire un mois (1 à 12).</p>`,
+ s:[{code:R`def lire_entier(message, mini, maxi):
+    while True:
+        try:
+            n = int(input(message))
+        except ValueError:
+            print("Veuillez saisir un nombre entier.")
+            continue
+        if mini <= n <= maxi:
+            return n
+        print(f"La valeur doit être comprise entre {mini} et {maxi}.")
+
+mois = lire_entier("Mois : ", 1, 12)
+print("Mois retenu :", mois)`, entree:'juin\n13\n6'}]},
+{t:'Tables de multiplication dans un fichier',
+ e:`<ol><li>Ecrire dans le fichier <code>tables.txt</code> les tables de multiplication de 1 à 9, une ligne par produit (ex. <code>7 x 8 = 56</code>).</li><li>Relire le fichier et afficher le nombre de lignes ainsi que les lignes dont le résultat dépasse 70.</li></ol>`,
+ s:[{code:R`with open("tables.txt", "w", encoding="utf-8") as f:
+    for i in range(1, 10):
+        for j in range(1, 11):
+            f.write(f"{i} x {j} = {i * j}\n")
+
+nb = 0
+with open("tables.txt", encoding="utf-8") as f:
+    for ligne in f:
+        nb += 1
+        resultat = int(ligne.split("=")[1])
+        if resultat > 70:
+            print(ligne.strip())
+print("Nombre de lignes :", nb)`}]},
+{t:'Bulletin à partir d\'un fichier CSV',
+ e:`<p>Le fichier <code>notes.csv</code> contient une ligne par étudiant : <code>nom;note1;note2;note3</code>. Ecrire un programme qui :</p><ol><li>crée ce fichier avec quatre étudiants (dont une ligne erronée) ;</li><li>le lit, calcule la moyenne de chaque étudiant en ignorant les lignes erronées ;</li><li>écrit le fichier <code>resultats.csv</code> contenant <code>nom;moyenne;décision</code> ;</li><li>affiche le contenu de <code>resultats.csv</code>.</li></ol>`,
+ s:[{code:R`with open("notes.csv", "w", encoding="utf-8") as f:
+    f.write("Sara;14;16;12\n")
+    f.write("Anas;9;11;8.5\n")
+    f.write("Hind;17;;18\n")
+    f.write("Omar;10;12;11\n")
+
+with open("notes.csv", encoding="utf-8") as fin, \
+     open("resultats.csv", "w", encoding="utf-8") as fout:
+    fout.write("nom;moyenne;decision\n")
+    for ligne in fin:
+        champs = ligne.strip().split(";")
+        try:
+            notes = [float(x) for x in champs[1:]]
+            moy = sum(notes) / len(notes)
+        except (ValueError, ZeroDivisionError):
+            print("Ligne ignorée :", ligne.strip())
+            continue
+        decision = "Admis" if moy >= 10 else "Ajourné"
+        fout.write(f"{champs[0]};{moy:.2f};{decision}\n")
+
+with open("resultats.csv", encoding="utf-8") as f:
+    print(f.read())`}]},
+{t:'Statistiques d\'un fichier texte',
+ e:`<p>Ecrire une fonction <code>statistiques(nom_fichier)</code> qui renvoie le nombre de lignes, de mots et de caractères d'un fichier texte, et affiche un message clair si le fichier n'existe pas. La tester sur un fichier créé par le programme et sur un fichier absent.</p>`,
+ s:[{code:R`def statistiques(nom_fichier):
+    try:
+        with open(nom_fichier, encoding="utf-8") as f:
+            lignes = f.readlines()
+    except FileNotFoundError:
+        print("Fichier introuvable :", nom_fichier)
+        return None
+    nb_mots = sum(len(l.split()) for l in lignes)
+    nb_car = sum(len(l) for l in lignes)
+    return len(lignes), nb_mots, nb_car
+
+with open("poeme.txt", "w", encoding="utf-8") as f:
+    f.write("Python est simple\n")
+    f.write("Python est puissant\n")
+    f.write("Programmer est un plaisir\n")
+
+print(statistiques("poeme.txt"))
+print(statistiques("absent.txt"))`}]}
+]
+};
+
 route();
 Py.init();
-
 </script>
 </body>
 </html>
