@@ -102,6 +102,17 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 .app.soon{border-style:dashed}.badge{display:inline-block;font:500 11px var(--mono);padding:3px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--muted);margin-left:6px;vertical-align:2px}
 .byline{font-size:15px;color:var(--muted);margin:-6px 0 18px}.byline b{color:var(--ink)}
 .app .by{display:block;font:500 12.5px var(--mono);color:var(--sand);margin:0 0 12px}
+.fil-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+.fil-nav a{font:500 13px var(--mono);padding:7px 12px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.fil-nav a:hover{border-color:var(--accent);color:var(--accent)}
+.filiere{margin:0 0 38px;scroll-margin-top:90px}
+.fil-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;border-bottom:2px solid var(--line);padding-bottom:8px;margin-bottom:6px}
+.fil-head h2{font:700 24px var(--display);margin:0}
+.fil-head span{color:var(--muted);font-size:15px}
+.fil-head em{margin-left:auto;font:500 12px var(--mono);font-style:normal;color:var(--sand)}
+.sem{font:600 13px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:18px 0 12px}
+.filiere>.apps:first-of-type{margin-top:16px}
+.filiere .apps{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 </style>
 </head>
 <body>
@@ -119,20 +130,17 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
   <h1>Apprendre en manipulant</h1>
   <p class="lead">Des logiciels gratuits, utilisables dans le navigateur sur ordinateur ou téléphone, pour s'entraîner avant et après les séances de cours et de TP.</p>
   <p class="byline">Logiciels conçus et développés par <b>Pr Mounir HANINE</b> · Faculté des Sciences Errachidia · Université Moulay Ismail</p>
-  <div class="apps">
+  <nav class="fil-nav" aria-label="Filières"><a href="#licence-digitalisation">Licence Digitalisation</a><a href="#licence-pro-francais">Licence Professionnelle Enseignement du français</a><a href="#master-ese">Master ESE</a><a href="#master-tourisme">Master Communication Touristique et Valorisation du Patrimoine</a><a href="#master-acbi">Master ACBI</a></nav>
+  <section class="filiere" id="licence-digitalisation">
+    <div class="fil-head"><h2>Licence Digitalisation</h2><span>Tronc Commun Informatique Appliquée</span><em>5 logiciels</em></div>
+    <h3 class="sem">Semestre 1 (S1)</h3>
+    <div class="apps">
     <article class="app">
       <span class="ic">py</span><h2>Programmation Python 1</h2><div class="appmod">Programmation Python · Tronc Commun Informatique Appliquée – S1 – Licence Digitalisation</div>
       <p>Apprendre Python chapitre par chapitre, en programmant directement dans le navigateur : rien à installer.</p>
       <ul><li>9 chapitres, des variables aux exceptions et fichiers</li><li>un cours détaillé avec schémas et 84 exemples modifiables à exécuter</li><li>45 exercices de travaux dirigés avec solutions détaillées</li><li>27 exercices corrigés automatiquement</li><li>un quiz par chapitre et suivi de la progression</li><li>espace « Mon programme » pour écrire, tester et enregistrer ses propres programmes</li></ul>
       <span class="by">par Pr S. FAYZ et Pr M. HANINE</span>
       <a class="btn" href="python.html">Ouvrir Programmation Python 1</a>
-    </article>
-    <article class="app">
-      <span class="ic">RO</span><h2>Recherche Opérationnelle et Optimisation</h2><div class="appmod">Recherche opérationnelle · Licence Digitalisation – Tronc Commun Informatique Appliquée – S3</div>
-      <p>Tout le module en 10 chapitres, avec des outils de calcul interactifs pour expérimenter chaque méthode : rien à installer.</p>
-      <ul><li>cours détaillé : optimisation avec et sans contraintes, programmation linéaire, dualité, nombres entiers, graphes</li><li>travaux dirigés corrigés pour chaque chapitre</li><li>simplexe pas à pas (deux phases, grand M), résolution graphique, dualité et analyse de sensibilité</li><li>gradient, gradient conjugué, conditions KKT, séparation et évaluation</li><li>Dijkstra, Bellman-Ford, Kruskal, Prim, coloration et flot maximum</li><li>un quiz par chapitre</li></ul>
-      <span class="by">par M. HANINE</span>
-      <a class="btn" href="recherche-operationnelle.html">Ouvrir Recherche Opérationnelle</a>
     </article>
     <article class="app">
       <span class="ic">{ C }</span><h2>Programmation C 1</h2><div class="appmod">Programmation en langage C · Licence Digitalisation – Tronc commun Informatique appliquée (S1)</div>
@@ -155,33 +163,40 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
       <span class="by">par M. HANINE</span>
       <a class="btn" href="numerix.html">Ouvrir NumériLab</a>
     </article>
+    </div>
+    <h3 class="sem">Semestre 3 (S3)</h3>
+    <div class="apps">
     <article class="app">
-      <span class="ic">SCPI</span><h2>Banc virtuel FSE</h2><div class="appmod">Master ESE · Licence Digitalisation</div>
-      <p>Banc virtuel de contrôle d’instruments de la Faculté des Sciences d’Errachidia : un générateur SEFRAM 4463 et un oscilloscope SEFRAM 5062DC simulés, pilotés avec leurs vraies commandes SCPI. Les vrais appareils sont disponibles en salle B2 de la Faculté des Sciences d’Errachidia.</p>
-      <ul><li>face avant et écran d'oscilloscope</li><li>console SCPI avec file d'erreurs</li><li>chaîne LabVIEW « Formater en chaîne »</li><li>6 défis corrigés</li><li>manuels des appareils à télécharger</li></ul>
+      <span class="ic">RO</span><h2>Recherche Opérationnelle et Optimisation</h2><div class="appmod">Recherche opérationnelle · Licence Digitalisation – Tronc Commun Informatique Appliquée – S3</div>
+      <p>Tout le module en 10 chapitres, avec des outils de calcul interactifs pour expérimenter chaque méthode : rien à installer.</p>
+      <ul><li>cours détaillé : optimisation avec et sans contraintes, programmation linéaire, dualité, nombres entiers, graphes</li><li>travaux dirigés corrigés pour chaque chapitre</li><li>simplexe pas à pas (deux phases, grand M), résolution graphique, dualité et analyse de sensibilité</li><li>gradient, gradient conjugué, conditions KKT, séparation et évaluation</li><li>Dijkstra, Bellman-Ford, Kruskal, Prim, coloration et flot maximum</li><li>un quiz par chapitre</li></ul>
       <span class="by">par M. HANINE</span>
-      <a class="btn" href="generateur.html">Ouvrir le banc virtuel</a>
+      <a class="btn" href="recherche-operationnelle.html">Ouvrir Recherche Opérationnelle</a>
     </article>
-    <article class="app">
-      <span class="ic">TO %</span><h2>Riad digital</h2><div class="appmod">Culture digitale et tourisme · Master (S7)</div>
-      <p>Simulateur de gestion d'un hébergement touristique à Merzouga : prix, stratégie digitale, avis en ligne et plateformes de réservation.</p>
-      <ul><li>tableau de bord : TO, ADR, RevPAR, résultat</li><li>feuille « Mensuel » avec les formules Excel du TP 5</li><li>export vers Excel (.csv)</li><li>objectifs de gestion et exercices de calcul</li></ul>
-      <span class="by">par M. HANINE</span>
-      <a class="btn" href="tourisme.html">Ouvrir Riad digital</a>
-    </article>
-    <article class="app">
-      <span class="ic">AUDIT</span><h2>Audit SI Lab</h2><div class="appmod">Audit des systèmes d’information pour le Master ACBI S9</div>
-      <p>Mission d'audit simulée du SI d'une entreprise fictive d'Errachidia : comptes, journal des connexions, sauvegardes et factures.</p>
-      <ul><li>10 contrôles d'audit avec leur formule Excel</li><li>anomalies surlignées dans les feuilles</li><li>niveau de risque et recommandations</li><li>rapport d'audit imprimable, export .csv</li></ul>
-      <span class="by">par M. HANINE</span>
-      <a class="btn" href="audit.html">Ouvrir Audit SI Lab</a>
-    </article>
+    </div>
+  </section>
+  <section class="filiere" id="licence-pro-francais">
+    <div class="fil-head"><h2>Licence Professionnelle Enseignement du français</h2><span>Informatique appliquée aux langues</span><em>1 logiciel</em></div>
+    <h3 class="sem">Semestre 5 (S5)</h3>
+    <div class="apps">
     <article class="app">
       <span class="ic">20/20</span><h2>Classe numérique</h2><div class="appmod">Informatique appliquée aux langues · Licence Pro Enseignement du français (S5)</div>
       <p>Le carnet de notes d'un professeur de français de 3<sup>e</sup> année collège : le tableur au service de l'enseignant.</p>
       <ul><li>notes, coefficients et épreuves modifiables</li><li>moyennes, mentions et rangs calculés par les formules Excel</li><li>statistiques de la classe et bulletin individuel</li><li>exercices corrigés pour s'entraîner</li></ul>
       <span class="by">par M. HANINE</span>
       <a class="btn" href="classe.html">Ouvrir Classe numérique</a>
+    </article>
+    </div>
+  </section>
+  <section class="filiere" id="master-ese">
+    <div class="fil-head"><h2>Master ESE</h2><span>Informatique industrielle et contrôle d’instruments · également utilisé en Licence Digitalisation</span><em>2 logiciels</em></div>
+    <div class="apps">
+    <article class="app">
+      <span class="ic">SCPI</span><h2>Banc virtuel FSE</h2><div class="appmod">Master ESE · Licence Digitalisation</div>
+      <p>Banc virtuel de contrôle d’instruments de la Faculté des Sciences d’Errachidia : un générateur SEFRAM 4463 et un oscilloscope SEFRAM 5062DC simulés, pilotés avec leurs vraies commandes SCPI. Les vrais appareils sont disponibles en salle B2 de la Faculté des Sciences d’Errachidia.</p>
+      <ul><li>face avant et écran d'oscilloscope</li><li>console SCPI avec file d'erreurs</li><li>chaîne LabVIEW « Formater en chaîne »</li><li>6 défis corrigés</li><li>manuels des appareils à télécharger</li></ul>
+      <span class="by">par M. HANINE</span>
+      <a class="btn" href="generateur.html">Ouvrir le banc virtuel</a>
     </article>
     <article class="app soon">
       <span class="ic">VISA</span><h2>Application de pilotage du banc <span class="badge">bientôt</span></h2><div class="appmod">Master ESE · Licence Digitalisation</div>
@@ -190,7 +205,34 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
       <span class="by">par M. HANINE</span>
       <span class="btn ghost" aria-disabled="true">Téléchargement prochainement</span>
     </article>
-  </div>
+    </div>
+  </section>
+  <section class="filiere" id="master-tourisme">
+    <div class="fil-head"><h2>Master Communication Touristique et Valorisation du Patrimoine</h2><span>Culture digitale et tourisme</span><em>1 logiciel</em></div>
+    <h3 class="sem">Semestre 7 (S7)</h3>
+    <div class="apps">
+    <article class="app">
+      <span class="ic">TO %</span><h2>Riad digital</h2><div class="appmod">Culture digitale et tourisme · Master (S7)</div>
+      <p>Simulateur de gestion d'un hébergement touristique à Merzouga : prix, stratégie digitale, avis en ligne et plateformes de réservation.</p>
+      <ul><li>tableau de bord : TO, ADR, RevPAR, résultat</li><li>feuille « Mensuel » avec les formules Excel du TP 5</li><li>export vers Excel (.csv)</li><li>objectifs de gestion et exercices de calcul</li></ul>
+      <span class="by">par M. HANINE</span>
+      <a class="btn" href="tourisme.html">Ouvrir Riad digital</a>
+    </article>
+    </div>
+  </section>
+  <section class="filiere" id="master-acbi">
+    <div class="fil-head"><h2>Master ACBI</h2><span>Audit des systèmes d’information</span><em>1 logiciel</em></div>
+    <h3 class="sem">Semestre 9 (S9)</h3>
+    <div class="apps">
+    <article class="app">
+      <span class="ic">AUDIT</span><h2>Audit SI Lab</h2><div class="appmod">Audit des systèmes d’information pour le Master ACBI S9</div>
+      <p>Mission d'audit simulée du SI d'une entreprise fictive d'Errachidia : comptes, journal des connexions, sauvegardes et factures.</p>
+      <ul><li>10 contrôles d'audit avec leur formule Excel</li><li>anomalies surlignées dans les feuilles</li><li>niveau de risque et recommandations</li><li>rapport d'audit imprimable, export .csv</li></ul>
+      <span class="by">par M. HANINE</span>
+      <a class="btn" href="audit.html">Ouvrir Audit SI Lab</a>
+    </article>
+    </div>
+  </section>
 </main>
 <footer><div class="wrap"><span>Logiciels didactiques · Pr. Mounir Hanine · Université Moulay Ismaïl</span><span class="yr" id="copyr"></span></div></footer>
 <script>document.getElementById('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';</script>
