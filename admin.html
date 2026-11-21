@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Administration – Demandes de livres</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root { --bleu:#0b4f8a; --bleu2:#e8f0f8; --texte:#1d2733; --gris:#6b7785; --bord:#d5dde6; --ok:#1d7a46; --err:#b3261e; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Source Sans 3",system-ui,sans-serif; color:var(--texte); background:#f5f7fa; }
+  header { background:var(--bleu); color:#fff; padding:16px; }
+  header .wrap { max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  header h1 { margin:0; font-size:1.3rem; }
+  header small { opacity:.85; }
+  main { max-width:1280px; margin:18px auto 40px; padding:0 16px; }
+  .card { background:#fff; border:1px solid var(--bord); border-radius:10px; padding:16px; margin-bottom:16px; }
+  input, select { padding:8px 9px; border:1px solid var(--bord); border-radius:6px; font:inherit; background:#fff; }
+  button { font:inherit; cursor:pointer; border-radius:6px; }
+  .primary { background:var(--bleu); color:#fff; border:none; padding:9px 18px; font-weight:600; }
+  .secondary { background:var(--bleu2); color:var(--bleu); border:1px solid #b9cfe6; padding:8px 14px; font-weight:600; }
+  .ghost { background:none; border:1px solid rgba(255,255,255,.6); color:#fff; padding:6px 12px; }
+  .danger { background:none; border:none; color:var(--err); padding:4px 6px; }
+  .tabs { display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
+  .tabs button { background:#fff; border:1px solid var(--bord); padding:9px 16px; font-weight:600; color:var(--gris); }
+  .tabs button.on { background:var(--bleu); color:#fff; border-color:var(--bleu); }
+  .filters { display:flex; gap:10px; flex-wrap:wrap; align-items:end; }
+  .filters label { display:block; font-size:.82rem; font-weight:600; color:var(--gris); margin-bottom:3px; }
+  .stats { display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 0; }
+  .stat { background:var(--bleu2); border-radius:8px; padding:8px 14px; min-width:120px; }
+  .stat b { display:block; font-size:1.35rem; color:var(--bleu); }
+  .stat span { font-size:.82rem; color:var(--gris); }
+  .tbl { overflow:auto; }
+  table { border-collapse:collapse; width:100%; font-size:.92rem; }
+  th, td { text-align:left; padding:7px 8px; border-bottom:1px solid #e7ecf1; vertical-align:top; }
+  th { background:#f0f4f8; position:sticky; top:0; font-size:.84rem; color:#41505f; white-space:nowrap; }
+  td.n { text-align:right; font-variant-numeric:tabular-nums; }
+  .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:.8rem; font-weight:600; }
+  .b-En.attente { }
+  .st-0 { background:#fff4d6; color:#7a5800; } .st-1 { background:#e3eefb; color:#0b4f8a; }
+  .st-2 { background:#e6f4ec; color:#1d7a46; } .st-3 { background:#fbeaea; color:#b3261e; }
+  .muted { color:var(--gris); font-size:.85rem; }
+  .msg { padding:10px 12px; border-radius:6px; margin:10px 0; display:none; }
+  .msg.ok { display:block; background:#e6f4ec; color:var(--ok); } .msg.err { display:block; background:#fbeaea; color:var(--err); }
+  #login { max-width:380px; margin:60px auto; }
+  #login input { width:100%; margin:8px 0 14px; }
+  .hidden { display:none !important; }
+  td input { width:100%; padding:6px 7px; }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div><small id="hdr-etab"></small><h1>Demandes de livres – Administration</h1></div>
+  <button class="ghost hidden" id="logout">Se déconnecter</button>
+</div></header>
+
+<main>
+  <div class="card" id="login">
+    <h2 style="margin-top:0;color:var(--bleu)">Connexion</h2>
+    <label for="pwd">Mot de passe administrateur</label>
+    <input type="password" id="pwd" autocomplete="current-password">
+    <button class="primary" id="btnLogin">Se connecter</button>
+    <div class="msg" id="loginMsg"></div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="tabs">
+      <button data-tab="demandes" class="on">Demandes</button>
+      <button data-tab="groupes">Livres regroupés (achats)</button>
+      <button data-tab="filieres">Filières et modules</button>
+    </div>
+
+    <div class="card" id="filterCard">
+      <div class="filters">
+        <div><label>Filière</label><select id="fFiliere"></select></div>
+        <div><label>Semestre</label><select id="fSemestre"></select></div>
+        <div><label>Statut</label><select id="fStatut"></select></div>
+        <div><label>Recherche</label><input id="fTexte" placeholder="Titre, auteur, CNE…"></div>
+        <button class="secondary" id="refresh">Actualiser</button>
+        <button class="primary" id="export">Exporter en Excel</button>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="msg" id="msg"></div>
+    </div>
+
+    <div class="card tbl" id="tab-demandes"><table id="tDemandes"></table></div>
+    <div class="card tbl hidden" id="tab-groupes">
+      <p class="muted" style="margin-top:0">Un livre demandé par plusieurs étudiants apparaît sur une seule ligne (même ISBN, ou même titre et même auteur). Le statut choisi ici s'applique à toutes les demandes du groupe visibles avec les filtres actuels.</p>
+      <table id="tGroupes"></table>
+    </div>
+    <div class="card hidden" id="tab-filieres">
+      <p class="muted" style="margin-top:0">Liste proposée aux étudiants dans le formulaire. Une ligne par module ; laissez « Module » vide si la filière n'a pas encore de modules saisis.</p>
+      <div class="tbl"><table id="tFilieres"></table></div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <button class="secondary" id="addFil">+ Ajouter une ligne</button>
+        <button class="primary" id="saveFil">Enregistrer la liste</button>
+      </div>
+      <div class="msg" id="filMsg"></div>
+    </div>
+  </div>
+</main>
+
+<script src="config.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  $("hdr-etab").textContent = UNIVERSITE + " · " + ETABLISSEMENT;
+  let PWD = "";
+  let DATA = [], STATUTS = [], FIL = [];
+  try { PWD = sessionStorage.getItem("adm_pwd") || ""; } catch (e) {}
+
+  /* ---------- utilitaires ---------- */
+  const uniq = (a) => [...new Set(a)];
+  const byFr = (a, b) => String(a).localeCompare(String(b), "fr", { numeric: true });
+  function norm(s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9؀-ۿ]+/g, " ").trim(); }
+  function cleanIsbn(s) { return String(s || "").toUpperCase().replace(/[^0-9X]/g, "").slice(0, 13); }
+  function bookKey(r) { const i = cleanIsbn(r.isbn); return i ? "isbn:" + i : "t:" + norm(r.titre) + "|" + norm(r.auteur); }
+  function el(tag, text, cls) { const e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+  function showMsg(id, type, text) { const m = $(id); m.className = "msg " + type; m.textContent = text; if (type === "ok") setTimeout(() => { m.className = "msg"; }, 4000); }
+  function fill(sel, values, all) {
+    const prev = sel.value; sel.innerHTML = "";
+    sel.appendChild(Object.assign(el("option", all), { value: "" }));
+    values.forEach(v => sel.appendChild(Object.assign(el("option", v), { value: v })));
+    if (values.includes(prev)) sel.value = prev;
+  }
+  function badge(st) { return el("span", st, "badge st-" + Math.max(0, STATUTS.indexOf(st))); }
+  function statusSelect(current, onChange) {
+    const s = document.createElement("select");
+    if (current === null) s.appendChild(Object.assign(el("option", "— mixte —"), { value: "" }));
+    STATUTS.forEach(v => s.appendChild(Object.assign(el("option", v), { value: v })));
+    s.value = current || "";
+    s.onchange = () => { if (s.value) onChange(s.value, s); };
+    return s;
+  }
+
+  /* ---------- connexion ---------- */
+  async function login(p) {
+    PWD = p;
+    const r = await apiCall({ action: "login", password: PWD });
+    STATUTS = r.statuts;
+    try { sessionStorage.setItem("adm_pwd", PWD); } catch (e) {}
+    $("login").classList.add("hidden"); $("app").classList.remove("hidden"); $("logout").classList.remove("hidden");
+    await load();
+  }
+  $("btnLogin").onclick = async () => {
+    $("btnLogin").disabled = true;
+    try { await login($("pwd").value); } catch (e) { showMsg("loginMsg", "err", e.message); }
+    $("btnLogin").disabled = false;
+  };
+  $("pwd").addEventListener("keydown", e => { if (e.key === "Enter") $("btnLogin").click(); });
+  $("logout").onclick = () => { try { sessionStorage.removeItem("adm_pwd"); } catch (e) {} location.reload(); };
+
+  /* ---------- données ---------- */
+  async function load() {
+    $("refresh").disabled = true;
+    try {
+      const r = await apiCall({ action: "list", password: PWD });
+      DATA = r.demandes; STATUTS = r.statuts; FIL = r.filieres;
+      const fils = uniq(DATA.map(d => d.filiere).concat(FIL.map(f => f.filiere))).filter(Boolean).sort(byFr);
+      fill($("fFiliere"), fils, "Toutes");
+      updateSemestres();
+      fill($("fStatut"), STATUTS, "Tous");
+      renderFilieres();
+      render();
+    } catch (e) { showMsg("msg", "err", e.message); }
+    $("refresh").disabled = false;
+  }
+  function updateSemestres() {
+    const f = $("fFiliere").value;
+    const src = DATA.concat(FIL).filter(d => !f || d.filiere === f);
+    fill($("fSemestre"), uniq(src.map(d => d.semestre)).filter(Boolean).sort(byFr), "Tous");
+  }
+  function filtered() {
+    const f = $("fFiliere").value, s = $("fSemestre").value, st = $("fStatut").value, q = norm($("fTexte").value);
+    return DATA.filter(d => (!f || d.filiere === f) && (!s || d.semestre === s) && (!st || d.statut === st) &&
+      (!q || norm([d.titre, d.auteur, d.editeur, d.isbn, d.cne, d.nom, d.prenom, d.module].join(" ")).includes(q)));
+  }
+  function groups(rows) {
+    const m = new Map(), parTitre = new Map();
+    const tkey = d => "t:" + norm(d.titre) + "|" + norm(d.auteur);
+    // Les demandes avec ISBN d'abord ; une demande sans ISBN rejoint le groupe du même titre/auteur
+    rows.filter(d => cleanIsbn(d.isbn)).forEach(d => { if (!parTitre.has(tkey(d))) parTitre.set(tkey(d), bookKey(d)); });
+    rows.forEach(d => {
+      const k = cleanIsbn(d.isbn) ? bookKey(d) : (parTitre.get(tkey(d)) || tkey(d));
+      if (!m.has(k)) m.set(k, { titre: d.titre, auteur: d.auteur, editeur: d.editeur, isbn: d.isbn, edition: d.edition, items: [] });
+      const g = m.get(k); g.items.push(d);
+      ["editeur", "isbn", "edition"].forEach(f => { if (!g[f] && d[f]) g[f] = d[f]; });
+    });
+    return [...m.values()].map(g => {
+      const sts = uniq(g.items.map(i => i.statut));
+      return Object.assign(g, {
+        nb: g.items.length,
+        etudiants: uniq(g.items.map(i => i.cne)).length,
+        filsem: uniq(g.items.map(i => i.filiere + " (" + i.semestre + ")")).sort(byFr).join(" ; "),
+        modules: uniq(g.items.map(i => i.module).filter(Boolean)).join(" ; "),
+        statut: sts.length === 1 ? sts[0] : null
+      });
+    }).sort((a, b) => b.nb - a.nb || byFr(a.titre, b.titre));
+  }
+
+  async function setStatus(ids, statut, sel) {
+    if (sel) sel.disabled = true;
+    try {
+      const r = await apiCall({ action: "setStatus", password: PWD, ids, statut });
+      const set = new Set(ids); DATA.forEach(d => { if (set.has(d.id)) d.statut = statut; });
+      showMsg("msg", "ok", r.updated + " demande(s) passée(s) au statut « " + statut + " ».");
+      render();
+    } catch (e) { showMsg("msg", "err", e.message); if (sel) sel.disabled = false; }
+  }
+
+  /* ---------- affichage ---------- */
+  function render() {
+    const rows = filtered(), gs = groups(rows);
+    const st = $("stats"); st.innerHTML = "";
+    const add = (n, t) => { const d = el("div", null, "stat"); d.append(el("b", n), el("span", t)); st.appendChild(d); };
+    add(rows.length, "demandes");
+    add(gs.length, "livres différents");
+    add(uniq(rows.map(r => r.cne)).length, "étudiants");
+    STATUTS.forEach(s => add(rows.filter(r => r.statut === s).length, s.toLowerCase()));
+
+    // Demandes
+    const t = $("tDemandes"); t.innerHTML = "";
+    const h = t.insertRow(); ["Date", "CNE", "Nom et prénom", "Filière", "Sem.", "Module", "Titre", "Auteur(s)", "Éditeur", "ISBN", "Édition", "Statut"].forEach(x => h.appendChild(el("th", x)));
+    if (!rows.length) { const r = t.insertRow(); const c = r.insertCell(); c.colSpan = 12; c.textContent = "Aucune demande pour ces filtres."; c.className = "muted"; }
+    rows.slice().sort((a, b) => byFr(b.date, a.date)).forEach(d => {
+      const r = t.insertRow();
+      [d.date, d.cne, d.nom + " " + d.prenom, d.filiere, d.semestre, d.module, d.titre, d.auteur, d.editeur, d.isbn, d.edition].forEach(v => r.insertCell().textContent = v);
+      r.insertCell().appendChild(statusSelect(d.statut, (v, s) => setStatus([d.id], v, s)));
+    });
+
+    // Groupes
+    const g = $("tGroupes"); g.innerHTML = "";
+    const hg = g.insertRow(); ["Titre", "Auteur(s)", "Éditeur", "ISBN", "Édition", "Demandes", "Étudiants", "Filières (semestre)", "Modules", "Statut"].forEach(x => hg.appendChild(el("th", x)));
+    if (!gs.length) { const r = g.insertRow(); const c = r.insertCell(); c.colSpan = 10; c.textContent = "Aucun livre pour ces filtres."; c.className = "muted"; }
+    gs.forEach(x => {
+      const r = g.insertRow();
+      [x.titre, x.auteur, x.editeur, x.isbn, x.edition].forEach(v => r.insertCell().textContent = v);
+      Object.assign(r.insertCell(), { textContent: x.nb, className: "n" });
+      Object.assign(r.insertCell(), { textContent: x.etudiants, className: "n" });
+      r.insertCell().textContent = x.filsem;
+      r.insertCell().textContent = x.modules;
+      r.insertCell().appendChild(statusSelect(x.statut, (v, s) => setStatus(x.items.map(i => i.id), v, s)));
+    });
+  }
+
+  ["fFiliere", "fSemestre", "fStatut"].forEach(id => $(id).addEventListener("change", () => { if (id === "fFiliere") updateSemestres(); render(); }));
+  $("fTexte").addEventListener("input", render);
+  $("refresh").onclick = load;
+
+  document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+    ["demandes", "groupes", "filieres"].forEach(n => $("tab-" + n).classList.toggle("hidden", n !== b.dataset.tab));
+    $("filterCard").classList.toggle("hidden", b.dataset.tab === "filieres");
+  });
+
+  /* ---------- export Excel ---------- */
+  $("export").onclick = () => {
+    if (typeof XLSX === "undefined") return showMsg("msg", "err", "La bibliothèque Excel n'a pas pu se charger. Vérifiez la connexion internet.");
+    const rows = filtered(), gs = groups(rows);
+    const wb = XLSX.utils.book_new();
+    const achats = gs.map(x => ({
+      "Titre": x.titre, "Auteur(s)": x.auteur, "Éditeur": x.editeur, "ISBN": x.isbn, "Édition/Année": x.edition,
+      "Nombre de demandes": x.nb, "Nombre d'étudiants": x.etudiants, "Filières (semestre)": x.filsem, "Modules": x.modules,
+      "Statut": x.statut || "Mixte", "Quantité à commander": "", "Prix unitaire (DH)": "", "Total (DH)": ""
+    }));
+    const ws1 = XLSX.utils.json_to_sheet(achats.length ? achats : [{ "Titre": "Aucun livre" }]);
+    // Formule Total = Quantité x Prix
+    achats.forEach((_, i) => { ws1["M" + (i + 2)] = { t: "n", f: "K" + (i + 2) + "*L" + (i + 2) }; });
+    ws1["!cols"] = [40, 26, 20, 16, 14, 12, 12, 40, 30, 12, 12, 12, 12].map(w => ({ wch: w }));
+    XLSX.utils.book_append_sheet(wb, ws1, "Livres à acheter");
+
+    const det = rows.map(d => ({
+      "Date": d.date, "CNE/Apogée": d.cne, "Nom": d.nom, "Prénom": d.prenom, "Filière": d.filiere, "Semestre": d.semestre,
+      "Module": d.module, "Titre": d.titre, "Auteur(s)": d.auteur, "Éditeur": d.editeur, "ISBN": d.isbn,
+      "Édition/Année": d.edition, "Statut": d.statut
+    }));
+    const ws2 = XLSX.utils.json_to_sheet(det.length ? det : [{ "Date": "Aucune demande" }]);
+    ws2["!cols"] = [16, 14, 16, 16, 30, 9, 26, 40, 26, 20, 16, 14, 12].map(w => ({ wch: w }));
+    XLSX.utils.book_append_sheet(wb, ws2, "Demandes détaillées");
+
+    const part = [$("fFiliere").value, $("fSemestre").value, $("fStatut").value].filter(Boolean).join("_").replace(/[^\wÀ-ſ-]+/g, "-");
+    const today = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, "demandes-livres_" + (part ? part + "_" : "") + today + ".xlsx");
+  };
+
+  /* ---------- filières ---------- */
+  function renderFilieres() {
+    const t = $("tFilieres"); t.innerHTML = "";
+    const h = t.insertRow(); ["Filière", "Semestre", "Module", ""].forEach(x => h.appendChild(el("th", x)));
+    FIL.forEach((f, i) => {
+      const r = t.insertRow();
+      ["filiere", "semestre", "module"].forEach(k => {
+        const inp = Object.assign(document.createElement("input"), { value: f[k] || "", placeholder: k === "semestre" ? "S1" : "" });
+        inp.oninput = () => { FIL[i][k] = inp.value; };
+        r.insertCell().appendChild(inp);
+      });
+      const del = el("button", "Supprimer", "danger"); del.onclick = () => { FIL.splice(i, 1); renderFilieres(); };
+      r.insertCell().appendChild(del);
+    });
+  }
+  $("addFil").onclick = () => {
+    const last = FIL[FIL.length - 1] || {};
+    FIL.push({ filiere: last.filiere || "", semestre: last.semestre || "", module: "" });
+    renderFilieres();
+    const inputs = $("tFilieres").querySelectorAll("input"); inputs[inputs.length - 1].focus();
+  };
+  $("saveFil").onclick = async () => {
+    $("saveFil").disabled = true;
+    try {
+      const r = await apiCall({ action: "saveConfig", password: PWD, filieres: FIL });
+      showMsg("filMsg", "ok", r.count + " ligne(s) enregistrée(s). Le formulaire étudiant est à jour.");
+      await load();
+    } catch (e) { showMsg("filMsg", "err", e.message); }
+    $("saveFil").disabled = false;
+  };
+
+  if (PWD) login(PWD).catch(() => { PWD = ""; try { sessionStorage.removeItem("adm_pwd"); } catch (e) {} });
+</script>
+</body>
+</html>
