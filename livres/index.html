@@ -43,6 +43,18 @@
   .hint { color:var(--gris); font-size:.88rem; margin:0 0 12px; }
   .actions { display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
   .hp { position:absolute; left:-5000px; }
+  .onglets { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+  .onglets button { flex:1; min-width:180px; background:#fff; border:1px solid var(--bord); border-radius:8px; padding:11px 14px; font:inherit; font-weight:600; color:var(--gris); cursor:pointer; }
+  .onglets button.on { background:var(--bleu); color:#fff; border-color:var(--bleu); box-shadow:inset 0 -3px 0 var(--orange); }
+  .suivi-form { display:flex; gap:12px; flex-wrap:wrap; align-items:end; }
+  .suivi-form > div { flex:1; min-width:180px; }
+  .ouvrage { border:1px solid var(--bord); border-radius:8px; padding:12px 14px; margin-top:12px; display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap; }
+  .ouvrage .t { font-weight:700; }
+  .ouvrage .s { color:var(--gris); font-size:.88rem; }
+  .ouvrage .rq { font-size:.88rem; margin-top:6px; color:var(--texte); }
+  .etat { display:inline-block; padding:4px 10px; border-radius:12px; font-size:.85rem; font-weight:700; white-space:nowrap; }
+  .etat-0 { background:#fff4d6; color:#7a5800; } .etat-1 { background:#e3eefb; color:#1f6d93; }
+  .etat-2 { background:#e6f4ec; color:#1d7a46; } .etat-3 { background:#fbeaea; color:#b3261e; }
   footer { text-align:center; color:var(--gris); font-size:.85rem; padding-bottom:24px; }
 </style>
 </head>
@@ -60,6 +72,25 @@
 </header>
 
 <main>
+  <div class="onglets" role="tablist">
+    <button type="button" id="tabNew" class="on">Nouvelle demande</button>
+    <button type="button" id="tabSuivi">Suivre mes demandes</button>
+  </div>
+
+  <section id="suivi" hidden>
+    <div class="card">
+      <h2>Où en sont mes demandes ?</h2>
+      <p class="hint">Saisissez le CNE (ou n° Apogée) et le nom utilisés lors de votre demande.</p>
+      <div class="suivi-form">
+        <div><label for="sCne">CNE ou n° Apogée</label><input id="sCne" maxlength="14" autocomplete="off"></div>
+        <div><label for="sNom">Nom</label><input id="sNom" maxlength="60"></div>
+        <button type="button" class="primary" id="sBtn">Voir mes demandes</button>
+      </div>
+      <div class="msg" id="sMsg" role="status"></div>
+      <div id="sListe"></div>
+    </div>
+  </section>
+
   <form id="form" novalidate>
     <div class="card">
       <h2>1. Vos informations</h2>
@@ -185,7 +216,8 @@
         filiere: $("filiere").value, semestre: $("semestre").value, website: $("website").value, livres });
       let t = "Merci ! " + r.count + " livre(s) enregistré(s).";
       if (r.doublons) t += " " + r.doublons + " livre(s) déjà demandé(s) par vous n'ont pas été ajoutés une seconde fois.";
-      showMsg("ok", t);
+      showMsg("ok", t + " Vous pourrez suivre leur traitement dans l'onglet « Suivre mes demandes ».");
+      $("sCne").value = cne; $("sNom").value = $("nom").value;
       $("livres").innerHTML = ""; addLivre();
     } catch (e) {
       showMsg("err", "La demande n'a pas pu être envoyée : " + e.message);
@@ -193,6 +225,52 @@
       btn.disabled = false; btn.textContent = "Envoyer ma demande";
     }
   });
+
+  /* ---------- Suivi des demandes ---------- */
+  const ETATS = {
+    "En attente": ["En cours d'examen", 0],
+    "Validée": ["Acceptée – commande prévue", 1],
+    "Achetée": ["Commandée", 2],
+    "Refusée": ["Non retenue", 3]
+  };
+  function showTab(suivi) {
+    $("suivi").hidden = !suivi; $("form").hidden = suivi;
+    $("tabSuivi").classList.toggle("on", suivi); $("tabNew").classList.toggle("on", !suivi);
+    try { history.replaceState(null, "", suivi ? "#suivi" : location.pathname + location.search); } catch (e) {}
+  }
+  $("tabNew").onclick = () => showTab(false);
+  $("tabSuivi").onclick = () => showTab(true);
+  if (location.hash === "#suivi") showTab(true);
+
+  function sMsg(type, text) { const m = $("sMsg"); m.className = "msg " + type; m.textContent = text; }
+  async function chercher() {
+    const cne = $("sCne").value.trim().toUpperCase().replace(/\s+/g, "");
+    const nom = $("sNom").value.trim();
+    $("sListe").innerHTML = ""; $("sMsg").className = "msg";
+    if (!/^[A-Z0-9]{6,14}$/.test(cne) || !nom) return sMsg("err", "Indiquez votre CNE (ou n° Apogée) et votre nom.");
+    const btn = $("sBtn"); btn.disabled = true; btn.textContent = "Recherche…";
+    try {
+      const r = await apiCall({ action: "mine", cne, nom });
+      if (!r.demandes.length) { sMsg("err", "Aucune demande trouvée. Vérifiez votre CNE et l'orthographe de votre nom."); return; }
+      sMsg("ok", r.demandes.length + " demande(s) trouvée(s).");
+      r.demandes.slice().reverse().forEach(d => {
+        const [lib, n] = ETATS[d.statut] || [d.statut, 0];
+        const box = document.createElement("div"); box.className = "ouvrage";
+        const g = document.createElement("div");
+        const t = document.createElement("div"); t.className = "t"; t.textContent = d.titre;
+        const s = document.createElement("div"); s.className = "s";
+        s.textContent = d.auteur + (d.module ? " · " + d.module : "") + " · demandé le " + String(d.date).slice(0, 10).split("-").reverse().join("/");
+        g.append(t, s);
+        if (d.remarque) { const rq = document.createElement("div"); rq.className = "rq"; rq.textContent = "Remarque : " + d.remarque; g.appendChild(rq); }
+        const e = document.createElement("span"); e.className = "etat etat-" + n; e.textContent = lib;
+        box.append(g, e); $("sListe").appendChild(box);
+      });
+    } catch (e) {
+      sMsg("err", e.message.indexOf("Action inconnue") >= 0 ? "Le suivi n'est pas encore activé. Réessayez plus tard." : "Recherche impossible : " + e.message);
+    } finally { btn.disabled = false; btn.textContent = "Voir mes demandes"; }
+  }
+  $("sBtn").onclick = chercher;
+  ["sCne", "sNom"].forEach(id => $(id).addEventListener("keydown", e => { if (e.key === "Enter") chercher(); }));
 
   (async function init() {
     addLivre();

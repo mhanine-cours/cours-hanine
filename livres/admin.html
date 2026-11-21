@@ -235,12 +235,21 @@
 
     // Demandes
     const t = $("tDemandes"); t.innerHTML = "";
-    const h = t.insertRow(); ["Date", "CNE", "Nom et prénom", "Filière", "Sem.", "Module", "Titre", "Auteur(s)", "Éditeur", "ISBN", "Édition", "Statut"].forEach(x => h.appendChild(el("th", x)));
-    if (!rows.length) { const r = t.insertRow(); const c = r.insertCell(); c.colSpan = 12; c.textContent = "Aucune demande pour ces filtres."; c.className = "muted"; }
+    const h = t.insertRow(); ["Date", "CNE", "Nom et prénom", "Filière", "Sem.", "Module", "Titre", "Auteur(s)", "Éditeur", "ISBN", "Édition", "Statut", "Remarque (visible par l'étudiant)"].forEach(x => h.appendChild(el("th", x)));
+    if (!rows.length) { const r = t.insertRow(); const c = r.insertCell(); c.colSpan = 13; c.textContent = "Aucune demande pour ces filtres."; c.className = "muted"; }
     rows.slice().sort((a, b) => byFr(b.date, a.date)).forEach(d => {
       const r = t.insertRow();
       [d.date, d.cne, d.nom + " " + d.prenom, d.filiere, d.semestre, d.module, d.titre, d.auteur, d.editeur, d.isbn, d.edition].forEach(v => r.insertCell().textContent = v);
       r.insertCell().appendChild(statusSelect(d.statut, (v, s) => setStatus([d.id], v, s)));
+      const rq = Object.assign(document.createElement("input"), { value: d.remarque || "", maxLength: 200, placeholder: "ex. disponible en mars" });
+      rq.style.minWidth = "180px";
+      rq.onchange = async () => {
+        rq.disabled = true;
+        try { await apiCall({ action: "setStatus", password: PWD, ids: [d.id], statut: d.statut, remarque: rq.value }); d.remarque = rq.value; showMsg("msg", "ok", "Remarque enregistrée."); }
+        catch (e) { showMsg("msg", "err", e.message); }
+        rq.disabled = false;
+      };
+      r.insertCell().appendChild(rq);
     });
 
     // Groupes
