@@ -5,18 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Demande d'achat de livres – Faculté des Sciences d'Errachidia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Noto+Kufi+Arabic:wght@500;600&display=swap" rel="stylesheet">
 <style>
-  :root { --bleu:#0b4f8a; --bleu2:#e8f0f8; --texte:#1d2733; --gris:#6b7785; --bord:#d5dde6; --ok:#1d7a46; --err:#b3261e; }
+  :root { --bleu:#1f6d93; --bleu2:#e6f1f7; --orange:#ef9300; --texte:#1d2733; --gris:#5f6b78; --bord:#d5dde6; --ok:#1d7a46; --err:#b3261e; }
   * { box-sizing:border-box; }
   body { margin:0; font-family:"Source Sans 3",system-ui,sans-serif; color:var(--texte); background:#f5f7fa; line-height:1.45; }
-  header { background:var(--bleu); color:#fff; padding:22px 16px; }
-  header .wrap { max-width:860px; margin:0 auto; }
-  header small { opacity:.85; letter-spacing:.02em; }
-  header h1 { margin:4px 0 0; font-size:1.6rem; }
+  .umi-top { background:#fff; border-bottom:1px solid #e3e8ee; }
+  .umi-top .wrap { margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:18px; }
+  .umi-top img { height:78px; width:auto; display:block; }
+  .umi-top .noms { flex:1; line-height:1.3; }
+  .umi-top .noms b { display:block; color:var(--bleu); font-size:1.05rem; }
+  .umi-top .noms span { color:var(--gris); font-size:.9rem; }
+  .umi-top .ar { font-family:"Noto Kufi Arabic","Source Sans 3",sans-serif; color:var(--bleu); font-size:1rem; text-align:right; }
+  .umi-band { background:var(--bleu); color:#fff; border-bottom:4px solid var(--orange); }
+  .umi-band .wrap { margin:0 auto; padding:14px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  .umi-band h1 { margin:0; font-size:1.35rem; font-weight:700; }
+  .umi-band a, .umi-band .ghost { color:#fff; text-decoration:none; font-size:.92rem; border:1px solid rgba(255,255,255,.55); padding:6px 12px; border-radius:6px; background:none; }
+  .umi-band a:hover, .umi-band .ghost:hover { background:rgba(255,255,255,.12); }
+  @media (max-width:640px) { .umi-top .ar { display:none; } .umi-top img { height:58px; } .umi-band h1 { font-size:1.15rem; } }
   main { max-width:860px; margin:24px auto 48px; padding:0 16px; }
   .card { background:#fff; border:1px solid var(--bord); border-radius:10px; padding:20px; margin-bottom:18px; }
-  .card h2 { margin:0 0 14px; font-size:1.15rem; color:var(--bleu); }
+  .card h2 { margin:0 0 14px; font-size:1.15rem; color:var(--bleu); padding-left:10px; border-left:4px solid var(--orange); }
   .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
   label { display:block; font-weight:600; font-size:.92rem; margin-bottom:4px; }
   label .req { color:var(--err); }
@@ -25,7 +34,7 @@
   .livre { border:1px dashed var(--bord); border-radius:8px; padding:14px; margin-bottom:12px; position:relative; }
   .livre .num { font-weight:700; color:var(--bleu); margin-bottom:10px; }
   .livre .suppr { position:absolute; top:10px; right:10px; background:none; border:none; color:var(--err); cursor:pointer; font:inherit; }
-  button.primary { background:var(--bleu); color:#fff; border:none; padding:11px 22px; border-radius:6px; font:inherit; font-weight:600; cursor:pointer; }
+  button.primary { background:var(--orange); color:#1d2733; border:none; padding:11px 22px; border-radius:6px; font:inherit; font-weight:600; cursor:pointer; }
   button.secondary { background:var(--bleu2); color:var(--bleu); border:1px solid #b9cfe6; padding:9px 16px; border-radius:6px; font:inherit; font-weight:600; cursor:pointer; }
   button:disabled { opacity:.6; cursor:wait; }
   .msg { padding:12px 14px; border-radius:6px; margin-top:14px; display:none; }
@@ -38,11 +47,17 @@
 </style>
 </head>
 <body>
-<header><div class="wrap">
-  <a href="../" style="color:#fff;opacity:.85;font-size:.9rem;text-decoration:none;float:right">← Site de cours</a>
-  <small id="hdr-etab"></small>
-  <h1>Demande d'achat de livres pour la bibliothèque</h1>
-</div></header>
+<header>
+  <div class="umi-top"><div class="wrap" style="max-width:860px">
+    <a href="../"><img src="../images/logo-fs-errachidia.png" alt="Université Moulay Ismaïl – Faculté des Sciences Errachidia"></a>
+    <div class="noms"><b>Faculté des Sciences d'Errachidia</b><span>Université Moulay Ismaïl – Meknès</span></div>
+    <div class="ar" lang="ar" dir="rtl">كلية العلوم – الرشيدية<br>جامعة مولاي إسماعيل</div>
+  </div></div>
+  <div class="umi-band"><div class="wrap" style="max-width:860px">
+    <h1>Demande d'achat de livres pour la bibliothèque</h1>
+    <a href="../">← Site de cours</a>
+  </div></div>
+</header>
 
 <main>
   <form id="form" novalidate>
@@ -81,8 +96,7 @@
   const MAX_LIVRES = 10;
   let filieres = [];
   const $ = (id) => document.getElementById(id);
-  $("hdr-etab").textContent = UNIVERSITE + " · " + ETABLISSEMENT;
-  $("ftr").textContent = ETABLISSEMENT + " – " + UNIVERSITE;
+    $("ftr").textContent = ETABLISSEMENT + " – " + UNIVERSITE;
 
   function uniq(a) { return [...new Set(a)]; }
   function fillSelect(sel, values, placeholder) {
