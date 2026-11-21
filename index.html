@@ -1,195 +1,131 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Demande d'achat de livres – Faculté des Sciences d'Errachidia</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cours Pr. Hanine</title>
+<meta name="description" content="Supports de cours du Pr. Mounir Hanine – Errachidia, Université Moulay Ismaïl : polycopiés, TP corrigés et diaporamas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root { --bleu:#0b4f8a; --bleu2:#e8f0f8; --texte:#1d2733; --gris:#6b7785; --bord:#d5dde6; --ok:#1d7a46; --err:#b3261e; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:"Source Sans 3",system-ui,sans-serif; color:var(--texte); background:#f5f7fa; line-height:1.45; }
-  header { background:var(--bleu); color:#fff; padding:22px 16px; }
-  header .wrap { max-width:860px; margin:0 auto; }
-  header small { opacity:.85; letter-spacing:.02em; }
-  header h1 { margin:4px 0 0; font-size:1.6rem; }
-  main { max-width:860px; margin:24px auto 48px; padding:0 16px; }
-  .card { background:#fff; border:1px solid var(--bord); border-radius:10px; padding:20px; margin-bottom:18px; }
-  .card h2 { margin:0 0 14px; font-size:1.15rem; color:var(--bleu); }
-  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
-  label { display:block; font-weight:600; font-size:.92rem; margin-bottom:4px; }
-  label .req { color:var(--err); }
-  input, select { width:100%; padding:9px 10px; border:1px solid var(--bord); border-radius:6px; font:inherit; background:#fff; }
-  input:focus, select:focus { outline:2px solid #9cc0e4; border-color:var(--bleu); }
-  .livre { border:1px dashed var(--bord); border-radius:8px; padding:14px; margin-bottom:12px; position:relative; }
-  .livre .num { font-weight:700; color:var(--bleu); margin-bottom:10px; }
-  .livre .suppr { position:absolute; top:10px; right:10px; background:none; border:none; color:var(--err); cursor:pointer; font:inherit; }
-  button.primary { background:var(--bleu); color:#fff; border:none; padding:11px 22px; border-radius:6px; font:inherit; font-weight:600; cursor:pointer; }
-  button.secondary { background:var(--bleu2); color:var(--bleu); border:1px solid #b9cfe6; padding:9px 16px; border-radius:6px; font:inherit; font-weight:600; cursor:pointer; }
-  button:disabled { opacity:.6; cursor:wait; }
-  .msg { padding:12px 14px; border-radius:6px; margin-top:14px; display:none; }
-  .msg.ok { display:block; background:#e6f4ec; color:var(--ok); border:1px solid #b8dfc8; }
-  .msg.err { display:block; background:#fbeaea; color:var(--err); border:1px solid #efc1bd; }
-  .hint { color:var(--gris); font-size:.88rem; margin:0 0 12px; }
-  .actions { display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
-  .hp { position:absolute; left:-5000px; }
-  footer { text-align:center; color:var(--gris); font-size:.85rem; padding-bottom:24px; }
-</style>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><div class="wrap">
-  <small id="hdr-etab"></small>
-  <h1>Demande d'achat de livres pour la bibliothèque</h1>
-</div></header>
-
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662">
+      <span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span>
+    </a>
+    <nav class="menu" aria-label="Navigation principale">
+      <a href="index.html#cours">Documents</a>
+      <a href="index.html#modules">Modules</a>
+      <a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a>
+      <a href="apropos.html">A propos</a>
+    </nav>
+  </div>
+</header>
 <main>
-  <form id="form" novalidate>
-    <div class="card">
-      <h2>1. Vos informations</h2>
-      <div class="grid">
-        <div><label for="cne">CNE ou n° Apogée <span class="req">*</span></label><input id="cne" required maxlength="14" autocomplete="off"></div>
-        <div><label for="nom">Nom <span class="req">*</span></label><input id="nom" required maxlength="60"></div>
-        <div><label for="prenom">Prénom <span class="req">*</span></label><input id="prenom" required maxlength="60"></div>
+  <section class="hero wrap">
+    <div class="eyebrow" id="annee"></div>
+    <h1>Du cours au laboratoire virtuel&nbsp;: <em>des ressources pour apprendre en pratiquant</em></h1>
+    <p>Cours, diapositives, travaux pratiques corrigés et études de cas des modules que j'ai enseigné à la Faculté polydisciplinaire et à la Faculté des sciences et techniques d'Errachidia, et que j'enseigne aujourd'hui à la Faculté des sciences d'Errachidia (Université Moulay Ismaïl). Les documents sont mis à jour au fil du semestre.</p>
+    <div class="signal">
+      <span><b id="nb-cours">0</b> modules</span>
+      <span><b id="nb-docs">0</b> documents</span>
+      <span><b>Mise à jour</b> <span id="maj"></span></span>
+    </div>
+  </section>
+  <div class="wrap layout">
+    <section id="cours" aria-labelledby="t-cours">
+      <h2 id="modules">Mes modules</h2>
+      <p class="sub">Chaque module a sa page : objectifs, programme, documents et QCM d'auto-évaluation.</p>
+      <div class="mods" id="mods"></div>
+      <h2 id="t-cours">Mes documents</h2>
+      <p class="sub">Choisissez une rubrique, puis cliquez sur un document pour l'ouvrir ou le télécharger.</p>
+      <div class="tabs" id="tabs" role="tablist" aria-label="Rubriques"></div>
+      <div class="tools">
+        <label class="search" for="q"><input id="q" type="search" placeholder="Rechercher un module, une formation…" aria-label="Rechercher"></label>
+        <div class="chips" id="chips" role="group" aria-label="Filtrer par niveau"></div>
       </div>
-      <div class="grid" style="margin-top:14px">
-        <div><label for="filiere">Filière <span class="req">*</span></label><select id="filiere" required><option value="">Chargement…</option></select></div>
-        <div><label for="semestre">Semestre <span class="req">*</span></label><select id="semestre" required disabled><option value="">Choisir la filière</option></select></div>
-      </div>
-      <input class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    </div>
-
-    <div class="card">
-      <h2>2. Livres demandés</h2>
-      <p class="hint">Indiquez au moins le titre et l'auteur. L'ISBN (au dos du livre, 10 ou 13 chiffres) aide le service des achats à commander la bonne édition.</p>
-      <div id="livres"></div>
-      <button type="button" class="secondary" id="ajouter">+ Ajouter un autre livre</button>
-    </div>
-
-    <div class="actions">
-      <span class="hint" style="margin:0">Les champs marqués <span style="color:var(--err)">*</span> sont obligatoires.</span>
-      <button type="submit" class="primary" id="envoyer">Envoyer ma demande</button>
-    </div>
-    <div class="msg" id="msg" role="status"></div>
-  </form>
+      <div class="courses" id="list"></div>
+      <div class="empty" id="empty" hidden>Aucun document ne correspond à votre recherche.</div>
+    </section>
+    <aside>
+      <section class="panel" id="annonces">
+        <h2>Annonces</h2>
+        <ul class="news" id="news"></ul>
+      </section>
+      <section class="panel contact" id="contact">
+        <h2>Contact</h2>
+        <p id="contact-lieu"></p>
+        <p id="contact-perm"></p>
+        <div class="mail"><code id="mail"></code><button class="copy" id="copy" type="button">Copier</button></div>
+      </section>
+    </aside>
+  </div>
 </main>
-<footer id="ftr"></footer>
+<footer>
+  <div class="wrap">
+    <span>Errachidia · Université Moulay Ismaïl</span>
+    <span class="yr" id="copyr"></span>
+  </div>
+</footer>
+<div class="toast" id="toast" hidden role="status"></div>
 
-<script src="config.js"></script>
+<!-- Contenu du site (modules, annonces, contact) : modifiez seulement data.js -->
+<script src="data.js"></script>
+<script src="qcm-data.js"></script>
+<script src="qcm/c.js"></script>
+<script src="qcm/ii.js"></script>
+<script src="qcm/scratch.js"></script>
+<script src="qcm/langues.js"></script>
+<script src="qcm/tourisme.js"></script>
+<script src="qcm/droit.js"></script>
 <script>
-  const MAX_LIVRES = 10;
-  let filieres = [];
-  const $ = (id) => document.getElementById(id);
-  $("hdr-etab").textContent = UNIVERSITE + " · " + ETABLISSEMENT;
-  $("ftr").textContent = ETABLISSEMENT + " – " + UNIVERSITE;
-
-  function uniq(a) { return [...new Set(a)]; }
-  function fillSelect(sel, values, placeholder) {
-    sel.innerHTML = "";
-    const o = document.createElement("option"); o.value = ""; o.textContent = placeholder; sel.appendChild(o);
-    values.forEach(v => { const x = document.createElement("option"); x.value = v; x.textContent = v; sel.appendChild(x); });
-  }
-  function modulesFor(f, s) {
-    return uniq(filieres.filter(r => r.filiere === f && r.semestre === s && r.module).map(r => r.module)).sort();
-  }
-  function refreshModules() {
-    const mods = modulesFor($("filiere").value, $("semestre").value);
-    document.querySelectorAll(".livre select[data-f='module']").forEach(sel => {
-      const prev = sel.value;
-      fillSelect(sel, mods.concat(["Autre / plusieurs modules"]), mods.length ? "Choisir le module" : "—");
-      if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
-    });
-  }
-
-  $("filiere").addEventListener("change", () => {
-    const f = $("filiere").value;
-    const sems = uniq(filieres.filter(r => r.filiere === f).map(r => r.semestre)).sort((a, b) => a.localeCompare(b, "fr", { numeric: true }));
-    fillSelect($("semestre"), sems, f ? "Choisir le semestre" : "Choisir la filière");
-    $("semestre").disabled = !f;
-    refreshModules();
-  });
-  $("semestre").addEventListener("change", refreshModules);
-
-  function champ(label, f, req, attrs) {
-    const d = document.createElement("div");
-    const l = document.createElement("label");
-    l.textContent = label + " ";
-    if (req) { const s = document.createElement("span"); s.className = "req"; s.textContent = "*"; l.appendChild(s); }
-    const i = document.createElement(f === "module" ? "select" : "input");
-    i.dataset.f = f;
-    Object.assign(i, attrs || {});
-    d.append(l, i);
-    return d;
-  }
-  function renumber() {
-    const items = document.querySelectorAll(".livre");
-    items.forEach((el, i) => {
-      el.querySelector(".num").textContent = "Livre " + (i + 1);
-      el.querySelector(".suppr").style.display = items.length > 1 ? "" : "none";
-    });
-    $("ajouter").disabled = items.length >= MAX_LIVRES;
-  }
-  function addLivre() {
-    if (document.querySelectorAll(".livre").length >= MAX_LIVRES) return;
-    const box = document.createElement("div"); box.className = "livre";
-    const num = document.createElement("div"); num.className = "num";
-    const del = document.createElement("button"); del.type = "button"; del.className = "suppr"; del.textContent = "Retirer";
-    del.onclick = () => { box.remove(); renumber(); };
-    const g1 = document.createElement("div"); g1.className = "grid";
-    g1.append(champ("Titre", "titre", true, { maxLength: 200 }), champ("Auteur(s)", "auteur", true, { maxLength: 150 }));
-    const g2 = document.createElement("div"); g2.className = "grid"; g2.style.marginTop = "12px";
-    g2.append(champ("Éditeur", "editeur", false, { maxLength: 120 }),
-              champ("ISBN", "isbn", false, { maxLength: 20, inputMode: "numeric", placeholder: "978…" }),
-              champ("Édition / année", "edition", false, { maxLength: 40, placeholder: "ex. 3e éd., 2022" }));
-    const g3 = document.createElement("div"); g3.className = "grid"; g3.style.marginTop = "12px";
-    g3.append(champ("Module concerné", "module", false));
-    box.append(num, del, g1, g2, g3);
-    $("livres").appendChild(box);
-    refreshModules();
-    renumber();
-  }
-  $("ajouter").onclick = addLivre;
-
-  function showMsg(type, text) { const m = $("msg"); m.className = "msg " + type; m.textContent = text; m.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
-
-  $("form").addEventListener("submit", async (ev) => {
-    ev.preventDefault();
-    const cne = $("cne").value.trim().toUpperCase().replace(/\s+/g, "");
-    const livres = [...document.querySelectorAll(".livre")].map(el => {
-      const o = {}; el.querySelectorAll("[data-f]").forEach(i => o[i.dataset.f] = i.value.trim()); return o;
-    }).filter(l => l.titre || l.auteur || l.isbn || l.editeur);
-    if (!/^[A-Z0-9]{6,14}$/.test(cne)) return showMsg("err", "Le CNE ou le numéro Apogée doit contenir 6 à 14 lettres ou chiffres.");
-    if (!$("nom").value.trim() || !$("prenom").value.trim()) return showMsg("err", "Indiquez votre nom et votre prénom.");
-    if (!$("filiere").value || !$("semestre").value) return showMsg("err", "Choisissez votre filière et votre semestre.");
-    if (!livres.length) return showMsg("err", "Ajoutez au moins un livre.");
-    if (livres.some(l => !l.titre || !l.auteur)) return showMsg("err", "Chaque livre doit avoir un titre et un auteur.");
-
-    const btn = $("envoyer"); btn.disabled = true; btn.textContent = "Envoi en cours…";
-    try {
-      const r = await apiCall({ action: "submit", cne, nom: $("nom").value, prenom: $("prenom").value,
-        filiere: $("filiere").value, semestre: $("semestre").value, website: $("website").value, livres });
-      let t = "Merci ! " + r.count + " livre(s) enregistré(s).";
-      if (r.doublons) t += " " + r.doublons + " livre(s) déjà demandé(s) par vous n'ont pas été ajoutés une seconde fois.";
-      showMsg("ok", t);
-      $("livres").innerHTML = ""; addLivre();
-    } catch (e) {
-      showMsg("err", "La demande n'a pas pu être envoyée : " + e.message);
-    } finally {
-      btn.disabled = false; btn.textContent = "Envoyer ma demande";
-    }
-  });
-
-  (async function init() {
-    addLivre();
-    try {
-      const r = await apiCall({ action: "config" });
-      filieres = r.filieres || [];
-      fillSelect($("filiere"), uniq(filieres.map(x => x.filiere)).sort((a, b) => a.localeCompare(b, "fr")), filieres.length ? "Choisir la filière" : "Aucune filière configurée");
-    } catch (e) {
-      fillSelect($("filiere"), [], "Indisponible");
-      showMsg("err", "Impossible de charger la liste des filières : " + e.message);
-    }
-  })();
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let filtre='Tous';
+$('annee').textContent=SITE.annee; $('maj').textContent=SITE.maj;
+$('mail').textContent=SITE.email; $('contact-lieu').textContent=SITE.lieu; $('contact-perm').textContent=SITE.permanence;
+$('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
+$('nb-cours').textContent=MODULES.length;
+$('mods').innerHTML=MODULES.map(m=>`<a class="mod" href="module.html?m=${m.id}"><span>${esc(m.niveau)} · ${DOCUMENTS.filter(d=>d.mid===m.id).length} documents${QCM[m.id]?' · QCM':''}</span><b>${esc(m.titre)}</b><span>${esc(m.formation)}</span></a>`).join('');
+$('nb-docs').textContent=DOCUMENTS.length;
+$('news').innerHTML=ANNONCES.map(a=>{const c=`<div class="date"><b>${esc(a.jour)}</b>${esc(a.mois)}</div><p><strong>${esc(a.titre)}${a.lien?' <span class="go">→</span>':''}</strong>${esc(a.texte)}</p>`;return `<li>${a.lien?`<a class="news-link" href="${esc(a.lien)}">${c}</a>`:c}</li>`;}).join('');
+let onglet=(location.hash.startsWith('#r-')&&RUBRIQUES[+location.hash.slice(3)])?RUBRIQUES[+location.hash.slice(3)]:'Tout';
+const rubs=['Tout',...RUBRIQUES.filter(r=>DOCUMENTS.some(d=>d.rubrique===r))];
+function drawTabs(){$('tabs').innerHTML=rubs.map(r=>`<button class="tab" role="tab" type="button" data-r="${esc(r)}" aria-selected="${r===onglet}">${esc(r)}<span class="n">${r==='Tout'?DOCUMENTS.length:DOCUMENTS.filter(d=>d.rubrique===r).length}</span></button>`).join('');}
+drawTabs();
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;onglet=b.dataset.r;drawTabs();render();});
+const niveaux=['Tous',...new Set(DOCUMENTS.flatMap(d=>d.niveau.split(' · ')))];
+$('chips').innerHTML=niveaux.map(n=>`<button class="chip" type="button" data-f="${esc(n)}" aria-pressed="${n===filtre}">${esc(n)}</button>`).join('');
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filtre=b.dataset.f;
+  document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
+const card=d=>`
+    <article class="course">
+      <div class="course-head"><div><div class="code">${esc(d.module)}</div><h3>${esc(d.titre)}</h3></div><span class="level">${esc(d.niveau)}</span></div>
+      <p>${esc(d.desc||'')}</p>
+      <div class="meta"><span>${esc(d.formation)}</span>${d.pages?`<span>${d.pages} pages</span>`:''}</div>
+      <div class="res"><a href="${esc(d.fichier)}" target="_blank" rel="noopener"><span class="fmt">PDF</span>Ouvrir le document</a><a href="module.html?m=${d.mid}">Page du module</a></div>
+    </article>`;
+function render(){
+  const t=$('q').value.trim().toLowerCase();
+  const items=DOCUMENTS.filter(d=>(onglet==='Tout'||d.rubrique===onglet)&&(filtre==='Tous'||d.niveau.split(' · ').includes(filtre))&&(!t||[d.module,d.titre,d.formation,d.desc||''].join(' ').toLowerCase().includes(t)));
+  const groupes=onglet==='Tout'?RUBRIQUES:[onglet];
+  $('list').className='';
+  $('list').innerHTML=groupes.map(r=>{const g=items.filter(d=>d.rubrique===r);if(!g.length)return'';
+    return `<div class="group">${onglet==='Tout'?`<h3 class="gt">${esc(r)}</h3>`:''}<div class="courses">${g.map(card).join('')}</div></div>`}).join('');
+  $('empty').hidden=items.length>0;
+}
+$('q').addEventListener('input',render);
+const toast=$('toast');let tt;
+function show(msg){toast.textContent=msg;toast.hidden=false;clearTimeout(tt);tt=setTimeout(()=>toast.hidden=true,2800)}
+$('copy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText(SITE.email);show('Adresse copiée.')}
+  catch(_){const r=document.createRange();r.selectNodeContents($('mail'));const s=getSelection();s.removeAllRanges();s.addRange(r);show('Adresse sélectionnée : copiez-la avec Ctrl+C.')}
+});
+render();
 </script>
 </body>
 </html>
