@@ -4,11 +4,124 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Cours Pr. Hanine</title>
-<meta name="description" content="Supports de cours du Pr. Mounir Hanine – Errachidia, Université Moulay Ismaïl : polycopiés, TP corrigés et diaporamas.">
+<meta name="description" content="Supports de cours et logiciels pédagogiques du Pr. Mounir Hanine – Faculté des Sciences Errachidia, Université Moulay Ismaïl : polycopiés, TP corrigés, diaporamas, QCM.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
+<style>
+/* ===== Couleurs de l'UMI (bleu #297fa8, orange #ef9300) ===== */
+:root{--bg:#f3f6f9;--line:#d6e0e8;--accent:#297fa8;--accent-ink:#fff;--sand:#d97f00;--sand-soft:#fdf0dc;--umi-dark:#0e3550;--umi-orange:#ef9300}
+@media (prefers-color-scheme:dark){:root{--bg:#0d151c;--paper:#14202a;--line:#243442;--accent:#5bb3dc;--accent-ink:#06202e;--sand:#f5a623;--sand-soft:#2b2010;--umi-dark:#0a2638}}
+/* ===== Page d'accueil (nouvelle mise en page) ===== */
+body{background-image:none}
+header.top{border-top:4px solid var(--accent);position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px)}
+.top .wrap{padding-block:10px;flex-wrap:nowrap}
+.brand .logo{height:64px}
+.brand strong{font-size:17px}
+.brand>span{max-width:none}.brand small{white-space:nowrap}
+@media (max-width:1320px){.brand small{display:none}}
+nav.menu{flex-wrap:nowrap;align-items:center}
+nav.menu a{white-space:nowrap}
+nav.menu a.on{color:var(--ink);background:var(--bg)}
+nav.menu a.cta{background:var(--accent);color:var(--accent-ink);margin-left:6px}
+nav.menu a.cta:hover{background:var(--accent);opacity:.9;color:var(--accent-ink)}
+.burger{display:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:8px 12px;font:600 14px var(--body);cursor:pointer}
+@media (max-width:1060px){
+  .top .wrap{flex-wrap:wrap}
+  .burger{display:block}
+  nav.menu{display:none;width:100%;flex-direction:column;align-items:stretch;padding-bottom:8px}
+  nav.menu.open{display:flex}
+  nav.menu a{padding:10px 12px}
+  nav.menu a.cta{margin:6px 0 0;text-align:center}
+}
+@media (max-width:600px){.brand .logo{height:52px}.brand small{display:none}}
+
+/* Bandeau */
+.band{background:var(--umi-dark);border-bottom:4px solid var(--umi-orange);color:#e9f3f1;position:relative;overflow:hidden}
+.band:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:28px 28px;mask-image:linear-gradient(90deg,transparent,#000 55%)}
+.band:after{content:"";position:absolute;right:-120px;top:-160px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(239,147,0,.30),transparent 65%)}
+.hero2{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:48px;align-items:center;padding-block:64px 72px}
+@media (max-width:900px){.hero2{grid-template-columns:1fr;gap:32px;padding-block:44px 52px}}
+.hero2 .eyebrow{color:#ffb547}
+.hero2 h1{font:700 clamp(28px,3.8vw,46px)/1.1 var(--display);margin:14px 0 18px;text-wrap:balance}
+.hero2 h1 em{font-style:normal;color:#7cc6ea}
+.hero2 p.intro{color:#bcd3e2;font-size:17px;max-width:58ch;margin:0}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.actions .btn{background:var(--umi-orange);color:#1f1300;padding:12px 18px}
+.actions .btn.ghost{background:transparent;color:#e9f3f1;border:1px solid rgba(255,255,255,.3)}
+.actions .btn.ghost:hover{background:rgba(255,255,255,.08)}
+.board{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:22px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:rgba(0,0,0,.18);border-radius:10px;padding:14px 16px;text-decoration:none;color:inherit;transition:background .15s}
+a.stat:hover{background:rgba(0,0,0,.3)}
+.stat b{display:block;font:700 30px/1 var(--display);color:#fff}
+.stat span{font:12px var(--mono);color:#a5c1d4;text-transform:uppercase;letter-spacing:.05em}
+.last{margin-top:14px;display:block;text-decoration:none;color:inherit;border-top:1px solid rgba(255,255,255,.14);padding-top:14px}
+.last small{font:500 12px var(--mono);color:#ffb547;text-transform:uppercase;letter-spacing:.06em}
+.last strong{display:block;margin-top:4px;font-size:16px;color:#fff}
+.last:hover strong{text-decoration:underline}
+.maj{margin-top:10px;font:12px var(--mono);color:#a5c1d4}
+
+/* Sections */
+.sec{padding-block:56px 8px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.sec-head h2{font-size:26px}
+.sec-head .sub{margin:0}
+.kicker{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sand);margin-bottom:6px}
+.more{font:600 14px var(--body);text-decoration:none;white-space:nowrap}
+.more:hover{text-decoration:underline}
+
+/* Logiciels */
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.app2{display:flex;flex-direction:column;gap:8px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px;text-decoration:none;color:var(--ink);transition:transform .15s,border-color .15s,box-shadow .15s}
+.app2:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(41,127,168,.5)}
+.app2 .ic{width:52px;height:40px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:700 13px var(--mono)}
+.app2:nth-child(3n+2) .ic{background:var(--umi-orange);color:#1f1300}
+.app2:nth-child(3n) .ic{background:var(--umi-dark);color:#fff}
+.app2 b{font-size:17px;line-height:1.3}
+.app2 p{margin:0;font-size:14px;color:var(--muted);flex:1}
+.app2 .for{font:12px var(--mono);color:var(--muted);border-top:1px dashed var(--line);padding-top:8px}
+.app2 .for i{font-style:normal;color:var(--accent);font-weight:500}
+
+/* Modules */
+.mods{margin-bottom:0}
+.mod{border-left:4px solid var(--accent);padding:16px 18px;transition:border-color .15s,transform .15s}
+.mod:hover{transform:translateY(-2px)}
+.mod .top2{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.mod .lv{font:500 12px var(--mono);background:var(--sand-soft);color:var(--sand);padding:2px 8px;border-radius:4px}
+.mod .cnt{font:12px var(--mono);color:var(--muted)}
+.mod b{font-size:17px;margin:8px 0 4px}
+.mod .fo{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:13px/1.5 var(--body);color:var(--muted)}
+
+/* Documents + annonces */
+.layout.sec{padding-block:56px 24px}
+.course{padding:18px}
+.course .res{gap:6px}
+.news li:nth-child(n+5){display:none}
+.news.all li:nth-child(n+5){display:grid}
+.news.all li:has(.news-link):nth-child(n+5){display:block}
+.allnews{margin-top:14px;width:100%;font:600 14px var(--body);padding:9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.news .tx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.news.all .tx{display:block}
+
+/* Espaces */
+.spaces{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-block:40px 64px}
+@media (max-width:880px){.spaces{grid-template-columns:1fr}}
+.space{display:block;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px}
+.space:hover{border-color:var(--accent)}
+.space .k{font:500 12px var(--mono);color:var(--sand);text-transform:uppercase;letter-spacing:.06em}
+.space b{display:block;font:700 18px var(--display);margin:8px 0 6px}
+.space p{margin:0;color:var(--muted);font-size:14px}
+.space.dark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.space.dark p{color:color-mix(in srgb,var(--bg) 75%,transparent)}
+.space.dark{background:var(--umi-dark);border-color:var(--umi-dark);color:#e8f1f7}.space.dark p{color:#bcd3e2}.space.dark .k{color:#ffb547}
+
+footer .wrap{align-items:center}
+footer .links{display:flex;gap:16px;flex-wrap:wrap}
+footer .links a{color:var(--muted);text-decoration:none}
+footer .links a:hover{color:var(--accent)}
+</style>
 </head>
 <body>
 <header class="top">
@@ -17,30 +130,65 @@
       <img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662">
       <span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span>
     </a>
-    <nav class="menu" aria-label="Navigation principale">
-      <a href="index.html#cours">Documents</a>
-      <a href="index.html#modules">Modules</a>
-      <a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a>
-      <a href="livres/">Demande de livres</a><a href="apropos.html">A propos</a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    <nav class="menu" id="menu" aria-label="Navigation principale">
+      <a class="on" href="index.html">Accueil</a>
+      <a href="#modules">Modules</a>
+      <a href="#cours">Documents</a>
+      <a href="qcm.html">QCM</a>
+      <a href="enseignants.html">Enseignants</a>
+      <a href="livres/">Demande de livres</a>
+      <a href="apropos.html">A propos</a>
+      <a class="cta" href="logiciels.html">Logiciels</a>
     </nav>
   </div>
 </header>
 <main>
-  <section class="hero wrap">
-    <div class="eyebrow" id="annee"></div>
-    <h1>Du cours au laboratoire virtuel&nbsp;: <em>des ressources pour apprendre en pratiquant</em></h1>
-    <p>Cours, diapositives, travaux pratiques corrigés et études de cas des modules que j'ai enseigné à la Faculté polydisciplinaire et à la Faculté des sciences et techniques d'Errachidia, et que j'enseigne aujourd'hui à la Faculté des sciences d'Errachidia (Université Moulay Ismaïl). Les documents sont mis à jour au fil du semestre.</p>
-    <div class="signal">
-      <span><b id="nb-cours">0</b> modules</span>
-      <span><b id="nb-docs">0</b> documents</span>
-      <span><b>Mise à jour</b> <span id="maj"></span></span>
+  <div class="band">
+    <section class="hero2 wrap">
+      <div>
+        <div class="eyebrow" id="annee"></div>
+        <h1>Du cours au laboratoire virtuel&nbsp;: <em>des ressources pour apprendre en pratiquant</em></h1>
+        <p class="intro">Cours, diapositives, travaux pratiques corrigés, études de cas et logiciels pédagogiques des modules que j'ai enseigné à la Faculté polydisciplinaire et à la Faculté des sciences et techniques d'Errachidia, et que j'enseigne aujourd'hui à la Faculté des sciences d'Errachidia (Université Moulay Ismaïl).</p>
+        <div class="actions">
+          <a class="btn" href="#logiciels">Découvrir les logiciels</a>
+          <a class="btn ghost" href="#cours">Voir les documents</a>
+          <a class="btn ghost" href="qcm.html">S'évaluer avec les QCM</a>
+        </div>
+      </div>
+      <div class="board">
+        <div class="stats">
+          <a class="stat" href="#logiciels"><b id="nb-apps">0</b><span>logiciels</span></a>
+          <a class="stat" href="#modules"><b id="nb-cours">0</b><span>modules</span></a>
+          <a class="stat" href="#cours"><b id="nb-docs">0</b><span>documents</span></a>
+          <a class="stat" href="qcm.html"><b id="nb-qcm">0</b><span>QCM</span></a>
+        </div>
+        <a class="last" id="last" href="#annonces"><small>Dernière nouveauté</small><strong id="last-t"></strong></a>
+        <div class="maj">Mise à jour : <span id="maj"></span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="sec wrap" id="logiciels">
+    <div class="sec-head">
+      <div><div class="kicker">Apprendre en pratiquant</div><h2>Logiciels pédagogiques</h2>
+      <p class="sub">Gratuits, utilisables dans le navigateur sur ordinateur ou téléphone : rien à installer.</p></div>
+      <a class="more" href="logiciels.html">Tous les logiciels, par filière et semestre →</a>
     </div>
+    <div class="apps" id="apps"></div>
   </section>
-  <div class="wrap layout">
+
+  <section class="sec wrap" id="modules">
+    <div class="sec-head">
+      <div><div class="kicker">Enseignement</div><h2>Mes modules</h2>
+      <p class="sub">Chaque module a sa page : objectifs, programme, documents et QCM d'auto-évaluation.</p></div>
+    </div>
+    <div class="mods" id="mods"></div>
+  </section>
+
+  <div class="wrap layout sec">
     <section id="cours" aria-labelledby="t-cours">
-      <h2 id="modules">Mes modules</h2>
-      <p class="sub">Chaque module a sa page : objectifs, programme, documents et QCM d'auto-évaluation.</p>
-      <div class="mods" id="mods"></div>
+      <div class="kicker">Supports</div>
       <h2 id="t-cours">Mes documents</h2>
       <p class="sub">Choisissez une rubrique, puis cliquez sur un document pour l'ouvrir ou le télécharger.</p>
       <div class="tabs" id="tabs" role="tablist" aria-label="Rubriques"></div>
@@ -48,13 +196,14 @@
         <label class="search" for="q"><input id="q" type="search" placeholder="Rechercher un module, une formation…" aria-label="Rechercher"></label>
         <div class="chips" id="chips" role="group" aria-label="Filtrer par niveau"></div>
       </div>
-      <div class="courses" id="list"></div>
+      <div id="list"></div>
       <div class="empty" id="empty" hidden>Aucun document ne correspond à votre recherche.</div>
     </section>
     <aside>
       <section class="panel" id="annonces">
         <h2>Annonces</h2>
         <ul class="news" id="news"></ul>
+        <button class="allnews" id="allnews" type="button">Voir toutes les annonces</button>
       </section>
       <section class="panel contact" id="contact">
         <h2>Contact</h2>
@@ -64,10 +213,17 @@
       </section>
     </aside>
   </div>
+
+  <div class="wrap spaces">
+    <a class="space dark" href="enseignants.html"><span class="k">Spécial enseignants</span><b>Espace enseignants</b><p>Outils pour les enseignants du campus universitaire d'Errachidia, dont la Délibération numérique.</p></a>
+    <a class="space" href="livres/"><span class="k">Bibliothèque</span><b>Demande de livres</b><p>Proposez les livres à acheter pour votre filière et votre semestre.</p></a>
+    <a class="space" href="apropos.html"><span class="k">Enseignant-chercheur</span><b>A propos</b><p>Parcours, enseignements et publications du Pr Mounir HANINE.</p></a>
+  </div>
 </main>
 <footer>
   <div class="wrap">
-    <span>Errachidia · Université Moulay Ismaïl</span>
+    <span>Faculté des Sciences Errachidia · Université Moulay Ismaïl</span>
+    <span class="links"><a href="logiciels.html">Logiciels</a><a href="qcm.html">QCM</a><a href="enseignants.html">Enseignants</a><a href="apropos.html">A propos</a></span>
     <span class="yr" id="copyr"></span>
   </div>
 </footer>
@@ -83,6 +239,18 @@
 <script src="qcm/tourisme.js"></script>
 <script src="qcm/droit.js"></script>
 <script>
+/* Logiciels mis en avant sur l'accueil (liste complète sur logiciels.html) */
+const LOGICIELS_ACCUEIL = (typeof LOGICIELS!=='undefined')?LOGICIELS:[
+  {ic:"py",   nom:"Programmation Python 1", lien:"python.html", desc:"Cours, exemples à exécuter, exercices corrigés automatiquement et quiz.", pour:"Licence Digitalisation", sem:"S1"},
+  {ic:"{ C }",nom:"Programmation C 1", lien:"c-pas-a-pas.html", desc:"Le C chapitre par chapitre, avec l'espace « Mon programme ».", pour:"Licence Digitalisation", sem:"S1"},
+  {ic:"1&0",  nom:"Electronique numérique", lien:"electronique.html", desc:"Numération, Karnaugh, circuits combinatoires et séquentiels, TP Logisim.", pour:"Licence Digitalisation", sem:"S1"},
+  {ic:"2⇄16", nom:"NumériLab", lien:"numerix.html", desc:"Le laboratoire de la numération : chaque calcul détaillé étape par étape.", pour:"Licence Digitalisation", sem:"S1"},
+  {ic:"RO",   nom:"Recherche Opérationnelle", lien:"recherche-operationnelle.html", desc:"Simplexe pas à pas, dualité, gradient, KKT, graphes et flots.", pour:"Licence Digitalisation", sem:"S3"},
+  {ic:"SCPI", nom:"Banc virtuel FSE", lien:"generateur.html", desc:"Générateur SEFRAM 4463 et oscilloscope 5062DC simulés, pilotés en SCPI.", pour:"Licence Digitalisation", sem:"S5"},
+  {ic:"20/20",nom:"Classe numérique", lien:"classe.html", desc:"Le carnet de notes de l'enseignant de français, calculé par formules Excel.", pour:"Licence Pro Enseignement du français", sem:"S5"},
+  {ic:"TO %", nom:"Riad digital", lien:"tourisme.html", desc:"Simulateur de gestion touristique avec Excel.", pour:"Master Communication touristique", sem:"S7"},
+  {ic:"AUDIT",nom:"Audit SI Lab", lien:"audit.html", desc:"Mission d'audit des systèmes d'information simulée, contrôles Excel.", pour:"Master ACBI", sem:"S9"}
+];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let filtre='Tous';
@@ -90,9 +258,17 @@ $('annee').textContent=SITE.annee; $('maj').textContent=SITE.maj;
 $('mail').textContent=SITE.email; $('contact-lieu').textContent=SITE.lieu; $('contact-perm').textContent=SITE.permanence;
 $('copyr').textContent='© '+new Date().getFullYear()+' Mounir Hanine';
 $('nb-cours').textContent=MODULES.length;
-$('mods').innerHTML=MODULES.map(m=>`<a class="mod" href="module.html?m=${m.id}"><span>${esc(m.niveau)} · ${DOCUMENTS.filter(d=>d.mid===m.id).length} documents${QCM[m.id]?' · QCM':''}</span><b>${esc(m.titre)}</b><span>${esc(m.formation)}</span></a>`).join('');
 $('nb-docs').textContent=DOCUMENTS.length;
-$('news').innerHTML=ANNONCES.map(a=>{const c=`<div class="date"><b>${esc(a.jour)}</b>${esc(a.mois)}</div><p><strong>${esc(a.titre)}${a.lien?' <span class="go">→</span>':''}</strong>${esc(a.texte)}</p>`;return `<li>${a.lien?`<a class="news-link" href="${esc(a.lien)}">${c}</a>`:c}</li>`;}).join('');
+$('nb-apps').textContent=LOGICIELS_ACCUEIL.length;
+$('nb-qcm').textContent=MODULES.filter(m=>QCM[m.id]).length;
+if(ANNONCES.length){$('last-t').textContent=ANNONCES[0].titre.replace(/^Nouveau\s*:\s*/,'')+' →';if(ANNONCES[0].lien)$('last').href=ANNONCES[0].lien;}
+$('apps').innerHTML=LOGICIELS_ACCUEIL.map(a=>`<a class="app2" href="${esc(a.lien)}"><span class="ic">${esc(a.ic)}</span><b>${esc(a.nom)}</b><p>${esc(a.desc)}</p><span class="for">${esc(a.pour)} · <i>${esc(a.sem)}</i></span></a>`).join('');
+$('mods').innerHTML=MODULES.map(m=>{const n=DOCUMENTS.filter(d=>d.mid===m.id).length;return `<a class="mod" href="module.html?m=${m.id}"><div class="top2"><span class="lv">${esc(m.niveau)}</span><span class="cnt">${n} document${n>1?'s':''}${QCM[m.id]?' · QCM':''}</span></div><b>${esc(m.titre)}</b><span class="fo">${esc(m.formation)}</span></a>`}).join('');
+$('news').innerHTML=ANNONCES.map(a=>{const c=`<div class="date"><b>${esc(a.jour)}</b>${esc(a.mois)}</div><p><strong>${esc(a.titre)}${a.lien?' <span class="go">→</span>':''}</strong><span class="tx">${esc(a.texte)}</span></p>`;return `<li>${a.lien?`<a class="news-link" href="${esc(a.lien)}">${c}</a>`:c}</li>`;}).join('');
+if(ANNONCES.length<=4)$('allnews').hidden=true;
+$('allnews').addEventListener('click',()=>{const on=$('news').classList.toggle('all');$('allnews').textContent=on?'Afficher moins':'Voir toutes les annonces';});
+$('burger').addEventListener('click',()=>{const o=$('menu').classList.toggle('open');$('burger').setAttribute('aria-expanded',o);});
+$('menu').addEventListener('click',e=>{if(e.target.closest('a'))$('menu').classList.remove('open');});
 let onglet=(location.hash.startsWith('#r-')&&RUBRIQUES[+location.hash.slice(3)])?RUBRIQUES[+location.hash.slice(3)]:'Tout';
 const rubs=['Tout',...RUBRIQUES.filter(r=>DOCUMENTS.some(d=>d.rubrique===r))];
 function drawTabs(){$('tabs').innerHTML=rubs.map(r=>`<button class="tab" role="tab" type="button" data-r="${esc(r)}" aria-selected="${r===onglet}">${esc(r)}<span class="n">${r==='Tout'?DOCUMENTS.length:DOCUMENTS.filter(d=>d.rubrique===r).length}</span></button>`).join('');}
@@ -113,7 +289,6 @@ function render(){
   const t=$('q').value.trim().toLowerCase();
   const items=DOCUMENTS.filter(d=>(onglet==='Tout'||d.rubrique===onglet)&&(filtre==='Tous'||d.niveau.split(' · ').includes(filtre))&&(!t||[d.module,d.titre,d.formation,d.desc||''].join(' ').toLowerCase().includes(t)));
   const groupes=onglet==='Tout'?RUBRIQUES:[onglet];
-  $('list').className='';
   $('list').innerHTML=groupes.map(r=>{const g=items.filter(d=>d.rubrique===r);if(!g.length)return'';
     return `<div class="group">${onglet==='Tout'?`<h3 class="gt">${esc(r)}</h3>`:''}<div class="courses">${g.map(card).join('')}</div></div>`}).join('');
   $('empty').hidden=items.length>0;
