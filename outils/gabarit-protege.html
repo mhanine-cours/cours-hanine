@@ -73,7 +73,12 @@ async function ouvrir(mdp){
   const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:sel,iterations:ITER,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
   const clair=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv},k,ct));
   try{sessionStorage.setItem(CLE_SESSION,mdp)}catch(_){}
-  document.open();document.write(clair);document.close();
+  const deco=`<style>.ens-bar{background:var(--umi-dark,#0e3550);color:#e3eef6;font:14px var(--body,system-ui)}.ens-bar .in{max-width:1120px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.ens-bar b{color:#ffb547;font-weight:600}.deco{display:inline-flex;align-items:center;gap:6px;font:600 14px var(--body,system-ui);padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;white-space:nowrap}.deco:hover{background:#b3261e;border-color:#b3261e}</style>
+<script>(function(){var bar=document.createElement('div');bar.className='ens-bar';bar.innerHTML='<div class="in"><span>\uD83D\uDD12 <b>Espace enseignants</b> · vous êtes connecté</span><button type="button" class="deco" title="Quitter l&#39;espace enseignants">\u23FB Se déconnecter</button></div>';
+bar.querySelector('.deco').addEventListener('click',function(){try{sessionStorage.removeItem('${CLE_SESSION}')}catch(e){}location.replace('enseignants.html');});
+var h=document.querySelector('header.top');if(h){h.insertAdjacentElement('afterend',bar)}else{document.body.insertBefore(bar,document.body.firstChild)}})();<\/script>`;
+  const page=clair.includes('</body>')?clair.replace(/<\/body>(?![\s\S]*<\/body>)/,deco+'</body>'):clair+deco;
+  document.open();document.write(page);document.close();
 }
 const f=document.getElementById('gate'),err=document.getElementById('err'),ok=document.getElementById('ok'),champ=document.getElementById('mdp');
 document.getElementById('voir').addEventListener('click',e=>{const v=champ.type==='password';champ.type=v?'text':'password';e.target.textContent=v?'Masquer':'Afficher';champ.focus();});
