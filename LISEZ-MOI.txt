@@ -44,3 +44,13 @@ scratch.js, langues.js, tourisme.js, droit.js). Une question = une ligne :
 - audit.html : Audit SI Lab, mission d audit des SI simulée (contrôles Excel, rapport).
 - electronique.html : Electronique numérique, logiciel du module (Licence Digitalisation S1) : numération, fonctions binaires, Karnaugh, circuits combinatoires et séquentiels, exercices, TP Logisim.
 - python.html : Programmation Python 1, logiciel du module (Tronc Commun Informatique Appliquée – S1 – Licence Digitalisation) : 9 chapitres, exemples exécutables, 27 exercices corrigés automatiquement, quiz, espace Mon programme.
+
+Espace enseignants protégé par mot de passe
+- enseignants.html et deliberation.html sont chiffrées : sans le mot de passe,
+  leur contenu est illisible. Le mot de passe est demandé une fois par visite.
+- Pour modifier une de ces pages ou changer le mot de passe : la déchiffrer,
+  la modifier, puis la chiffrer de nouveau (outil : outils/proteger.py) :
+    python3 outils/proteger.py dechiffrer enseignants.html /tmp/enseignants.html
+    python3 outils/proteger.py chiffrer  /tmp/enseignants.html enseignants.html
+  Ne jamais déposer la version déchiffrée sur GitHub.
+- menu.js : bouton « Menu » commun à toutes les pages (téléphone).
