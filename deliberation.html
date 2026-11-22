@@ -16,13 +16,13 @@
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips span{font:500 13px var(--mono);padding:6px 11px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
 .chips b{color:var(--accent);font-weight:600}
-.screen{background:#0d1d22;color:#d7f2ee;border-radius:16px;padding:22px 24px;font-family:var(--mono);box-shadow:0 18px 40px -18px rgba(8,40,45,.55);position:relative;overflow:hidden}
+.screen{background:#0e3550;color:#e3eef6;border-radius:16px;padding:22px 24px;font-family:var(--mono);box-shadow:0 18px 40px -18px rgba(8,30,50,.55);position:relative;overflow:hidden}
 .screen:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px);pointer-events:none}
-.screen .dots{display:flex;gap:6px;margin-bottom:16px}.screen .dots i{width:10px;height:10px;border-radius:50%;background:#2f4a50}.screen .dots i:first-child{background:#e36f5c}.screen .dots i:nth-child(2){background:#e0a64a}.screen .dots i:nth-child(3){background:#3fb6ad}
-.screen .ln{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed #23393f;font-size:15px}
-.screen .ln:last-child{border:0}.screen .ln small{color:#7fa5a2}.screen .ln b{color:#7ee0d6;font-weight:500;letter-spacing:.04em}
+.screen .dots{display:flex;gap:6px;margin-bottom:16px}.screen .dots i{width:10px;height:10px;border-radius:50%;background:#2c4d66}.screen .dots i:first-child{background:#e36f5c}.screen .dots i:nth-child(2){background:#ef9300}.screen .dots i:nth-child(3){background:#5bb3dc}
+.screen .ln{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed #24506e;font-size:15px}
+.screen .ln:last-child{border:0}.screen .ln small{color:#a5c1d4}.screen .ln b{color:#7cc6ea;font-weight:500;letter-spacing:.04em}
 .screen .big{font:600 34px var(--mono);color:#fff;margin:2px 0 10px;letter-spacing:.02em}
-.screen .cur{display:inline-block;width:10px;height:1.1em;background:#3fb6ad;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
+.screen .cur{display:inline-block;width:10px;height:1.1em;background:#5bb3dc;vertical-align:-3px;margin-left:4px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .picker{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 20px}
 .picker button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px 14px 13px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s}
@@ -114,8 +114,8 @@ table.t tr td:last-child{font-weight:600;color:var(--accent)}
 #scope{width:100%;height:auto;border-radius:10px;display:block;background:#0b1a1d}
 .meas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0 12px}
 .meas div{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}.meas small{display:block;font:500 10.5px var(--mono);color:var(--muted);text-transform:uppercase}.meas b{font:600 14px var(--mono)}
-.log{background:#0d1d22;color:#d7f2ee;border-radius:12px;padding:12px 14px;font:13.5px var(--mono);height:230px;overflow:auto}
-.log .l{display:flex;gap:10px;padding:2px 0}.log .t{width:34px;flex:none;font-size:11px;padding-top:2px;color:#7fa5a2}.log .t.gen{color:#e0a64a}.log .t.scope{color:#7ee0d6}.log .r{color:#9fd8a8}
+.log{background:#0e3550;color:#e3eef6;border-radius:12px;padding:12px 14px;font:13.5px var(--mono);height:230px;overflow:auto}
+.log .l{display:flex;gap:10px;padding:2px 0}.log .t{width:34px;flex:none;font-size:11px;padding-top:2px;color:#a5c1d4}.log .t.gen{color:#e0a64a}.log .t.scope{color:#7cc6ea}.log .r{color:#9fd8a8}
 .lvfmt{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 12px;word-break:break-all}
 .defi{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:var(--paper)}
 .defi.done{border-color:#23794a;box-shadow:inset 4px 0 0 #23794a}.defi .dq{font-size:16px;margin-bottom:8px}.defi .row{margin:0}
@@ -261,9 +261,20 @@ table.xl tr.chk td{background:color-mix(in srgb,#e05a4f 7%,transparent)}
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="index.html"><img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662"><span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span></a>
-    <nav class="menu" aria-label="Navigation principale">
-      <a href="index.html#cours">Documents</a><a href="index.html#modules">Modules</a><a href="qcm.html">QCM</a><a href="logiciels.html">Logiciels</a><a href="enseignants.html">Enseignants</a><a href="livres/">Demande de livres</a><a href="apropos.html">A propos</a>
+    <a class="brand" href="index.html">
+      <img class="logo" src="images/logo-fs-errachidia.png" alt="Faculté des Sciences Errachidia – Université Moulay Ismail" width="952" height="662">
+      <span><strong>Pr Mounir HANINE</strong><small>Faculté des Sciences Errachidia · Université Moulay Ismail</small></span>
+    </a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+    <nav class="menu" id="menu" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="index.html#modules">Modules</a>
+      <a href="index.html#cours">Documents</a>
+      <a href="qcm.html">QCM</a>
+      <a class="on" href="enseignants.html" aria-current="page">Enseignants</a>
+      <a href="livres/">Demande de livres</a>
+      <a href="apropos.html">A propos</a>
+      <a class="cta" href="logiciels.html">Logiciels</a>
     </nav>
   </div>
 </header>
@@ -544,5 +555,6 @@ $('newc').onclick=()=>{CLS='Module d\'exemple · étudiants fictifs';$('imp-msg'
 ['i-etab','i-fil','i-mod','i-sem','i-au','i-resp','j-pres','j-m1','j-m2','i-lieu','i-date'].forEach(id=>$(id).addEventListener('input',()=>{$('cls-sub').innerHTML=esc($('i-mod').value)+' · '+esc($('i-fil').value)+' · '+CLS;pv();}));
 defaults();$('i-date').value=new Date().toLocaleDateString('fr-FR');$('logo-prev').src=LOGO;gen();all();
 </script>
+<script src="menu.js"></script>
 </body>
 </html>

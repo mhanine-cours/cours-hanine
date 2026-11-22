@@ -1,20 +1,22 @@
 
 :root{
-  --bg:#f3f5f2; --paper:#fff; --ink:#14202b; --muted:#5b6872; --line:#d8dfdc;
-  --grid:rgba(20,80,90,.06); --accent:#0e6e6b; --accent-ink:#fff; --sand:#a8701c; --sand-soft:#f6ead6;
+  /* Couleurs de l'UMI : bleu #297fa8, orange #ef9300 */
+  --bg:#f3f6f9; --paper:#fff; --ink:#14202b; --muted:#5b6872; --line:#d6e0e8;
+  --grid:rgba(41,127,168,.06); --accent:#297fa8; --accent-ink:#fff; --sand:#d97f00; --sand-soft:#fdf0dc;
+  --umi-dark:#0e3550; --umi-orange:#ef9300;
   --display:"Unbounded","Arial Black",system-ui,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root{
-  --bg:#0f1619; --paper:#162025; --ink:#e6ecea; --muted:#9aa8ad; --line:#26343a;
-  --grid:rgba(120,200,200,.05); --accent:#3fb6ad; --accent-ink:#06201f; --sand:#e0a64a; --sand-soft:#2a2216; color-scheme:dark}}
+  --bg:#0d151c; --paper:#14202a; --ink:#e6ecf0; --muted:#9aa9b5; --line:#243442;
+  --grid:rgba(91,179,220,.05); --accent:#5bb3dc; --accent-ink:#06202e; --sand:#f5a623; --sand-soft:#2b2010; --umi-dark:#0a2638; color-scheme:dark}}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--body);
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:24px 24px;padding-bottom:env(safe-area-inset-bottom,0px)}
+  background-size:24px 24px;background-image:none;padding-bottom:env(safe-area-inset-bottom,0px)}
 .wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 a{color:var(--accent)}
 :focus-visible{outline:2px solid var(--sand);outline-offset:2px}
@@ -134,3 +136,38 @@ footer .yr{font:500 14px var(--mono);color:var(--ink)}
 .news-link{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:start;text-decoration:none;color:inherit;border-radius:10px;padding:6px;margin:-6px;transition:background .15s}
 .news-link:hover{background:var(--bg)}.news-link:hover strong{color:var(--accent)}.news .go{color:var(--accent);font-weight:600}
 .news li:has(.news-link){display:block}
+
+/* ===== En-tête et pied de page communs (nouveau design UMI) ===== */
+header.top{border-top:4px solid var(--accent)}
+.top .wrap{padding-block:10px;flex-wrap:nowrap}
+.brand .logo{height:110px}
+.brand strong{font-size:19px}
+.brand>span{max-width:none}.brand small{white-space:nowrap}
+@media (max-width:1320px){.brand small{display:none}}
+nav.menu{flex-wrap:nowrap;align-items:center}
+nav.menu a{white-space:nowrap}
+nav.menu a.on{color:var(--ink);background:var(--bg)}
+nav.menu a.cta{background:var(--accent);color:var(--accent-ink);margin-left:6px}
+nav.menu a.cta:hover{background:var(--accent);opacity:.9;color:var(--accent-ink)}
+nav.menu a.cta.on{box-shadow:inset 0 -3px 0 var(--umi-orange)}
+.burger{display:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:8px 12px;font:600 14px var(--body);cursor:pointer}
+@media (max-width:1060px){
+  .top .wrap{flex-wrap:wrap}
+  .burger{display:block}
+  nav.menu{display:none;width:100%;flex-direction:column;align-items:stretch;padding-bottom:8px}
+  nav.menu.open{display:flex}
+  nav.menu a{padding:10px 12px}
+  nav.menu a.cta{margin:6px 0 0;text-align:center}
+}
+@media (max-width:1060px){.brand .logo{height:84px}}
+@media (max-width:600px){.brand .logo{height:64px}.brand small{display:none}}
+footer{border-top:4px solid var(--umi-orange)}
+footer .wrap{align-items:center}
+footer .links{display:flex;gap:16px;flex-wrap:wrap}
+footer .links a{color:var(--muted);text-decoration:none}
+footer .links a:hover{color:var(--accent)}
+/* Titres des pages intérieures */
+.page h1{color:var(--ink)}
+.crumb a:hover{color:var(--accent)}
+.kicker{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sand);margin-bottom:6px}
+.brand strong{white-space:nowrap}

@@ -10,32 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="style.css">
 <style>
-/* ===== Couleurs de l'UMI (bleu #297fa8, orange #ef9300) ===== */
-:root{--bg:#f3f6f9;--line:#d6e0e8;--accent:#297fa8;--accent-ink:#fff;--sand:#d97f00;--sand-soft:#fdf0dc;--umi-dark:#0e3550;--umi-orange:#ef9300}
-@media (prefers-color-scheme:dark){:root{--bg:#0d151c;--paper:#14202a;--line:#243442;--accent:#5bb3dc;--accent-ink:#06202e;--sand:#f5a623;--sand-soft:#2b2010;--umi-dark:#0a2638}}
-/* ===== Page d'accueil (nouvelle mise en page) ===== */
-body{background-image:none}
-header.top{border-top:4px solid var(--accent);position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(8px)}
-.top .wrap{padding-block:10px;flex-wrap:nowrap}
-.brand .logo{height:64px}
-.brand strong{font-size:17px}
-.brand>span{max-width:none}.brand small{white-space:nowrap}
-@media (max-width:1320px){.brand small{display:none}}
-nav.menu{flex-wrap:nowrap;align-items:center}
-nav.menu a{white-space:nowrap}
-nav.menu a.on{color:var(--ink);background:var(--bg)}
-nav.menu a.cta{background:var(--accent);color:var(--accent-ink);margin-left:6px}
-nav.menu a.cta:hover{background:var(--accent);opacity:.9;color:var(--accent-ink)}
-.burger{display:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:8px 12px;font:600 14px var(--body);cursor:pointer}
-@media (max-width:1060px){
-  .top .wrap{flex-wrap:wrap}
-  .burger{display:block}
-  nav.menu{display:none;width:100%;flex-direction:column;align-items:stretch;padding-bottom:8px}
-  nav.menu.open{display:flex}
-  nav.menu a{padding:10px 12px}
-  nav.menu a.cta{margin:6px 0 0;text-align:center}
-}
-@media (max-width:600px){.brand .logo{height:52px}.brand small{display:none}}
+/* ===== Page d'accueil ===== */
 
 /* Bandeau */
 .band{background:var(--umi-dark);border-bottom:4px solid var(--umi-orange);color:#e9f3f1;position:relative;overflow:hidden}
@@ -68,7 +43,6 @@ a.stat:hover{background:rgba(0,0,0,.3)}
 .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
 .sec-head h2{font-size:26px}
 .sec-head .sub{margin:0}
-.kicker{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--sand);margin-bottom:6px}
 .more{font:600 14px var(--body);text-decoration:none;white-space:nowrap}
 .more:hover{text-decoration:underline}
 
@@ -117,10 +91,6 @@ a.stat:hover{background:rgba(0,0,0,.3)}
 .space.dark p{color:color-mix(in srgb,var(--bg) 75%,transparent)}
 .space.dark{background:var(--umi-dark);border-color:var(--umi-dark);color:#e8f1f7}.space.dark p{color:#bcd3e2}.space.dark .k{color:#ffb547}
 
-footer .wrap{align-items:center}
-footer .links{display:flex;gap:16px;flex-wrap:wrap}
-footer .links a{color:var(--muted);text-decoration:none}
-footer .links a:hover{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -132,9 +102,9 @@ footer .links a:hover{color:var(--accent)}
     </a>
     <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
     <nav class="menu" id="menu" aria-label="Navigation principale">
-      <a class="on" href="index.html">Accueil</a>
-      <a href="#modules">Modules</a>
-      <a href="#cours">Documents</a>
+      <a class="on" href="index.html" aria-current="page">Accueil</a>
+      <a href="index.html#modules">Modules</a>
+      <a href="index.html#cours">Documents</a>
       <a href="qcm.html">QCM</a>
       <a href="enseignants.html">Enseignants</a>
       <a href="livres/">Demande de livres</a>
@@ -267,8 +237,6 @@ $('mods').innerHTML=MODULES.map(m=>{const n=DOCUMENTS.filter(d=>d.mid===m.id).le
 $('news').innerHTML=ANNONCES.map(a=>{const c=`<div class="date"><b>${esc(a.jour)}</b>${esc(a.mois)}</div><p><strong>${esc(a.titre)}${a.lien?' <span class="go">→</span>':''}</strong><span class="tx">${esc(a.texte)}</span></p>`;return `<li>${a.lien?`<a class="news-link" href="${esc(a.lien)}">${c}</a>`:c}</li>`;}).join('');
 if(ANNONCES.length<=4)$('allnews').hidden=true;
 $('allnews').addEventListener('click',()=>{const on=$('news').classList.toggle('all');$('allnews').textContent=on?'Afficher moins':'Voir toutes les annonces';});
-$('burger').addEventListener('click',()=>{const o=$('menu').classList.toggle('open');$('burger').setAttribute('aria-expanded',o);});
-$('menu').addEventListener('click',e=>{if(e.target.closest('a'))$('menu').classList.remove('open');});
 let onglet=(location.hash.startsWith('#r-')&&RUBRIQUES[+location.hash.slice(3)])?RUBRIQUES[+location.hash.slice(3)]:'Tout';
 const rubs=['Tout',...RUBRIQUES.filter(r=>DOCUMENTS.some(d=>d.rubrique===r))];
 function drawTabs(){$('tabs').innerHTML=rubs.map(r=>`<button class="tab" role="tab" type="button" data-r="${esc(r)}" aria-selected="${r===onglet}">${esc(r)}<span class="n">${r==='Tout'?DOCUMENTS.length:DOCUMENTS.filter(d=>d.rubrique===r).length}</span></button>`).join('');}
@@ -302,5 +270,6 @@ $('copy').addEventListener('click',async()=>{
 });
 render();
 </script>
+<script src="menu.js"></script>
 </body>
 </html>
